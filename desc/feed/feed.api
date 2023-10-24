@@ -1,62 +1,39 @@
 syntax = "v1"
 
 info(
-	title: "用户实例"
-	desc: "用户实例"
-	author: "Mikael"
-	email: "13247629622@163.com"
+	title: "短视频Feed"
+	desc: "主页短视频Feed"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
 )
 
-type Feed {
-	Id       int64  `json:"id"`
-	Mobile   string `json:"mobile"`
-	Nickname string `json:"nickname"`
-	Sex      int64  `json:"sex"`
-	Avatar   string `json:"avatar"`
-	Info     string `json:"info"`
+type User{ // 视频作者信息
+	NickName string `json:"nickName"`   // 昵称
+	AvatarUrl string `json:"avatarUrl"` // 头像地址
 }
 
-// type (
-// 	RegisterReq {
-// 		Mobile   string `json:"mobile"`
-// 		Password string `json:"password"`
-// 	}
-// 	RegisterResp {
-// 		AccessToken  string `json:"accessToken"`
-// 		AccessExpire int64  `json:"accessExpire"`
-// 		RefreshAfter int64  `json:"refreshAfter"`
-// 	}
-// )
+type Video {
+	Id int64 `json:"id"`                // 视频ID
+	PlayUrl string `json:"playUrl"`     // 视频播放地址
+	ThumbUrl string `json:"thumbUrl"`   // 视频封面地址
+	Context string `json:"context"`     // 视频描述
 
-// type (
-// 	LoginReq {
-// 		Mobile   string `json:"mobile"`
-// 		Password string `json:"password"`
-// 	}
-// 	LoginResp {
-// 		AccessToken  string `json:"accessToken"`
-// 		AccessExpire int64  `json:"accessExpire"`
-// 		RefreshAfter int64  `json:"refreshAfter"`
-// 	}
-// )
+	FavNum int64 `json:"favNum"`        // 点赞数
+	CommentNum int64 `json:"commentNum"`// 评论数
+	ShareNum int64 `json:"shareNum"`    // 分享数
 
-// type (
-// 	WXMiniAuthReq {
-// 		Code          string `json:"code"`
-// 		IV            string `json:"iv"`
-// 		EncryptedData string `json:"encryptedData"`
-// 	}
-// 	WXMiniAuthResp {
-// 		AccessToken  string `json:"accessToken"`
-// 		AccessExpire int64  `json:"accessExpire"`
-// 		RefreshAfter int64  `json:"refreshAfter"`
-// 	}
-// )
+	IsFav bool `json:"isFav"`           // 当前用户是否已点赞
+	IsFollow bool `json:"isFollow"`     // 当前用户是否已关注该用户
 
-// type (
-// 	UserInfoReq {
-// 	}
-// 	UserInfoResp {
-// 		UserInfo User `json:"userInfo"`
-// 	}
-// )
+	Author User `json:"author"`         // 作者信息
+}
+
+type (
+	FeedReq{
+		LatestTime int		 `json:"latest_time" binding:"option"` // 最新视频时间
+		token      string 	 `json:"token" binding:"option"`           // 用户token
+	}
+	FeedResp{
+		VideoList []Video `json:"videoList"`
+	}
+)
