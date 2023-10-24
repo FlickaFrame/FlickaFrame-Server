@@ -12,3 +12,17 @@
 
 账户系统：用户可登录，收藏视频
 可参考常见短视频应用自由增加功能，提升完善度，如点赞、分享、关注、搜索等
+
+## Deploy
+
+### MYSQL
+
+```bash
+    docker run -itd --name mysql-qiniuyun -p 3306:3306 -e MYSQL_ROOT_PASSWORD=qiniuyun-abc mysql
+```
+
+### REDIS
+
+```bash
+    docker run -itd --name redis-qiniuyun -p 6379:6379 redis
+```
