@@ -12,9 +12,9 @@ import (
 
 type Config struct {
 	DSN          string
-	MaxOpenConns int
-	MaxIdleConns int
-	MaxLifetime  int
+	MaxOpenConns int `json:",default=10"`
+	MaxIdleConns int `json:",default=100"`
+	MaxLifetime  int `json:",default=3600"`
 }
 
 type DB struct {

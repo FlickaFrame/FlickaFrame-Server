@@ -8,7 +8,6 @@ tidy: ## go mod tidy
 .PHONY: gen-api-go
 gen-api-go: ## generate api go
 	goctl api go --dir=./ --api ./desc/main.api  --style go_zero
-	${GO} mod tidy
 
 .PHONY: lint-go
 lint-go:
