@@ -1,0 +1,6 @@
+syntax = "v1"
+
+import (
+	"user/user_server.api"
+	"feed/feed_server.api"
+)

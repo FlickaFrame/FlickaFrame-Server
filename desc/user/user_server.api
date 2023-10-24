@@ -1,0 +1,42 @@
+syntax = "v1"
+
+info(
+	title: "用户中心服务"
+	desc: "用户中心服务"
+	version: "v1"
+)
+
+import (
+	"user.api"
+)
+
+//============================> usercenter v1 <============================
+//no need login
+@server(
+	prefix: usercenter/v1
+	group: user
+)
+service main {
+	@doc "register"
+	@handler register
+	post /user/register (RegisterReq) returns (RegisterResp)
+	@doc "login"
+	@handler login
+	post /user/login (LoginReq) returns (LoginResp)
+}
+
+//need login
+@server(
+	prefix: usercenter/v1
+	group: user
+	jwt: JwtAuth
+)
+
+service main {
+	@doc "get user info"
+	@handler detail
+	post /user/detail (UserInfoReq) returns (UserInfoResp)
+	@doc "wechat mini auth"
+	@handler wxMiniAuth
+	post /user/wxMiniAuth (WXMiniAuthReq) returns (WXMiniAuthResp)
+}
