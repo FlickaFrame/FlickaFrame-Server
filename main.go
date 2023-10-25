@@ -6,6 +6,8 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/handler"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode"
+	"github.com/zeromicro/go-zero/rest/httpx"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -24,6 +26,9 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+
+	// 自定义错误处理方法
+	httpx.SetErrorHandler(xcode.ErrHandler)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
