@@ -15,11 +15,12 @@ var (
 	ServiceUnavailable = add(503, "UNAVAILABLE")
 	Deadline           = add(504, "DEADLINE_EXCEEDED")
 	LimitExceed        = add(509, "RESOURCE_EXHAUSTED")
+	DB_ERROR           = add(510, "DB_ERROR")
 )
 
 var errSet = make(container.Set[string])
 
-func New(code int, msg string) Code {
+func Add(code int, msg string) Code {
 	return add(code, msg)
 }
 
