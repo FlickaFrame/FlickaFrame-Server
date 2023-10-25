@@ -16,3 +16,7 @@ lint-go:
 .PHONY: lint-go-fix
 lint-go-fix:
 	$(GO) run $(GOLANGCI_LINT_PACKAGE) run --fix
+
+.PHONY: build
+build: ## build
+	${GO} build -o tiktok .
