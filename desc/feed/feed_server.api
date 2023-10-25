@@ -1,9 +1,10 @@
 syntax = "v1"
 
 info(
-	title: "主页Feed"
-	desc: "主页Feed"
-	version: "v1"
+	title: "短视频Feed"
+	desc: "主页短视频Feed"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
 )
 
 import (
