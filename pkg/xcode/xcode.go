@@ -45,11 +45,3 @@ func String(s string) Code {
 
 	return Code{code: code}
 }
-
-func New(code int, msg string) Code {
-	return Code{code: code, msg: msg}
-}
-
-func add(code int, msg string) Code {
-	return Code{code: code, msg: msg}
-}

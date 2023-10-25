@@ -1,5 +1,7 @@
 package xcode
 
+import "github.com/FlickaFrame/FlickaFrame-Server/pkg/container"
+
 var (
 	OK                 = add(0, "OK")
 	NoLogin            = add(101, "NOT_LOGIN")
@@ -14,3 +16,16 @@ var (
 	Deadline           = add(504, "DEADLINE_EXCEEDED")
 	LimitExceed        = add(509, "RESOURCE_EXHAUSTED")
 )
+
+var errSet = make(container.Set[string])
+
+func New(code int, msg string) Code {
+	return add(code, msg)
+}
+
+func add(code int, msg string) Code {
+	if errSet.Contains(msg) {
+		panic("duplicate error code: " + msg)
+	}
+	return Code{code: code, msg: msg}
+}
