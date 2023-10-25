@@ -11,10 +11,10 @@ import (
 )
 
 type Config struct {
-	DSN          string
-	MaxOpenConns int `json:",default=10"`
-	MaxIdleConns int `json:",default=100"`
-	MaxLifetime  int `json:",default=3600"`
+	DSN          string // 数据库连接DSN
+	MaxOpenConns int    `json:",default=10"`   // 最大连接数
+	MaxIdleConns int    `json:",default=100"`  // 最大空闲连接数
+	MaxLifetime  int    `json:",default=3600"` // 最大连接周期，单位秒
 }
 
 type DB struct {
@@ -68,7 +68,7 @@ func NewMysql(conf *Config) (*DB, error) {
 		conf.MaxLifetime = 3600
 	}
 	db, err := gorm.Open(mysql.Open(conf.DSN), &gorm.Config{
-		Logger: &ormLog{},
+		Logger: &ormLog{}, // 集成go-zero日志组件
 	})
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func NewMysql(conf *Config) (*DB, error) {
 	sdb.SetMaxOpenConns(conf.MaxOpenConns)
 	sdb.SetConnMaxLifetime(time.Second * time.Duration(conf.MaxLifetime))
 
-	err = db.Use(NewCustomePlugin())
+	err = db.Use(NewCustomPlugin()) // 注入自定义插件
 	if err != nil {
 		return nil, err
 	}
