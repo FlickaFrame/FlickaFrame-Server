@@ -3,53 +3,41 @@ syntax = "v1"
 info(
 	title: "用户实例"
 	desc: "用户实例"
-	author: "Mikael"
-	email: "13247629622@163.com"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
 )
 
 type User {
-	Id       int64  `json:"id"`
-	Mobile   string `json:"mobile"`
-	Nickname string `json:"nickname"`
+	ID       int64  `json:"id"`
+	Phone    string `json:"phone"`
+	NickName string `json:"nick_name"`
 	Sex      int64  `json:"sex"`
-	Avatar   string `json:"avatar"`
+	AvtarUrl string `json:"avatar"`
 	Info     string `json:"info"`
 }
 
 type (
 	RegisterReq {
-		Mobile   string `json:"mobile"`
-		Password string `json:"password"`
+		Phone   string  `json:"phone" validate:"e164,required"`
+		Password string `json:"password" validate:"required"`
+		NickName string `json:"nick_name,option"`
 	}
 	RegisterResp {
-		AccessToken  string `json:"accessToken"`
-		AccessExpire int64  `json:"accessExpire"`
-		RefreshAfter int64  `json:"refreshAfter"`
+		AccessToken  string `json:"access_token"`
+		AccessExpire int64  `json:"access_expire"`
+		RefreshAfter int64  `json:"refresh_after"`
 	}
 )
 
 type (
 	LoginReq {
-		Mobile   string `json:"mobile"`
+		Phone   string `json:"phone"`
 		Password string `json:"password"`
 	}
 	LoginResp {
-		AccessToken  string `json:"accessToken"`
-		AccessExpire int64  `json:"accessExpire"`
-		RefreshAfter int64  `json:"refreshAfter"`
-	}
-)
-
-type (
-	WXMiniAuthReq {
-		Code          string `json:"code"`
-		IV            string `json:"iv"`
-		EncryptedData string `json:"encryptedData"`
-	}
-	WXMiniAuthResp {
-		AccessToken  string `json:"accessToken"`
-		AccessExpire int64  `json:"accessExpire"`
-		RefreshAfter int64  `json:"refreshAfter"`
+		AccessToken  string `json:"access_token"`
+		AccessExpire int64  `json:"access_expire"`
+		RefreshAfter int64  `json:"refresh_after"`
 	}
 )
 
@@ -57,6 +45,6 @@ type (
 	UserInfoReq {
 	}
 	UserInfoResp {
-		UserInfo User `json:"userInfo"`
+		UserInfo User `json:"user_info"`
 	}
 )

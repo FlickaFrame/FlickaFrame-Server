@@ -7,10 +7,11 @@ import (
 
 type User struct {
 	gorm.Model
-	UserName       string
+	NickName       string
 	AvtarUrl       string
+	Sex            int64
 	Password       string
-	Phone          string `gorm:"uniqueIndex;not null;size:11"`
+	Phone          string
 	FollowingCount int
 	FollowerCount  int
 }
@@ -29,6 +30,10 @@ func NewUserModel(db *gorm.DB) *UserModel {
 	}
 }
 
+func (m *UserModel) Insert(ctx context.Context, data *User) error {
+	return m.db.WithContext(ctx).Create(data).Error
+}
+
 func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
 	var result User
 	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
@@ -38,4 +43,10 @@ func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
 func (m *UserModel) MustFindOne(ctx context.Context, id int64) *User {
 	user, _ := m.FindOne(ctx, id)
 	return user
+}
+
+func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, error) {
+	var result User
+	err := m.db.WithContext(ctx).Where("phone = ?", phone).First(&result).Error
+	return &result, err
 }

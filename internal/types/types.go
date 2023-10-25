@@ -2,21 +2,60 @@
 package types
 
 type User struct {
+	ID       int64  `json:"id"`
+	Phone    string `json:"phone"`
+	NickName string `json:"nick_name"`
+	Sex      int64  `json:"sex"`
+	AvtarUrl string `json:"avatar"`
+	Info     string `json:"info"`
+}
+
+type RegisterReq struct {
+	Phone    string `json:"phone" validate:"e164,required"`
+	Password string `json:"password" validate:"required"`
+	NickName string `json:"nick_name,option"`
+}
+
+type RegisterResp struct {
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+	RefreshAfter int64  `json:"refresh_after"`
+}
+
+type LoginReq struct {
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
+
+type LoginResp struct {
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+	RefreshAfter int64  `json:"refresh_after"`
+}
+
+type UserInfoReq struct {
+}
+
+type UserInfoResp struct {
+	UserInfo User `json:"user_info"`
+}
+
+type VideoUserInfo struct {
 	NickName  string `json:"nick_name"`  // 昵称
 	AvatarUrl string `json:"avatar_url"` // 头像地址
 }
 
 type Video struct {
-	Id         int64  `json:"id"`          // 视频ID
-	PlayUrl    string `json:"play_url"`    // 视频播放地址
-	ThumbUrl   string `json:"thumb_url"`   // 视频封面地址
-	Title      string `json:"title"`       // 视频标题
-	FavNum     int64  `json:"fav_num"`     // 点赞数
-	CommentNum int64  `json:"comment_num"` // 评论数
-	ShareNum   int64  `json:"share_num"`   // 分享数
-	IsFav      bool   `json:"is_fav"`      // 当前用户是否已点赞
-	IsFollow   bool   `json:"is_follow"`   // 当前用户是否已关注该用户
-	Author     User   `json:"author"`      // 作者信息
+	ID            int64         `json:"id"`          // 视频ID
+	Title         string        `json:"title"`       // 视频标题
+	PlayUrl       string        `json:"play_url"`    // 视频播放地址
+	ThumbUrl      string        `json:"thumb_url"`   // 视频封面地址
+	FavoriteCount int64         `json:"fav_num"`     // 点赞数
+	CommentCount  int64         `json:"comment_num"` // 评论数
+	ShareNum      int64         `json:"share_num"`   // 分享数
+	IsFav         bool          `json:"is_fav"`      // 当前用户是否已点赞
+	IsFollow      bool          `json:"is_follow"`   // 当前用户是否已关注该用户
+	Author        VideoUserInfo `json:"author"`      // 作者信息
 }
 
 type FeedReq struct {

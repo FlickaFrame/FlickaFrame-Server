@@ -40,7 +40,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		feedItem := &types.Video{}
 		author := l.svcCtx.UserModel.MustFindOne(l.ctx, v.AuthorID)
 		copier.Copy(feedItem, v)
-		copier.Copy(feedItem.Author, author)
+		copier.Copy(&feedItem.Author, author)
 		feedItem.PlayUrl = l.GetVideoURL(v.PlayUrl)
 		videoRsp = append(videoRsp, feedItem)
 	}
@@ -58,6 +58,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 }
 
 func (l *FeedLogic) GetVideoURL(key string) string {
+	// TODO: 链接未失效的时候直接从Redis中取
 	mac := qbox.NewMac(l.svcCtx.Config.Oss.AccessKeyId, l.svcCtx.Config.Oss.AccessKeySecret)
 	deadline := time.Now().Add(time.Second * 3600).Unix() //1小时有效期
 	privateAccessURL := storage.MakePrivateURL(mac, l.svcCtx.Config.Oss.Endpoint, key, deadline)

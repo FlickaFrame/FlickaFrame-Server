@@ -7,7 +7,7 @@ info(
 	email: "caicandong@shu.edu.cn"
 )
 
-type User{ // 视频作者信息
+type VideoUserInfo{ // 视频作者信息
 	NickName string `json:"nick_name"`   // 昵称
 	AvatarUrl string `json:"avatar_url"` // 头像地址
 }
@@ -22,7 +22,7 @@ type Video{
 	ShareNum      int64  `json:"share_num"`   // 分享数
 	IsFav         bool   `json:"is_fav"`      // 当前用户是否已点赞
 	IsFollow      bool   `json:"is_follow"`   // 当前用户是否已关注该用户
-	Author        User   `json:"author"`      // 作者信息
+	Author        VideoUserInfo   `json:"author"`      // 作者信息
 }
 
 type FeedReq {

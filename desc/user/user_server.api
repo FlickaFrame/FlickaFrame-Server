@@ -13,7 +13,7 @@ import (
 //============================> usercenter v1 <============================
 //no need login
 @server(
-	prefix: usercenter/v1
+	prefix: api/v1
 	group: user
 )
 service main {
@@ -27,7 +27,7 @@ service main {
 
 //need login
 @server(
-	prefix: usercenter/v1
+	prefix: api/v1
 	group: user
 	jwt: JwtAuth
 )
@@ -35,8 +35,5 @@ service main {
 service main {
 	@doc "get user info"
 	@handler detail
-	post /user/detail (UserInfoReq) returns (UserInfoResp)
-	@doc "wechat mini auth"
-	@handler wxMiniAuth
-	post /user/wxMiniAuth (WXMiniAuthReq) returns (WXMiniAuthResp)
+	get /user/detail (UserInfoReq) returns (UserInfoResp)
 }
