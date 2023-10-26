@@ -5,13 +5,23 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	SexUnknown = iota
+	SexMale
+	SexFemale
+)
+
 type User struct {
 	gorm.Model
-	NickName       string
-	AvtarUrl       string
-	Sex            int64
-	Password       string
-	Phone          string
+	NickName  string `gorm:"type:varchar(32)"` // 昵称
+	AvatarUrl string // 头像地址
+	Age       int    // 年龄
+	Gender    int    `gorm:"type:enum('0','1','2')"` // 性别
+	Password  string // 密码
+	Phone     string `gorm:"type:varchar(100);index:idx_phone,unique"` // 手机号
+	Slogan    string // 个人简介
+	TikTokID  string `gorm:"type:varchar(100);index:idx_tiktok,unique"` // 抖音ID
+
 	FollowingCount int
 	FollowerCount  int
 }

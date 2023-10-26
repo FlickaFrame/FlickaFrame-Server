@@ -19,6 +19,8 @@ type Video struct {
 
 	AuthorID int64      `gorm:"index"`
 	Author   *user.User `gorm:"-"`
+
+	CategoryID int64 `gorm:"index"`
 }
 
 func (v *Video) TableName() string {
