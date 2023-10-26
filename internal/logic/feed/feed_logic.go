@@ -2,6 +2,7 @@ package feed
 
 import (
 	"context"
+	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/jinzhu/copier"
@@ -29,9 +30,14 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	if req.LatestTime != 0 {
 		LatestTime = time.UnixMilli(req.LatestTime)
 	}
-	videos, err := l.svcCtx.VideoModel.FindByLatestTime(l.ctx, LatestTime, 10)
+	videos, err := l.svcCtx.VideoModel.List(l.ctx, video_model.Option{
+		AuthorID:   req.AuthorID,
+		LatestTime: LatestTime,
+		Limit:      req.Limit,
+		QueryAll:   false,
+	})
 	if err != nil {
-		l.Logger.Infof("find videos by latest time error: %v", err)
+		logx.WithContext(l.ctx).Errorf("find videos by latest time error: %v", err)
 		return
 	}
 	videoRsp := make([]*types.Video, 0, len(videos))
@@ -39,9 +45,10 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		feedItem := &types.Video{}
 		author := l.svcCtx.UserModel.MustFindOne(l.ctx, v.AuthorID)
 		copier.Copy(feedItem, v)
+		feedItem.CreatedAt = v.CreatedAt.Format("2006-01-02 15:04:05")
 		copier.Copy(&feedItem.Author, author)
-		feedItem.PlayUrl = l.GetVideoURL(v.PlayUrl)
-		feedItem.Author.AvatarUrl = l.GetVideoURL(author.AvatarUrl)
+		feedItem.PlayUrl = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, v.PlayUrl)
+		feedItem.Author.AvatarUrl = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, author.AvatarUrl)
 		videoRsp = append(videoRsp, feedItem)
 	}
 
@@ -56,9 +63,4 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		Length:    len(videos),
 	}
 	return
-}
-
-func (l *FeedLogic) GetVideoURL(key string) string {
-	privateAccessURL := storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, key)
-	return privateAccessURL
 }

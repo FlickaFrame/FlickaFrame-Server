@@ -61,13 +61,18 @@ type Option struct {
 
 func (m *VideoModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
 	session := m.db.WithContext(ctx)
-	if opts.Limit == 0 {
-		opts.Limit = DefaultLimit
-	}
+	// 根据作者ID
 	if opts.AuthorID != 0 {
 		session = session.Where("author_id = ?", opts.AuthorID)
 	}
 
+	if !opts.QueryAll {
+		session = session.Where("created_at <= ?", opts.LatestTime)
+		session = session.Limit(opts.Limit)
+	// 分页
+	if opts.Limit == 0 {
+		opts.Limit = DefaultLimit
+	}
 	if !opts.QueryAll {
 		session = session.Where("created_at <= ?", opts.LatestTime)
 		session = session.Limit(opts.Limit)
