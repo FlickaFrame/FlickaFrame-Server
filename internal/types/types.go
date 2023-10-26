@@ -41,29 +41,34 @@ type UserInfoResp struct {
 }
 
 type VideoUserInfo struct {
-	NickName  string `json:"nick_name"`  // 昵称
-	AvatarUrl string `json:"avatar_url"` // 头像地址
+	NickName  string `json:"nickName"`  // 昵称
+	AvatarUrl string `json:"avatarUrl"` // 头像地址
 }
 
 type Video struct {
-	ID            int64         `json:"id"`          // 视频ID
-	Title         string        `json:"title"`       // 视频标题
-	PlayUrl       string        `json:"play_url"`    // 视频播放地址
-	ThumbUrl      string        `json:"thumb_url"`   // 视频封面地址
-	FavoriteCount int64         `json:"fav_num"`     // 点赞数
-	CommentCount  int64         `json:"comment_num"` // 评论数
-	ShareNum      int64         `json:"share_num"`   // 分享数
-	IsFav         bool          `json:"is_fav"`      // 当前用户是否已点赞
-	IsFollow      bool          `json:"is_follow"`   // 当前用户是否已关注该用户
-	Author        VideoUserInfo `json:"author"`      // 作者信息
+	ID            int64         `json:"id"`         // 视频ID
+	Title         string        `json:"title"`      // 视频标题
+	PlayUrl       string        `json:"playUrl"`    // 视频播放地址
+	ThumbUrl      string        `json:"thumbUrl"`   // 视频封面地址
+	FavoriteCount int64         `json:"favNum"`     // 点赞数
+	CommentCount  int64         `json:"commentNum"` // 评论数
+	ShareNum      int64         `json:"shareNum"`   // 分享数
+	CreatedAt     string        `json:"createdAt"`  // 视频创建时间(毫秒时间戳)
+	IsFav         bool          `json:"isFav"`      // 当前用户是否已点赞
+	IsFollow      bool          `json:"isFollow"`   // 当前用户是否已关注该用户
+	Tags          []string      `json:"tags"`       // 视频标签
+	Author        VideoUserInfo `json:"author"`     // 作者信息
 }
 
 type FeedReq struct {
-	LatestTime int64  `json:"latest_time,optional"` // 最新视频时间(毫秒时间戳)
-	Token      string `json:"token,optional"`       // 用户token
+	LatestTime int64  `json:"latest_time,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
+	Limit      int    `json:"limit,optional" form:"limit,optional"`            // 请求数量
+	Token      string `json:"token,optional" form:"token,optional"`            // 登录token
+	AuthorID   uint   `json:"author_id,optional" form:"authorID,optional"`     // 作者ID
 }
 
 type FeedResp struct {
 	VideoList []*Video `json:"video_list"`
 	NextTime  int64    `json:"next_time"` // 下次请求时间(毫秒时间戳)
+	Length    int      `json:"length"`    // 视频列表长度
 }

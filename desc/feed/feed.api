@@ -20,6 +20,7 @@ type Video{
 	FavoriteCount int64         `json:"favNum"`     // 点赞数
 	CommentCount  int64         `json:"commentNum"` // 评论数
 	ShareNum      int64         `json:"shareNum"`   // 分享数
+	CreatedAt      string         `json:"createdAt"`   // 视频创建时间(毫秒时间戳)
 	IsFav         bool          `json:"isFav"`      // 当前用户是否已点赞
 	IsFollow      bool          `json:"isFollow"`   // 当前用户是否已关注该用户
 	Tags          []string      `json:"tags"`        // 视频标签
@@ -28,7 +29,9 @@ type Video{
 
 type FeedReq {
 	LatestTime int64  `json:"latest_time,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
-	Token      string `json:"token,optional" form:"token,optional"`       // 用户token
+	Limit      int    `json:"limit,optional" form:"limit,optional"`           // 请求数量
+	Token      string `json:"token,optional" form:"token,optional"`            // 登录token
+	AuthorID   uint   `json:"author_id,optional" form:"authorID,optional"`     // 作者ID
 }
 
 type FeedResp {
