@@ -47,6 +47,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/feed",
 				Handler: feed.FeedHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/category",
+				Handler: feed.CategoryHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)

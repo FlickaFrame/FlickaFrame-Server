@@ -57,6 +57,7 @@ type Option struct {
 	LatestTime time.Time // 最新时间(分页)
 	Limit      int       // 限制数量(分页)
 	QueryAll   bool      // 是否查询所有(分页)
+	CategoryID uint      // 分类ID
 }
 
 func (m *VideoModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
@@ -65,10 +66,10 @@ func (m *VideoModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
 	if opts.AuthorID != 0 {
 		session = session.Where("author_id = ?", opts.AuthorID)
 	}
-
-	if !opts.QueryAll {
-		session = session.Where("created_at <= ?", opts.LatestTime)
-		session = session.Limit(opts.Limit)
+	// 根据分类ID
+	if opts.CategoryID != 0 {
+		session = session.Where("category_id = ?", opts.CategoryID)
+	}
 	// 分页
 	if opts.Limit == 0 {
 		opts.Limit = DefaultLimit

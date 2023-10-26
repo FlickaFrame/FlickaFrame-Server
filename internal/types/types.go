@@ -61,14 +61,28 @@ type Video struct {
 }
 
 type FeedReq struct {
-	LatestTime int64  `json:"latest_time,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
-	Limit      int    `json:"limit,optional" form:"limit,optional"`            // 请求数量
-	Token      string `json:"token,optional" form:"token,optional"`            // 登录token
-	AuthorID   uint   `json:"author_id,optional" form:"authorID,optional"`     // 作者ID
+	LatestTime int64  `json:"latest_time,optional" form:"latestTime,optional"`  // 最新视频时间(毫秒时间戳)
+	Limit      int    `json:"limit,optional" form:"limit,optional"`             // 请求数量
+	Token      string `json:"token,optional" form:"token,optional"`             // 登录token
+	AuthorID   uint   `json:"author_id,optional" form:"authorID,optional"`      // 作者ID
+	Tag        string `json:"tag,optional" form:"tag,optional"`                 // 标签
+	CategoryID uint   `json:"category_id,optional" form:"category_id,optional"` // 分类
 }
 
 type FeedResp struct {
 	VideoList []*Video `json:"video_list"`
 	NextTime  int64    `json:"next_time"` // 下次请求时间(毫秒时间戳)
 	Length    int      `json:"length"`    // 视频列表长度
+}
+
+type CategoryReq struct {
+}
+
+type Category struct {
+	ID   uint   `json:"id"`   // 分类ID
+	Name string `json:"name"` // 分类名称
+}
+
+type CategoryResp struct {
+	CategoryList []*Category `json:"category_list"`
 }

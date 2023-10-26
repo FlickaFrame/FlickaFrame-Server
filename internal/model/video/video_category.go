@@ -20,13 +20,3 @@ func (m *VideoModel) FindCategories(ctx context.Context) ([]*Category, error) {
 	err := m.db.WithContext(ctx).Find(&result).Error
 	return result, err
 }
-
-func (m *VideoModel) FindVideoByCategory(ctx context.Context, categoryID int64, limit int) ([]*Video, error) {
-	var result []*Video
-	err := m.db.WithContext(ctx).
-		Where("category_id = ?", categoryID).
-		Order("id desc").
-		Limit(limit).
-		Find(&result).Error
-	return result, err
-}

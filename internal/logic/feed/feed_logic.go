@@ -35,6 +35,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		LatestTime: LatestTime,
 		Limit:      req.Limit,
 		QueryAll:   false,
+		CategoryID: req.CategoryID,
 	})
 	if err != nil {
 		logx.WithContext(l.ctx).Errorf("find videos by latest time error: %v", err)

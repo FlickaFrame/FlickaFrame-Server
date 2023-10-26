@@ -18,7 +18,10 @@ import (
 	group: feed
 )
 service main {
-	@doc "register"
+	@doc "feed"
 	@handler feed
 	get /feed (FeedReq) returns (FeedResp)
+	@doc "category"
+	@handler category
+	get /category (CategoryReq) returns (CategoryResp)
 }
