@@ -5,7 +5,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/jinzhu/copier"
-	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/zeromicro/go-zero/core/logx"
 	"time"
@@ -42,6 +41,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		copier.Copy(feedItem, v)
 		copier.Copy(&feedItem.Author, author)
 		feedItem.PlayUrl = l.GetVideoURL(v.PlayUrl)
+		feedItem.Author.AvatarUrl = l.GetVideoURL(author.AvatarUrl)
 		videoRsp = append(videoRsp, feedItem)
 	}
 
@@ -58,9 +58,6 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 }
 
 func (l *FeedLogic) GetVideoURL(key string) string {
-	// TODO: 链接未失效的时候直接从Redis中取
-	mac := qbox.NewMac(l.svcCtx.Config.Oss.AccessKeyId, l.svcCtx.Config.Oss.AccessKeySecret)
-	deadline := time.Now().Add(time.Second * 3600).Unix() //1小时有效期
-	privateAccessURL := storage.MakePrivateURL(mac, l.svcCtx.Config.Oss.Endpoint, key, deadline)
+	privateAccessURL := storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, key)
 	return privateAccessURL
 }
