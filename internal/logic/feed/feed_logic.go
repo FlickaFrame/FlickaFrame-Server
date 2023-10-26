@@ -48,11 +48,12 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	// 判断是否无视频
 	nextTime := LatestTime.UnixMilli()
 	if len(videos) > 0 {
-		nextTime = videos[0].CreatedAt.UnixMilli()
+		nextTime = videos[len(videos)-1].CreatedAt.UnixMilli() - 1
 	}
 	resp = &types.FeedResp{
 		VideoList: videoRsp,
 		NextTime:  nextTime,
+		Length:    len(videos),
 	}
 	return
 }
