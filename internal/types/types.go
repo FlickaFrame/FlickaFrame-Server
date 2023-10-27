@@ -94,21 +94,21 @@ type FollowUser struct {
 }
 
 type FollowReq struct {
-	ContextUserId string `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
 }
 
 type FollowResp struct {
 }
 
 type UnFollowReq struct {
-	ContextUserId string `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
 }
 
 type UnFollowResp struct {
 }
 
 type CheckMyFollowingReq struct {
-	ContextUserId string `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
 }
 
 type CheckMyFollowingResp struct {
@@ -134,9 +134,9 @@ type ListMyFollowingResp struct {
 }
 
 type ListFollowersReq struct {
-	ContextUserId string `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
-	Page          int    `json:"page" desc:"页码" validate:"required"`
-	Limit         int    `json:"limit" desc:"每页数量" validate:"required"`
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+	Page          int  `json:"page" desc:"页码" validate:"required"`
+	Limit         int  `json:"limit" desc:"每页数量" validate:"required"`
 }
 
 type ListFollowersResp struct {
@@ -144,9 +144,9 @@ type ListFollowersResp struct {
 }
 
 type ListFollowingReq struct {
-	ContextUserId string `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
-	Page          int    `json:"page" desc:"页码" validate:"required"`
-	Limit         int    `json:"limit" desc:"每页数量" validate:"required"`
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+	Page          int  `json:"page" desc:"页码" validate:"required"`
+	Limit         int  `json:"limit" desc:"每页数量" validate:"required"`
 }
 
 type ListFollowingResp struct {
@@ -154,8 +154,8 @@ type ListFollowingResp struct {
 }
 
 type CheckFollowingReq struct {
-	DoderUserId   string `json:"doer_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
-	ContextUserId string `json:"context_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
+	DoderUserId   uint `json:"doer_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
+	ContextUserId uint `json:"context_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
 }
 
 type CheckFollowingResp struct {

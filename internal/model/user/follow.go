@@ -9,9 +9,9 @@ import (
 // Follow 关注
 type Follow struct {
 	gorm.Model
-	UserID         int64 `gorm:"uniqueIndex:idx_follow"`
+	UserID         uint  `gorm:"uniqueIndex:idx_follow"`
 	User           *User `gorm:"-"`
-	FollowedUserID int64 `gorm:"uniqueIndex:idx_follow"`
+	FollowedUserID uint  `gorm:"uniqueIndex:idx_follow"`
 	FollowedUser   *User `gorm:"-"`
 	Status         bool  `gorm:"index;not null"`
 }
@@ -50,6 +50,20 @@ func (m *FollowModel) IsFollow(ctx context.Context, userId, followedUserId uint)
 		return false, nil
 	}
 	return result.Status, err
+}
+
+func (m *FollowModel) FollowOrUnFollow(ctx context.Context, userId, followedUserId uint, status bool) error {
+	result := Follow{
+		UserID:         userId,
+		FollowedUserID: followedUserId,
+		Status:         status,
+	}
+	err := m.db.WithContext(ctx).Where("user_id =? and followed_user_id=?", userId, followedUserId).FirstOrCreate(&result).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+	result.Status = status
+	return m.db.WithContext(ctx).Save(result).Error
 }
 
 func (m *FollowModel) Update(ctx context.Context, data *Follow) error {
