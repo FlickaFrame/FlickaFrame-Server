@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	feed "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/feed"
+	follow "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/follow"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 
@@ -24,19 +25,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/login",
 				Handler: user.LoginHandler(serverCtx),
 			},
-		},
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
 			{
 				Method:  http.MethodGet,
 				Path:    "/user/detail",
 				Handler: user.DetailHandler(serverCtx),
 			},
 		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 
@@ -51,6 +45,59 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/category",
 				Handler: feed.CategoryHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPut,
+				Path:    "/user/following/:user_id",
+				Handler: follow.FollowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/user/following/:user_id",
+				Handler: follow.UnfollowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/following/:user_id",
+				Handler: follow.CheckMyFollowingHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/followers",
+				Handler: follow.ListMyFollowersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/following",
+				Handler: follow.ListMyFollowingHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/users/:user_id/followers",
+				Handler: follow.ListFollowersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/users/:user_id/following",
+				Handler: follow.ListFollowingHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/users/:doer_id/following/:context_user_id",
+				Handler: follow.CheckFollowingHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),

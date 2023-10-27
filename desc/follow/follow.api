@@ -1,0 +1,92 @@
+syntax = "v1"
+
+info(
+    title: "用户关注"
+    desc: "用户关注"
+    author: "caicandong"
+    email: "caicandong@shu.edu.cn"
+)
+
+type FollowUser{
+    UserId string `json:"user_id" desc:"用户id"`
+    UserName string `json:"user_name" desc:"用户名"`
+    Avatar string `json:"avatar" desc:"头像"`
+}
+
+type (
+    FollowReq {
+        ContextUserId string `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
+    }
+    FollowResp {
+    }
+)
+
+type (
+    UnFollowReq {
+        ContextUserId string `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
+    }
+    UnFollowResp {
+    }
+)
+
+type (
+    CheckMyFollowingReq{
+        ContextUserId string `json:"user_id" path:"user_id" desc:"关注用户id" validate:"required"`
+    }
+    CheckMyFollowingResp{
+        Status bool `json:"status" desc:"是否关注"`
+    }
+)
+
+type (
+    ListMyFollowersReq{
+        Page int `json:"page" desc:"页码" validate:"required"`
+        Limit int `json:"limit" desc:"每页数量" validate:"required"`
+    }
+    ListMyFollowersResp{
+        FollowUser []*FollowUser `json:"followers" desc:"用户id"`
+    }
+)
+
+type (
+    ListMyFollowingReq{
+        Page int `json:"page" desc:"页码" validate:"required"`
+        Limit int `json:"limit" desc:"每页数量" validate:"required"`
+    }
+    ListMyFollowingResp{
+        FollowUser []*FollowUser `json:"followers" desc:"用户id"`
+    }
+)
+
+
+type (
+    ListFollowersReq {
+        ContextUserId string `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+        Page int `json:"page" desc:"页码" validate:"required"`
+        Limit int `json:"limit" desc:"每页数量" validate:"required"`
+    }
+    ListFollowersResp{
+        FollowUser []*FollowUser `json:"followers" desc:"用户id"`
+    }
+)
+
+type (
+    ListFollowingReq{
+        ContextUserId string `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+        Page int `json:"page" desc:"页码" validate:"required"`
+        Limit int `json:"limit" desc:"每页数量" validate:"required"`
+    }
+    ListFollowingResp{
+        FollowUser []*FollowUser `json:"followers" desc:"用户id"`
+    }
+)
+
+type (
+    CheckFollowingReq {
+        DoderUserId string     `json:"doer_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
+        ContextUserId string  `json:"context_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
+    }
+    CheckFollowingResp{
+        Status bool `json:"status" desc:"是否关注"`
+    }
+)

@@ -12,7 +12,7 @@ type User {
 	Phone    string `json:"phone"`
 	NickName string `json:"nick_name"`
 	Sex      int64  `json:"sex"`
-	AvtarUrl string `json:"avatar"`
+	AvatarUrl string `json:"avatar_url"`
 	Info     string `json:"info"`
 }
 
