@@ -4,9 +4,9 @@ package handler
 import (
 	"net/http"
 
-	feed "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/feed"
 	follow "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/follow"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
+	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -39,12 +39,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/feed",
-				Handler: feed.FeedHandler(serverCtx),
+				Handler: video.FeedHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/category",
-				Handler: feed.CategoryHandler(serverCtx),
+				Handler: video.CategoryHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -98,6 +98,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/users/:doer_id/following/:context_user_id",
 				Handler: follow.CheckFollowingHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/users/follow/:user_id/count",
+				Handler: follow.CountFollowersHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),

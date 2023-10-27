@@ -161,3 +161,12 @@ type CheckFollowingReq struct {
 type CheckFollowingResp struct {
 	Status bool `json:"status" desc:"是否关注"`
 }
+
+type CountFollowReq struct {
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+}
+
+type CountFollowResp struct {
+	FollowingCount int64 `json:"following_count" desc:"关注数量"`
+	FollowersCount int64 `json:"follower_count" desc:"粉丝数量"`
+}

@@ -56,4 +56,8 @@ service main {
     @doc "CheckFollowing check if one user is following another user"
     @handler CheckFollowing
     get /users/:doer_id/following/:context_user_id(CheckFollowingReq) returns (CheckFollowingResp)
+
+    @doc "Count the number of followers and following for the given user"
+    @handler CountFollowers
+    get /users/follow/:user_id/count(CountFollowReq) returns (CountFollowResp)
 }

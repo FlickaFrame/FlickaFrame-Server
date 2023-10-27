@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"errors"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 )
@@ -84,42 +84,49 @@ func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID uint) err
 	})
 }
 
-func (m *FollowModel) Update(ctx context.Context, data *Follow) error {
-	return m.db.WithContext(ctx).Save(data).Error
-}
+// GetUserFollowers returns range of user's followers.
+func (m *UserModel) GetUserFollowers(ctx context.Context, userId uint, listOptions orm.ListOptions) ([]*User, error) {
+	sess := m.db.WithContext(ctx).
+		Select("`user`.*").
+		Joins("LEFT", "follow", "`user`.id=follow.user_id").
+		Where("follow.follow_id=?", userId)
 
-func (m *FollowModel) UpdateFields(ctx context.Context, id int64, values map[string]interface{}) error {
-	return m.db.WithContext(ctx).Model(&Follow{}).Where("id = ?", id).Updates(values).Error
-}
-
-func (m *FollowModel) FindByUserIDAndFollowedUserID(ctx context.Context, userId, followedUserId int64) (*Follow, error) {
-	var result Follow
-	err := m.db.WithContext(ctx).
-		Where("user_id = ? AND followed_user_id = ?", userId, followedUserId).
-		First(&result).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, nil
+	if listOptions.Page != 0 {
+		sess = orm.SetSessionPagination(sess, &listOptions)
+		users := make([]*User, 0, listOptions.PageSize)
+		return users, sess.Find(&users).Error
 	}
 
-	return &result, err
+	users := make([]*User, 0, 8)
+	err := sess.Find(&users).Error
+	return users, err
 }
 
-func (m *FollowModel) FindByUserId(ctx context.Context, userId int64, limit int) ([]*Follow, error) {
-	var result []*Follow
-	err := m.db.WithContext(ctx).
-		Where("user_id = ? AND follow_status = ?", userId, 1).
-		Order("id desc").
-		Limit(limit).
-		Find(&result).Error
+// GetUserFollowing returns range of user's following.
+func (m *UserModel) GetUserFollowing(ctx context.Context, userId uint, listOptions orm.ListOptions) ([]*User, error) {
+	sess := m.db.WithContext(ctx).
+		Select("`user`.*").
+		Joins("LEFT", "follow", "`user`.id=follow.follow_id").
+		Where("follow.user_id=?", userId)
 
-	return result, err
+	if listOptions.Page != 0 {
+		sess = orm.SetSessionPagination(sess, &listOptions)
+		users := make([]*User, 0, listOptions.PageSize)
+		return users, sess.Find(&users).Error
+	}
+
+	users := make([]*User, 0, 8)
+	return users, sess.Find(&users).Error
 }
 
-func (m *FollowModel) FindByFollowedUserIds(ctx context.Context, followedUserIds []int64) ([]*Follow, error) {
-	var result []*Follow
-	err := m.db.WithContext(ctx).
-		Where("followed_user_id in (?)", followedUserIds).
-		Find(&result).Error
+func (m *UserModel) CountFollowers(ctx context.Context, userId uint) (int64, error) {
+	var count int64
+	err := m.db.WithContext(ctx).Model(&Follow{}).Where("followed_user_id = ?", userId).Count(&count).Error
+	return count, err
+}
 
-	return result, err
+func (m *UserModel) CountFollowing(ctx context.Context, userId uint) (int64, error) {
+	var count int64
+	err := m.db.WithContext(ctx).Model(&Follow{}).Where("user_id = ?", userId).Count(&count).Error
+	return count, err
 }

@@ -243,3 +243,34 @@ type CheckFollowingResp struct {
 }
 ```
 
+### 9. "Count the number of followers and following for the given user"
+
+1. route definition
+
+- Url: /api/v1/users/follow/:user_id/count
+- Method: GET
+- Request: `CountFollowReq`
+- Response: `CountFollowResp`
+
+2. request definition
+
+
+
+```golang
+type CountFollowReq struct {
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+}
+```
+
+
+3. response definition
+
+
+
+```golang
+type CountFollowResp struct {
+	FollowingCount int64 `json:"following_count" desc:"关注数量"`
+	FollowersCount int64 `json:"follower_count" desc:"粉丝数量"`
+}
+```
+

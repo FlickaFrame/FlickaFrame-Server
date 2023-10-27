@@ -90,3 +90,13 @@ type (
         Status bool `json:"status" desc:"是否关注"`
     }
 )
+
+type(
+    CountFollowReq{
+        ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+    }
+    CountFollowResp{
+        FollowingCount int64 `json:"following_count" desc:"关注数量"`
+        FollowersCount int64 `json:"follower_count" desc:"粉丝数量"`
+    }
+)

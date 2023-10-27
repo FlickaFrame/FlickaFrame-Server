@@ -8,14 +8,14 @@ info(
 )
 
 import (
-	"feed.api"
+	"video.api"
 )
 
 //============================> usercenter v1 <============================
 //no need login
 @server(
 	prefix: api/v1
-	group: feed
+	group: video
 )
 service main {
 	@doc "feed"

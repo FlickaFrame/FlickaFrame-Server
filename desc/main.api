@@ -2,6 +2,6 @@ syntax = "v1"
 
 import (
 	"user/user_server.api"
-	"feed/feed_server.api"
+	"video/video_server.api"
 	"follow/follow_server.api"
 )

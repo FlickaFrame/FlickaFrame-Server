@@ -11,9 +11,8 @@ gen-api-go: ## generate api go
 
 .PHONY: gen-api-doc
 gen-api-doc: ## generate api doc
-	rm -rf docs/api/main.md
+	rm -rf docs/api/*
 	goctl api doc --dir ./desc/  -o docs/api/
-
 
 .PHONY: lint-go
 lint-go:
