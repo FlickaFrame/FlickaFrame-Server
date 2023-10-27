@@ -17,4 +17,5 @@ var (
 
 	ErrUserNoExistsError = xcode.Add(40007, "user not exists")
 	ErrUsernamePwdError  = xcode.Add(40008, "username or password error")
+	ErrUserFollowSelf    = xcode.Add(40009, "can not follow yourself")
 )
