@@ -4,6 +4,7 @@ import (
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	comment_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/comment"
+	favorite_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
 	"gorm.io/gorm"
 )
 
@@ -16,5 +17,6 @@ func Migrate(db *gorm.DB) error {
 		&video_model.Category{},
 		&user_model.Follow{},
 		&comment_model.Comment{},
+		&favorite_model.Favorite{},
 	)
 }

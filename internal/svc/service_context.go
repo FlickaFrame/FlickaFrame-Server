@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/comment"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/go-playground/validator/v10"
 	"github.com/qiniu/go-sdk/v7/storage"
@@ -22,6 +23,7 @@ type ServiceContext struct {
 	UserModel     *user.UserModel
 	FollowModel   *user.FollowModel
 	FavoriteModel *favorite.FavoriteModel
+	CommentModel  *comment.CommentModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -56,5 +58,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserModel:     user.NewUserModel(db.DB),
 		FollowModel:   user.NewFollowModel(db.DB),
 		FavoriteModel: favorite.NewFavoriteModel(db.DB),
+		CommentModel:  comment.NewCommentModel(db.DB),
 	}
 }
