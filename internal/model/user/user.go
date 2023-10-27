@@ -44,13 +44,13 @@ func (m *UserModel) Insert(ctx context.Context, data *User) error {
 	return m.db.WithContext(ctx).Create(data).Error
 }
 
-func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
+func (m *UserModel) FindOne(ctx context.Context, id uint) (*User, error) {
 	var result User
 	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
 	return &result, err
 }
 
-func (m *UserModel) MustFindOne(ctx context.Context, id int64) *User {
+func (m *UserModel) MustFindOne(ctx context.Context, id uint) *User {
 	user, _ := m.FindOne(ctx, id)
 	return user
 }

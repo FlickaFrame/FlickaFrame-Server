@@ -1,6 +1,7 @@
 package comment
 
 import (
+	"context"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"gorm.io/gorm"
@@ -17,4 +18,20 @@ type Comment struct {
 
 func (c *Comment) TableName() string {
 	return "comment"
+}
+
+type CommentModel struct {
+	db *gorm.DB
+}
+
+func (c *CommentModel) Insert(ctx context.Context, comment Comment) error {
+	return c.db.WithContext(ctx).Create(&comment).Error
+}
+
+func (c *CommentModel) Delete(ctx context.Context, comment Comment) error {
+	return c.db.WithContext(ctx).Delete(&comment).Error
+}
+
+func (c *CommentModel) Update(ctx context.Context, comment Comment) error {
+	return c.db.WithContext(ctx).Save(&comment).Error
 }

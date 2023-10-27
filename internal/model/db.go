@@ -1,7 +1,6 @@
 package model
 
 import (
-	follow_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/follow"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"gorm.io/gorm"
@@ -14,6 +13,6 @@ func Migrate(db *gorm.DB) error {
 		&video_model.Tag{},
 		&video_model.VideoTag{},
 		&video_model.Category{},
-		&follow_model.Follow{},
+		&user_model.Follow{},
 	)
 }

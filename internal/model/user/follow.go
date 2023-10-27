@@ -1,19 +1,19 @@
-package follow
+package user
 
 import (
 	"context"
 	"errors"
-	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"gorm.io/gorm"
 )
 
+// Follow 关注
 type Follow struct {
 	gorm.Model
-	Status         int
-	UserID         int64            `gorm:"uniqueIndex:idx_follow"`
-	User           *user_model.User `gorm:"-"`
-	FollowedUserID int64            `gorm:"uniqueIndex:idx_follow"`
-	FollowedUser   *user_model.User `gorm:"-"`
+	UserID         int64 `gorm:"uniqueIndex:idx_follow"`
+	User           *User `gorm:"-"`
+	FollowedUserID int64 `gorm:"uniqueIndex:idx_follow"`
+	FollowedUser   *User `gorm:"-"`
+	Status         bool  `gorm:"index;not null"`
 }
 
 func (m *Follow) TableName() string {
@@ -38,6 +38,18 @@ func (m *FollowModel) FindOne(ctx context.Context, id int64) (*Follow, error) {
 	var result Follow
 	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
 	return &result, err
+}
+
+func (m *FollowModel) IsFollow(ctx context.Context, userId, followedUserId uint) (bool, error) {
+	if userId == 0 || followedUserId == 0 {
+		return false, nil
+	}
+	var result Follow
+	err := m.db.WithContext(ctx).Where("user_id = ? AND followed_user_id = ?", userId, followedUserId).First(&result).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
+	return result.Status, err
 }
 
 func (m *FollowModel) Update(ctx context.Context, data *Follow) error {

@@ -3,6 +3,7 @@ package feed
 import (
 	"context"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/jinzhu/copier"
@@ -26,6 +27,7 @@ func NewFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FeedLogic {
 }
 
 func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
+	doerId := l.ctx.Value(jwt.CtxKeyJwtUserId) // 从context中获取当前用户id
 	LatestTime := time.Now()
 	if req.LatestTime != 0 {
 		LatestTime = time.UnixMilli(req.LatestTime)
@@ -51,6 +53,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		feedItem.PlayUrl = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, v.PlayUrl)
 		feedItem.Author.AvatarUrl = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, author.AvatarUrl)
 		videoRsp = append(videoRsp, feedItem)
+		feedItem.IsFollow, _ = l.svcCtx.FollowModel.IsFollow(l.ctx, doerId.(uint), v.AuthorID)
+		feedItem.IsFav, _ = l.svcCtx.FavoriteModel.IsFavorite(l.ctx, doerId.(uint), v.ID)
 	}
 
 	// 判断是否无视频

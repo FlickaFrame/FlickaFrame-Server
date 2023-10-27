@@ -19,10 +19,10 @@ type Video struct {
 	FavoriteCount int
 	CommentCount  int
 
-	AuthorID int64      `gorm:"index"`
+	AuthorID uint       `gorm:"index"`
 	Author   *user.User `gorm:"-"`
 
-	CategoryID int64 `gorm:"index"`
+	CategoryID uint `gorm:"index"`
 }
 
 func (v *Video) TableName() string {

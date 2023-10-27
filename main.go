@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/handler"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/middleware"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode"
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -26,6 +27,8 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+
+	server.Use(middleware.NewCurrentUserMiddleware(c.JwtAuth.AccessSecret).Handle)
 
 	// 自定义错误处理方法
 	httpx.SetErrorHandler(xcode.ErrHandler)

@@ -3,6 +3,7 @@ package svc
 import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
@@ -19,6 +20,8 @@ type ServiceContext struct {
 	BizRedis      *redis.Redis           // 业务redis连接
 	VideoModel    *video.VideoModel
 	UserModel     *user.UserModel
+	FollowModel   *user.FollowModel
+	FavoriteModel *favorite.FavoriteModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -47,9 +50,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			UseHTTPS:      true,
 			UseCdnDomains: false,
 		}),
-		DB:         db,
-		BizRedis:   rds,
-		VideoModel: video.NewVideoModel(db.DB),
-		UserModel:  user.NewUserModel(db.DB),
+		DB:            db,
+		BizRedis:      rds,
+		VideoModel:    video.NewVideoModel(db.DB),
+		UserModel:     user.NewUserModel(db.DB),
+		FollowModel:   user.NewFollowModel(db.DB),
+		FavoriteModel: favorite.NewFavoriteModel(db.DB),
 	}
 }
