@@ -9,11 +9,15 @@ import (
 
 type Comment struct {
 	gorm.Model
-	Content string            `gorm:"type:varchar(255);not null"`
-	UserID  int               `gorm:"index:idx_userid;not null"`
-	User    user_model.User   `gorm:"-"`
-	VideoID int               `gorm:"index:idx_videoid;not null"`
-	Video   video_model.Video `gorm:"-"`
+	Content       string            `gorm:"type:varchar(255);not null"`  // 评论内容
+	OwnerUID      int               `gorm:"index:idx_userid;not null"`   // 评论者ID
+	TargetCID     int							  `gorm:"index:idx_targetid;not null"` // 回复的评论ID
+	User          user_model.User   `gorm:"-"`
+	VideoID       int               `gorm:"index:idx_videoid;not null"`  // 评论的视频ID
+	Video         video_model.Video `gorm:"-"`
+	ReplayCount   int               `gorm:"default:0"`                   // 回复数
+	LikeCount     int               `gorm:"default:0"`                   // 点赞数
+	Type          int               `gorm:"default:0"`                   // 评论类型(0:评论,1:回复)
 }
 
 func (c *Comment) TableName() string {
