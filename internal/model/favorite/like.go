@@ -10,11 +10,12 @@ const (
 	FavoriteLike
 )
 
-// VideoFavorite 视频点赞
-type VideoFavorite struct {
+// Favorite 点赞
+type Favorite struct {
 	gorm.Model
-	VideoID uint `gorm:"index:idx_video_user;not null"`
-	UserID  uint `gorm:"index:idx_video_user;not null"`
+	TargetID uint `gorm:"index:idx_target_user_type;not null"`
+	UserID  uint `gorm:"index:idx_target_user_type;not null"`
+	Type    int `gorm:"index:idx_target_user_type;not null"`      // 0:视频 1:评论
 	Status  bool `gorm:"index;not null"` // false:未点赞 true:点赞
 }
 
@@ -30,7 +31,7 @@ func (m *FavoriteModel) IsFavorite(ctx context.Context, videoId, userId uint) (b
 	if videoId == 0 || userId == 0 {
 		return false, nil
 	}
-	var result VideoFavorite
+	var result Favorite
 	err := m.db.WithContext(ctx).Where("video_id = ? AND user_id = ?", videoId, userId).First(&result).Error
 	if err != nil {
 		return false, err
@@ -39,7 +40,7 @@ func (m *FavoriteModel) IsFavorite(ctx context.Context, videoId, userId uint) (b
 }
 
 // Insert 新增点赞状态
-func (m *FavoriteModel) Insert(ctx context.Context, like *VideoFavorite) error {
+func (m *FavoriteModel) Insert(ctx context.Context, like *Favorite) error {
 	return m.db.WithContext(ctx).Create(like).Error
 }
 
