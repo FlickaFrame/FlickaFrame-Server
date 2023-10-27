@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +14,6 @@ type Follow struct {
 	User           *User `gorm:"-"`
 	FollowedUserID uint  `gorm:"uniqueIndex:idx_follow"`
 	FollowedUser   *User `gorm:"-"`
-	Status         bool  `gorm:"index;not null"`
 }
 
 func (m *Follow) TableName() string {
@@ -30,40 +30,58 @@ func NewFollowModel(db *gorm.DB) *FollowModel {
 	}
 }
 
-func (m *FollowModel) Insert(ctx context.Context, data *Follow) error {
-	return m.db.WithContext(ctx).Create(data).Error
-}
-
-func (m *FollowModel) FindOne(ctx context.Context, id int64) (*Follow, error) {
-	var result Follow
-	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
-	return &result, err
-}
-
-func (m *FollowModel) IsFollow(ctx context.Context, userId, followedUserId uint) (bool, error) {
-	if userId == 0 || followedUserId == 0 {
-		return false, nil
+// IsFollowing returns true if user is following followID.
+func (m *UserModel) IsFollowing(ctx context.Context, userId, followID uint) bool {
+	if userId == 0 || followID == 0 {
+		return false
 	}
 	var result Follow
-	err := m.db.WithContext(ctx).Where("user_id = ? AND followed_user_id = ?", userId, followedUserId).First(&result).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return false, nil
+	err := m.db.WithContext(ctx).
+		Where("user_id = ? AND followed_user_id = ?", userId, followID).
+		First(&result).Error
+	if err != nil {
+		logx.Debugf("IsFollowing error: %v", err)
+		return false
 	}
-	return result.Status, err
+	return true
 }
 
-func (m *FollowModel) FollowOrUnFollow(ctx context.Context, userId, followedUserId uint, status bool) error {
-	result := Follow{
-		UserID:         userId,
-		FollowedUserID: followedUserId,
-		Status:         status,
+// FollowUser marks someone be  follower.
+func (m *UserModel) FollowUser(ctx context.Context, userId, followID uint) error {
+	if userId == followID || m.IsFollowing(ctx, userId, followID) {
+		return nil
 	}
-	err := m.db.WithContext(ctx).Where("user_id =? and followed_user_id=?", userId, followedUserId).FirstOrCreate(&result).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return err
+	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&Follow{UserID: userId, FollowedUserID: followID}).Error; err != nil {
+			return err
+		}
+		if err := tx.Model(&User{}).Where("id = ?", followID).Update("num_followers", gorm.Expr("num_followers + ?", 1)).Error; err != nil {
+			return err
+		}
+		if err := tx.Model(&User{}).Where("id = ?", userId).Update("num_following", gorm.Expr("num_following + ?", 1)).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+// UnfollowUser unmarks someone as another's follower.
+func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID uint) error {
+	if userID == followID || !m.IsFollowing(ctx, userID, followID) {
+		return nil
 	}
-	result.Status = status
-	return m.db.WithContext(ctx).Save(result).Error
+	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_id = ? AND followed_user_id = ?", userID, followID).Delete(&Follow{}).Error; err != nil {
+			return err
+		}
+		if err := tx.Model(&User{}).Where("id = ?", followID).Update("num_followers", gorm.Expr("num_followers - ?", 1)).Error; err != nil {
+			return err
+		}
+		if err := tx.Model(&User{}).Where("id = ?", userID).Update("num_following", gorm.Expr("num_following - ?", 1)).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
 func (m *FollowModel) Update(ctx context.Context, data *Follow) error {

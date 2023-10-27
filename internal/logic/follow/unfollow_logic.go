@@ -2,6 +2,7 @@ package follow
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,6 @@ func NewUnfollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Unfollow
 }
 
 func (l *UnfollowLogic) Unfollow(req *types.UnFollowReq) (resp *types.UnFollowResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	doerUserId := jwt.GetUidFromCtx(l.ctx)
+	return nil, l.svcCtx.UserModel.UnfollowUser(l.ctx, doerUserId, req.ContextUserId)
 }

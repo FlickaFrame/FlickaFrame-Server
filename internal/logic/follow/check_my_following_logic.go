@@ -2,6 +2,7 @@ package follow
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,7 @@ func NewCheckMyFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *CheckMyFollowingLogic) CheckMyFollowing(req *types.CheckMyFollowingReq) (resp *types.CheckMyFollowingResp, err error) {
-	// todo: add your logic here and delete this line
-
+	doerUserId := jwt.GetUidFromCtx(l.ctx)
+	resp.Status = l.svcCtx.UserModel.IsFollowing(l.ctx, doerUserId, req.ContextUserId)
 	return
 }

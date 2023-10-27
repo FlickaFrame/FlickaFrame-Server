@@ -3,10 +3,10 @@ package svc
 import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/comment"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/comment"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/go-playground/validator/v10"
 	"github.com/qiniu/go-sdk/v7/storage"

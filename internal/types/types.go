@@ -154,7 +154,7 @@ type ListFollowingResp struct {
 }
 
 type CheckFollowingReq struct {
-	DoderUserId   uint `json:"doer_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
+	DoerUserId    uint `json:"doer_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
 	ContextUserId uint `json:"context_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
 }
 

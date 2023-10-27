@@ -24,7 +24,6 @@ func NewCheckFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 }
 
 func (l *CheckFollowingLogic) CheckFollowing(req *types.CheckFollowingReq) (resp *types.CheckFollowingResp, err error) {
-	// todo: add your logic here and delete this line
-
+	resp.Status = l.svcCtx.UserModel.IsFollowing(l.ctx, req.DoerUserId, req.ContextUserId)
 	return
 }
