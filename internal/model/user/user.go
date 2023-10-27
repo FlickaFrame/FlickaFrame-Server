@@ -1,7 +1,7 @@
 package user
 
 import (
-	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"gorm.io/gorm"
 )
 
@@ -9,6 +9,11 @@ const (
 	SexUnknown = iota
 	SexMale
 	SexFemale
+)
+
+const (
+	SaltByteLength        = 16
+	PasswordHashAlgorithm = "argon2"
 )
 
 type User struct {
@@ -30,33 +35,22 @@ func (u *User) TableName() string {
 	return "user"
 }
 
-type UserModel struct {
-	db *gorm.DB
-}
-
-func NewUserModel(db *gorm.DB) *UserModel {
-	return &UserModel{
-		db: db,
+func (u *User) SetPassword(passwd string) (err error) {
+	//TODO: 密钥加盐
+	if len(passwd) == 0 {
+		u.Password = ""
+		return nil
 	}
+	u.Password = util.Md5ByString(u.Password)
+	return nil
 }
 
-func (m *UserModel) Insert(ctx context.Context, data *User) error {
-	return m.db.WithContext(ctx).Create(data).Error
+// ValidatePassword checks if the given password matches the one belonging to the user.
+func (u *User) ValidatePassword(password string) bool {
+	return u.Password == util.Md5ByString(password)
 }
 
-func (m *UserModel) FindOne(ctx context.Context, id uint) (*User, error) {
-	var result User
-	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
-	return &result, err
-}
-
-func (m *UserModel) MustFindOne(ctx context.Context, id uint) *User {
-	user, _ := m.FindOne(ctx, id)
-	return user
-}
-
-func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, error) {
-	var result User
-	err := m.db.WithContext(ctx).Where("phone = ?", phone).First(&result).Error
-	return &result, err
+// IsPasswordSet checks if the password is set or left empty
+func (u *User) IsPasswordSet() bool {
+	return len(u.Password) != 0
 }
