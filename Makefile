@@ -9,6 +9,12 @@ tidy: ## go mod tidy
 gen-api-go: ## generate api go
 	goctl api go --dir=./ --api ./desc/main.api  --style go_zero
 
+.PHONY: gen-api-doc
+gen-api-doc: ## generate api doc
+	rm -rf docs/api/main.md
+	goctl api doc --dir ./desc/main.api  -o docs/api/main.md
+
+
 .PHONY: lint-go
 lint-go:
 	$(GO) run $(GOLANGCI_LINT_PACKAGE) run
