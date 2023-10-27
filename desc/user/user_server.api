@@ -20,19 +20,11 @@ service main {
 	@doc "register"
 	@handler register
 	post /user/register (RegisterReq) returns (RegisterResp)
+
 	@doc "login"
 	@handler login
 	post /user/login (LoginReq) returns (LoginResp)
-}
 
-//need login
-@server(
-	prefix: api/v1
-	group: user
-	jwt: JwtAuth
-)
-
-service main {
 	@doc "get user info"
 	@handler detail
 	get /user/detail (UserInfoReq) returns (UserInfoResp)
