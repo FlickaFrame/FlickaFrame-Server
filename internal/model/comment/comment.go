@@ -67,11 +67,25 @@ func (m *CommentModel) List(ctx context.Context, opts Option) ([]*Comment, error
 	return result, err
 }
 
+// 创建视频的一级评论
 func (m *CommentModel) CreateVideoComment(ctx context.Context, doer uint, videoId uint, content string) error {
 	comment := Comment{
 		Content:  content,
 		VideoID:  videoId,
 		OwnerUID: doer,
+	}
+	return m.db.WithContext(ctx).
+		Create(&comment).Error
+}
+
+// 创建视频的二级评论（评论的回复）
+func (m *CommentModel) CreateReplyComment(ctx context.Context, doer uint, videoId uint, content string, parentId uint, targetId uint) error {
+	comment := Comment{
+		Content:  content,
+		VideoID:  videoId,
+		OwnerUID: doer,
+		ParentID: parentId,
+		TargetID: targetId,
 	}
 	return m.db.WithContext(ctx).
 		Create(&comment).Error

@@ -652,6 +652,40 @@
           "comment"
         ]
       }
+    },
+    "api/v1/video/{video_id}/reply": {
+      "put": {
+        "summary": "Create a reply for an Comment",
+        "operationId": "CreateReplyComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateReplyCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateReplyCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
     }
   },
   "definitions": {
@@ -896,6 +930,42 @@
         "关注数量",
         "follower_count",
         "粉丝数量"
+      ]
+    },
+    "CreateReplyCommentReq": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "video_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "parent_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "target_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CreateReplyCommentReq",
+      "required": [
+        "content",
+        "video_id",
+        "parent_id",
+        "target_id"
+      ]
+    },
+    "CreateReplyCommentResp": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "$ref": "#/definitions/Commnent"
+        }
+      },
+      "title": "CreateReplyCommentResp",
+      "required": [
+        "comment"
       ]
     },
     "CreateVideoCommentReq": {

@@ -38,6 +38,10 @@ service main {
 	@doc "Edit comments of an Video"
 	@handler EditVideoComment
 	post /comments/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
+
+	@doc "Create a reply for an Comment"
+	@handler CreateReplyComment
+	put /video/:video_id/reply (CreateReplyCommentReq) returns (CreateReplyCommentResp)
 }
 
 type CommentUserInfo {
@@ -142,5 +146,18 @@ type (
 		CreatedAt string     `json:"created_at"`
 		UserID    string     `json:"user_id"`
 		Comments  []Commnent `json:"comments"`
+	}
+)
+
+type (
+	CreateReplyCommentReq {
+		Content string `json:"content"`
+		VideoId uint `json:"video_id" path:"video_id"`
+		ParentId uint `json:"parent_id"`
+		TargetId uint `json:"target_id"`
+	}
+
+	CreateReplyCommentResp {
+		Commnent *Commnent `json:"comment"`
 	}
 )

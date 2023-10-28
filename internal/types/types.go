@@ -305,3 +305,14 @@ type ListVideoCommentsResp struct {
 	UserID    string     `json:"user_id"`
 	Comments  []Commnent `json:"comments"`
 }
+
+type CreateReplyCommentReq struct {
+	Content  string `json:"content"`
+	VideoId  uint   `json:"video_id" path:"video_id"`
+	ParentId uint   `json:"parent_id" path:"parent_id"`
+	TargetId uint   `json:"target_id" path:"target_id"`
+}
+
+type CreateReplyCommentResp struct {
+	Commnent *Commnent `json:"comment"`
+}
