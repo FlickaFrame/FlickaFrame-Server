@@ -51,7 +51,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		feedItem.CreatedAt = v.CreatedAt.Format("2006-01-02 15:04:05")
 		copier.Copy(&feedItem.Author, author)
 		feedItem.PlayUrl = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, v.PlayUrl)
-		feedItem.Author.AvatarUrl = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, author.AvatarUrl)
+		feedItem.Author.Avatar = storage.MakePublicURL(l.svcCtx.Config.Oss.Endpoint, author.AvatarUrl)
 		videoRsp = append(videoRsp, feedItem)
 		feedItem.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, v.AuthorID)
 		feedItem.IsFav, _ = l.svcCtx.FavoriteModel.IsFavorite(l.ctx, doerId, v.ID)
