@@ -7,8 +7,10 @@ import (
 
 type Status struct {
 	Code    int32  `json:"code"`
-	Message string `json:"message"`
+	Message string `json:"msg,omitempty"`
 	Details any    `json:"details,omitempty"`
+	Success bool   `json:"success,omitempty"`
+	Data    any    `json:"data,omitempty"`
 }
 
 func CodeFromError(err error) XCode {
