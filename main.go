@@ -22,14 +22,13 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	server := rest.MustNewServer(c.RestConf)
+	server := rest.MustNewServer(c.RestConf, rest.WithUnauthorizedCallback(xcode.UnAuthorizedCallback))
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 	// 对外开放Swagger
 	open_api.RegisterSwagger(server)
-
 	server.Use(middleware.NewCurrentUserMiddleware(c.JwtAuth.AccessSecret).Handle)
 
 	// 自定义错误处理方法
