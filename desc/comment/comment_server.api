@@ -1,0 +1,128 @@
+syntax = "v1"
+
+info(
+	title: "用户关注"
+	desc: "用户关注"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
+)
+
+@server(
+	prefix: api/v1
+	group: comment
+	jwt: JwtAuth
+)
+service main {
+	@doc "Create a comment for an Video"
+	@handler CreateVideoComment
+	put /video/:video_id/comments (CreateVideoCommentReq) returns (CreateVideoCommentResp)
+
+	@doc "Get a specific comment of an Video"
+	@handler GetVideoComment
+	get /video/:video_id/comments/:comment_id (GetVideoCommentReq) returns (GetVideoCommentResp)
+
+	@doc "Delete a comment of an Video"
+	@handler DeleteVideoComment
+	delete /video/:video_id/comments/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
+
+	@doc "Edit comments of an Video"
+	@handler EditVideoComment
+	post /video/:video_id/comments/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
+
+	@doc "List comments of an Video"
+	@handler ListVideoComments
+	get /video/:video_id/comments (ListVideoCommentsReq) returns (ListVideoCommentsResp)
+}
+
+type CommentUserInfo {
+	UserID   string `json:"user_id"`
+	Nickname string `json:"nickname"`
+	Image    string `json:"image"`
+}
+
+type SubComments {
+	ID         string `json:"id"`
+	VideoID    string `json:"video_id"`
+	Content    string `json:"content"`
+	CreateTime int64  `json:"create_time"`
+	Status     int    `json:"status"`
+
+	AtUsers             []*CommentUserInfo   `json:"at_users"`
+	UserInfo            *CommentUserInfo     `json:"user_info"`
+	CommentInteractInfo *CommentInteractInfo `json:"comment_interact_info"`
+	ShowTags            []string             `json:"show_tags"`
+}
+
+type TargetCommnet { // 回复的目标评论
+	ID       string           `json:"id"`
+	UserInfo *CommentUserInfo `json:"user_info"`
+}
+
+type CommentInteractInfo {
+	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
+	LikedCount string `json:"liked_count"` // 点赞数
+}
+
+type Commnent {
+	ID         string `json:"id"`
+	VideoID    string `json:"video_id"`
+	Status     int    `json:"status"`
+	Content    string `json:"content"`
+	CreateTime int64  `json:"create_time"`
+
+	UserInfo            *CommentUserInfo     `json:"user_info"`
+	CommentInteractInfo *CommentInteractInfo `json:"comment_interact_info"`
+
+	SubComments       []*SubComments `json:"sub_comments"`
+	SubCommentCount   string         `json:"sub_comment_count"`
+	SubCommentHasMore bool           `json:"sub_comment_has_more"`
+	SubCommentCursor  string         `json:"sub_comment_cursor"`
+
+	AtUsers  []*CommentUserInfo `json:"at_users"`
+	ShowTags []string           `json:"show_tags"`
+
+	IPAddress string `json:"ip_address"`
+}
+
+type (
+	CreateVideoCommentReq {
+	}
+
+	CreateVideoCommentResp {
+	}
+)
+
+type (
+	GetVideoCommentReq {
+	}
+
+	GetVideoCommentResp {
+	}
+)
+
+type (
+	DeleteVideoCommentReq {
+	}
+
+	DeleteVideoCommentResp {
+	}
+)
+
+type (
+	EditVideoCommentReq {
+	}
+
+	EditVideoCommentResp {
+	}
+)
+
+type (
+	ListVideoCommentsReq {
+	}
+
+	ListVideoCommentsResp {
+		CreatedAt string     `json:"created_at"`
+		UserID    string     `json:"user_id"`
+		Comments  []Commnent `json:"comments"`
+	}
+)

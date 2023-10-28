@@ -4,4 +4,5 @@ import (
 	"user/user_server.api"
 	"video/video_server.api"
 	"follow/follow_server.api"
+	"comment/comment_server.api"
 )

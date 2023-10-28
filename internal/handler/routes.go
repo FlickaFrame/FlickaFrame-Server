@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	comment "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/comment"
 	follow "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/follow"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
@@ -110,6 +111,38 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: follow.CountFollowersHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPut,
+				Path:    "/video/:video_id/comments",
+				Handler: comment.CreateVideoCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/video/:video_id/comments/:comment_id",
+				Handler: comment.GetVideoCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/video/:video_id/comments/:comment_id",
+				Handler: comment.DeleteVideoCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/video/:video_id/comments/:comment_id",
+				Handler: comment.EditVideoCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/video/:video_id/comments",
+				Handler: comment.ListVideoCommentsHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 }
