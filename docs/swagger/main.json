@@ -416,7 +416,7 @@
     "api/v1/video/category": {
       "get": {
         "summary": "category",
-        "operationId": "VideoCategory",
+        "operationId": "Category",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -434,7 +434,7 @@
     "api/v1/video/feed": {
       "get": {
         "summary": "feed",
-        "operationId": "VideoFeed",
+        "operationId": "Feed",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -494,6 +494,172 @@
         "requestBody": {},
         "tags": [
           "video"
+        ]
+      }
+    },
+    "api/v1/video/{video_id}/comments": {
+      "get": {
+        "summary": "List comments of an Video",
+        "operationId": "ListVideoComments",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListVideoCommentsResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      },
+      "put": {
+        "summary": "Create a comment for an Video",
+        "operationId": "CreateVideoComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateVideoCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateVideoCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
+    },
+    "api/v1/video/{video_id}/comments/{comment_id}": {
+      "get": {
+        "summary": "Get a specific comment of an Video",
+        "operationId": "GetVideoComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetVideoCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a comment of an Video",
+        "operationId": "DeleteVideoComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteVideoCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteVideoCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      },
+      "post": {
+        "summary": "Edit comments of an Video",
+        "operationId": "EditVideoComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/EditVideoCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EditVideoCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
         ]
       }
     }
@@ -627,6 +793,30 @@
         "粉丝数量"
       ]
     },
+    "CreateVideoCommentReq": {
+      "type": "object",
+      "title": "CreateVideoCommentReq"
+    },
+    "CreateVideoCommentResp": {
+      "type": "object",
+      "title": "CreateVideoCommentResp"
+    },
+    "DeleteVideoCommentReq": {
+      "type": "object",
+      "title": "DeleteVideoCommentReq"
+    },
+    "DeleteVideoCommentResp": {
+      "type": "object",
+      "title": "DeleteVideoCommentResp"
+    },
+    "EditVideoCommentReq": {
+      "type": "object",
+      "title": "EditVideoCommentReq"
+    },
+    "EditVideoCommentResp": {
+      "type": "object",
+      "title": "EditVideoCommentResp"
+    },
     "FeedReq": {
       "type": "object",
       "properties": {
@@ -725,6 +915,14 @@
         "avatar",
         "头像"
       ]
+    },
+    "GetVideoCommentReq": {
+      "type": "object",
+      "title": "GetVideoCommentReq"
+    },
+    "GetVideoCommentResp": {
+      "type": "object",
+      "title": "GetVideoCommentResp"
     },
     "ListFollowersReq": {
       "type": "object",
@@ -879,6 +1077,14 @@
         "followers",
         "用户id"
       ]
+    },
+    "ListVideoCommentsReq": {
+      "type": "object",
+      "title": "ListVideoCommentsReq"
+    },
+    "ListVideoCommentsResp": {
+      "type": "object",
+      "title": "ListVideoCommentsResp"
     },
     "LoginReq": {
       "type": "object",

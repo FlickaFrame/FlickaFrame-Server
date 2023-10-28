@@ -45,12 +45,37 @@ type (
 	}
 )
 
-
-
-
 type VideoUserInfo { // 视频作者信息
-	NickName  string `json:"nickName"`  // 昵称
-	AvatarUrl string `json:"avatarUrl"` // 头像地址
+	NickName string `json:"nick_name"`
+	Avatar   string `json:"avatar"`
+	UserID   string `json:"user_id"`
+}
+
+type VideoCoverInfo {
+	ImageScene string `json:"image_scene"` //视频封面类型
+	URL        string `json:"url"`         //视频封面地址
+}
+
+type VideoCover {
+	TraceID  string           `json:"trace_id"`
+	InfoList []VideoCoverInfo `json:"info_list"`
+	FileID   string           `json:"file_id"`
+	Height   int              `json:"height"`
+	Width    int              `json:"width"`
+	URL      string           `json:"url"`
+}
+
+type VideoInteractInfo {
+	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
+	LikedCount string `json:"liked_count"` // 点赞数
+}
+
+type VideoCard {
+	Cover        VideoCover        `json:"cover"`         // 视频封面
+	Type         string            `json:"type"`          // 视频分类
+	DisplayTitle string            `json:"display_title"` // 视频标题
+	User         VideoUserInfo     `json:"user"`          // 视频作者信息
+	InteractInfo VideoInteractInfo `json:"interact_info"` // 视频互动信息
 }
 
 type Video {

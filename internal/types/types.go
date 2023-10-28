@@ -70,8 +70,36 @@ type CategoryResp struct {
 }
 
 type VideoUserInfo struct {
-	NickName  string `json:"nickName"`  // 昵称
-	AvatarUrl string `json:"avatarUrl"` // 头像地址
+	NickName string `json:"nick_name"`
+	Avatar   string `json:"avatar"`
+	UserID   string `json:"user_id"`
+}
+
+type VideoCoverInfo struct {
+	ImageScene string `json:"image_scene"` //视频封面类型
+	URL        string `json:"url"`         //视频封面地址
+}
+
+type VideoCover struct {
+	TraceID  string           `json:"trace_id"`
+	InfoList []VideoCoverInfo `json:"info_list"`
+	FileID   string           `json:"file_id"`
+	Height   int              `json:"height"`
+	Width    int              `json:"width"`
+	URL      string           `json:"url"`
+}
+
+type VideoInteractInfo struct {
+	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
+	LikedCount string `json:"liked_count"` // 点赞数
+}
+
+type VideoCard struct {
+	Cover        VideoCover        `json:"cover"`         // 视频封面
+	Type         string            `json:"type"`          // 视频分类
+	DisplayTitle string            `json:"display_title"` // 视频标题
+	User         VideoUserInfo     `json:"user"`          // 视频作者信息
+	InteractInfo VideoInteractInfo `json:"interact_info"` // 视频互动信息
 }
 
 type Video struct {
@@ -176,4 +204,82 @@ type CheckFollowingReq struct {
 
 type CheckFollowingResp struct {
 	Status bool `json:"status" desc:"是否关注"`
+}
+
+type CommentUserInfo struct {
+	UserID   string `json:"user_id"`
+	Nickname string `json:"nickname"`
+	Image    string `json:"image"`
+}
+
+type SubComments struct {
+	ID                  string               `json:"id"`
+	VideoID             string               `json:"video_id"`
+	Content             string               `json:"content"`
+	CreateTime          int64                `json:"create_time"`
+	Status              int                  `json:"status"`
+	AtUsers             []*CommentUserInfo   `json:"at_users"`
+	UserInfo            *CommentUserInfo     `json:"user_info"`
+	CommentInteractInfo *CommentInteractInfo `json:"comment_interact_info"`
+	ShowTags            []string             `json:"show_tags"`
+}
+
+type TargetCommnet struct {
+	ID       string           `json:"id"`
+	UserInfo *CommentUserInfo `json:"user_info"`
+}
+
+type CommentInteractInfo struct {
+	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
+	LikedCount string `json:"liked_count"` // 点赞数
+}
+
+type Commnent struct {
+	ID                  string               `json:"id"`
+	VideoID             string               `json:"video_id"`
+	Status              int                  `json:"status"`
+	Content             string               `json:"content"`
+	CreateTime          int64                `json:"create_time"`
+	UserInfo            *CommentUserInfo     `json:"user_info"`
+	CommentInteractInfo *CommentInteractInfo `json:"comment_interact_info"`
+	SubComments         []*SubComments       `json:"sub_comments"`
+	SubCommentCount     string               `json:"sub_comment_count"`
+	SubCommentHasMore   bool                 `json:"sub_comment_has_more"`
+	SubCommentCursor    string               `json:"sub_comment_cursor"`
+	AtUsers             []*CommentUserInfo   `json:"at_users"`
+	ShowTags            []string             `json:"show_tags"`
+	IPAddress           string               `json:"ip_address"`
+}
+
+type CreateVideoCommentReq struct {
+}
+
+type CreateVideoCommentResp struct {
+}
+
+type GetVideoCommentReq struct {
+}
+
+type GetVideoCommentResp struct {
+}
+
+type DeleteVideoCommentReq struct {
+}
+
+type DeleteVideoCommentResp struct {
+}
+
+type EditVideoCommentReq struct {
+}
+
+type EditVideoCommentResp struct {
+}
+
+type ListVideoCommentsReq struct {
+}
+
+type ListVideoCommentsResp struct {
+	CreatedAt string     `json:"created_at"`
+	UserID    string     `json:"user_id"`
+	Comments  []Commnent `json:"comments"`
 }
