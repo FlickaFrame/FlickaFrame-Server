@@ -39,5 +39,6 @@ func (l *ListVideoCommentsLogic) ListVideoComments(req *types.ListVideoCommentsR
 		_ = copier.Copy(&commentRsp, comment)
 		commentsRsp = append(commentsRsp, &commentRsp)
 	}
+	resp.Comments = commentsRsp
 	return
 }

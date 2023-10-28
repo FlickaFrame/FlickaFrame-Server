@@ -11,7 +11,7 @@ type User struct {
 }
 
 type RegisterReq struct {
-	Phone    string `json:"phone" validate:"e164,required"`
+	Phone    string `json:"phone" validate:"required"`
 	Password string `json:"password" validate:"required"`
 	NickName string `json:"nickName,option"`
 }
@@ -301,9 +301,9 @@ type ListVideoCommentsReq struct {
 }
 
 type ListVideoCommentsResp struct {
-	CreatedAt string     `json:"createdAt"`
-	UserID    string     `json:"userId"`
-	Comments  []Commnent `json:"comments"`
+	CreatedAt string      `json:"createdAt"`
+	UserID    string      `json:"userId"`
+	Comments  []*Commnent `json:"comments"`
 }
 
 type CreateReplyCommentReq struct {

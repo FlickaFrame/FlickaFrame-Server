@@ -47,7 +47,7 @@ type User {
 
 type (
 	RegisterReq {
-		Phone    string `json:"phone" validate:"e164,required"`
+		Phone    string `json:"phone" validate:"required"`
 		Password string `json:"password" validate:"required"`
 		NickName string `json:"nickName,option"`
 	}

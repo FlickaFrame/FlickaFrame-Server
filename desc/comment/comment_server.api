@@ -145,7 +145,7 @@ type (
 	ListVideoCommentsResp {
 		CreatedAt string     `json:"createdAt"`
 		UserID    string     `json:"userId"`
-		Comments  []Commnent `json:"comments"`
+		Comments  []*Commnent `json:"comments"`
 	}
 )
 
