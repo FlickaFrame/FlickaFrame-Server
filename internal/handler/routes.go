@@ -154,6 +154,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/comments/:comment_id",
 				Handler: comment.EditVideoCommentHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/video/:video_id/reply",
+				Handler: comment.CreateReplyCommentHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

@@ -143,7 +143,7 @@ type (
 type (
 	CheckFollowingReq {
 		DoerUserId    uint `json:"doerUserId" path:"doer_user_id" desc:"用户id" validate:"required"`
-		ContextUserId uint `json:"context_user_id" path:"doer_user_id" desc:"用户id" validate:"required"`
+		ContextUserId uint `json:"contextUserId" path:"doer_user_id" desc:"用户id" validate:"required"`
 	}
 	CheckFollowingResp {
 		Status bool `json:"status" desc:"是否关注"`

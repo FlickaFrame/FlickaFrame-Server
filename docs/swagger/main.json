@@ -549,7 +549,7 @@
             "type": "string"
           },
           {
-            "name": "category_id",
+            "name": "categoryId",
             "description": " 分类",
             "in": "query",
             "required": false,
@@ -714,7 +714,7 @@
     "CategoryResp": {
       "type": "object",
       "properties": {
-        "category_list": {
+        "categoryList": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Category"
@@ -723,7 +723,7 @@
       },
       "title": "CategoryResp",
       "required": [
-        "category_list"
+        "categoryList"
       ]
     },
     "CheckFollowingReq": {
@@ -732,7 +732,7 @@
         "doerUserId": {
           "$ref": "#/definitions/uint"
         },
-        "context_user_id": {
+        "contextUserId": {
           "$ref": "#/definitions/uint"
         }
       },
@@ -741,7 +741,7 @@
         "doerUserId",
         "doer_user_id",
         "用户id",
-        "context_user_id"
+        "contextUserId"
       ]
     },
     "CheckFollowingResp": {
@@ -1052,7 +1052,7 @@
     "FeedReq": {
       "type": "object",
       "properties": {
-        "latest_time": {
+        "latestTime": {
           "type": "integer",
           "format": "int64",
           "description": " 最新视频时间(毫秒时间戳)"
@@ -1066,7 +1066,7 @@
           "type": "string",
           "description": " 登录token"
         },
-        "author_id": {
+        "authorId": {
           "$ref": "#/definitions/uint",
           "description": " 作者ID"
         },
@@ -1074,7 +1074,7 @@
           "type": "string",
           "description": " 标签"
         },
-        "category_id": {
+        "categoryId": {
           "$ref": "#/definitions/uint",
           "description": " 分类"
         }
@@ -1096,7 +1096,7 @@
             "$ref": "#/definitions/VideoItem"
           }
         },
-        "next_time": {
+        "nextTime": {
           "type": "integer",
           "format": "int64",
           "description": " 下次请求时间(毫秒时间戳)"
@@ -1115,7 +1115,7 @@
       "required": [
         "videoList",
         "items",
-        "next_time",
+        "nextTime",
         "cursorScore",
         "length"
       ]
@@ -1705,7 +1705,7 @@
           "type": "string",
           "description": " 视频分类"
         },
-        "display_title": {
+        "displayTitle": {
           "type": "string",
           "description": " 视频标题"
         },
@@ -1713,7 +1713,7 @@
           "$ref": "#/definitions/VideoUserInfo",
           "description": " 视频作者信息"
         },
-        "interact_info": {
+        "interactInfo": {
           "$ref": "#/definitions/VideoInteractInfo",
           "description": " 视频互动信息"
         }
@@ -1722,15 +1722,15 @@
       "required": [
         "cover",
         "type",
-        "display_title",
+        "displayTitle",
         "user",
-        "interact_info"
+        "interactInfo"
       ]
     },
     "VideoCover": {
       "type": "object",
       "properties": {
-        "trace_id": {
+        "traceId": {
           "type": "string"
         },
         "infoList": {
@@ -1756,7 +1756,7 @@
       },
       "title": "VideoCover",
       "required": [
-        "trace_id",
+        "traceId",
         "infoList",
         "fileId",
         "height",
@@ -1767,7 +1767,7 @@
     "VideoCoverInfo": {
       "type": "object",
       "properties": {
-        "image_scene": {
+        "imageScene": {
           "type": "string",
           "description": "视频封面类型"
         },
@@ -1778,7 +1778,7 @@
       },
       "title": "VideoCoverInfo",
       "required": [
-        "image_scene",
+        "imageScene",
         "url"
       ]
     },
@@ -1822,7 +1822,7 @@
           "$ref": "#/definitions/VideoCard",
           "description": " 视频信息"
         },
-        "trace_id": {
+        "traceId": {
           "type": "string",
           "description": " 视频traceID"
         }
@@ -1833,7 +1833,7 @@
         "id",
         "modelType",
         "videoCard",
-        "trace_id"
+        "traceId"
       ]
     },
     "VideoUserInfo": {
