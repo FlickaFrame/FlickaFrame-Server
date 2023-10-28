@@ -7,9 +7,8 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/handler"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/middleware"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/open_api"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode"
-	"github.com/zeromicro/go-zero/rest/httpx"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -27,6 +26,8 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+	// 对外开放Swagger
+	open_api.RegisterSwagger(server)
 
 	server.Use(middleware.NewCurrentUserMiddleware(c.JwtAuth.AccessSecret).Handle)
 
