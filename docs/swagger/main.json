@@ -729,7 +729,7 @@
     "CheckFollowingReq": {
       "type": "object",
       "properties": {
-        "doer_user_id": {
+        "doerUserId": {
           "$ref": "#/definitions/uint"
         },
         "context_user_id": {
@@ -738,6 +738,7 @@
       },
       "title": "CheckFollowingReq",
       "required": [
+        "doerUserId",
         "doer_user_id",
         "用户id",
         "context_user_id"
@@ -760,12 +761,13 @@
     "CheckMyFollowingReq": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "CheckMyFollowingReq",
       "required": [
+        "userId",
         "user_id",
         "关注用户id"
       ]
@@ -792,7 +794,7 @@
           "format": "boolean",
           "description": " 当前用户是否已点赞"
         },
-        "liked_count": {
+        "likedCount": {
           "type": "string",
           "description": " 点赞数"
         }
@@ -800,13 +802,13 @@
       "title": "CommentInteractInfo",
       "required": [
         "liked",
-        "liked_count"
+        "likedCount"
       ]
     },
     "CommentUserInfo": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "type": "string"
         },
         "nickname": {
@@ -818,7 +820,7 @@
       },
       "title": "CommentUserInfo",
       "required": [
-        "user_id",
+        "userId",
         "nickname",
         "image"
       ]
@@ -829,7 +831,7 @@
         "id": {
           "type": "string"
         },
-        "video_id": {
+        "videoId": {
           "type": "string"
         },
         "status": {
@@ -839,75 +841,76 @@
         "content": {
           "type": "string"
         },
-        "create_time": {
+        "createTime": {
           "type": "integer",
           "format": "int64"
         },
-        "user_info": {
+        "userInfo": {
           "$ref": "#/definitions/CommentUserInfo"
         },
-        "comment_interact_info": {
+        "commentInteractInfo": {
           "$ref": "#/definitions/CommentInteractInfo"
         },
-        "sub_comments": {
+        "subComments": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/SubComments"
           }
         },
-        "sub_comment_count": {
+        "subCommentCount": {
           "type": "string"
         },
-        "sub_comment_has_more": {
+        "subCommentHasMore": {
           "type": "boolean",
           "format": "boolean"
         },
-        "sub_comment_cursor": {
+        "subCommentCursor": {
           "type": "string"
         },
-        "at_users": {
+        "atUsers": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CommentUserInfo"
           }
         },
-        "show_tags": {
+        "showTags": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "ip_address": {
+        "ipAddress": {
           "type": "string"
         }
       },
       "title": "Commnent",
       "required": [
         "id",
-        "video_id",
+        "videoId",
         "status",
         "content",
-        "create_time",
-        "user_info",
-        "comment_interact_info",
-        "sub_comments",
-        "sub_comment_count",
-        "sub_comment_has_more",
-        "sub_comment_cursor",
-        "at_users",
-        "show_tags",
-        "ip_address"
+        "createTime",
+        "userInfo",
+        "commentInteractInfo",
+        "subComments",
+        "subCommentCount",
+        "subCommentHasMore",
+        "subCommentCursor",
+        "atUsers",
+        "showTags",
+        "ipAddress"
       ]
     },
     "CountFollowReq": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "CountFollowReq",
       "required": [
+        "userId",
         "user_id",
         "用户id"
       ]
@@ -915,20 +918,20 @@
     "CountFollowResp": {
       "type": "object",
       "properties": {
-        "following_count": {
+        "followingCount": {
           "type": "integer",
           "format": "int64"
         },
-        "follower_count": {
+        "followerCount": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "CountFollowResp",
       "required": [
-        "following_count",
+        "followingCount",
         "关注数量",
-        "follower_count",
+        "followerCount",
         "粉丝数量"
       ]
     },
@@ -938,22 +941,23 @@
         "content": {
           "type": "string"
         },
-        "video_id": {
+        "videoId": {
           "$ref": "#/definitions/uint"
         },
-        "parent_id": {
+        "parentId": {
           "$ref": "#/definitions/uint"
         },
-        "target_id": {
+        "targetId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "CreateReplyCommentReq",
       "required": [
         "content",
+        "videoId",
         "video_id",
-        "parent_id",
-        "target_id"
+        "parentId",
+        "targetId"
       ]
     },
     "CreateReplyCommentResp": {
@@ -974,13 +978,14 @@
         "content": {
           "type": "string"
         },
-        "video_id": {
+        "videoId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "CreateVideoCommentReq",
       "required": [
         "content",
+        "videoId",
         "video_id"
       ]
     },
@@ -999,16 +1004,18 @@
     "DeleteVideoCommentReq": {
       "type": "object",
       "properties": {
-        "video_id": {
+        "videoId": {
           "$ref": "#/definitions/uint"
         },
-        "comment_id": {
+        "commentId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "DeleteVideoCommentReq",
       "required": [
+        "videoId",
         "video_id",
+        "commentId",
         "comment_id"
       ]
     },
@@ -1019,10 +1026,10 @@
     "EditVideoCommentReq": {
       "type": "object",
       "properties": {
-        "video_id": {
+        "videoId": {
           "$ref": "#/definitions/uint"
         },
-        "comment_id": {
+        "commentId": {
           "$ref": "#/definitions/uint"
         },
         "content": {
@@ -1031,7 +1038,9 @@
       },
       "title": "EditVideoCommentReq",
       "required": [
+        "videoId",
         "video_id",
+        "commentId",
         "comment_id",
         "content"
       ]
@@ -1075,7 +1084,7 @@
     "FeedResp": {
       "type": "object",
       "properties": {
-        "video_list": {
+        "videoList": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Video"
@@ -1092,7 +1101,7 @@
           "format": "int64",
           "description": " 下次请求时间(毫秒时间戳)"
         },
-        "cursor_score": {
+        "cursorScore": {
           "type": "string",
           "description": " 下次请求时间(毫秒时间戳)"
         },
@@ -1104,22 +1113,23 @@
       },
       "title": "FeedResp",
       "required": [
-        "video_list",
+        "videoList",
         "items",
         "next_time",
-        "cursor_score",
+        "cursorScore",
         "length"
       ]
     },
     "FollowReq": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "FollowReq",
       "required": [
+        "userId",
         "user_id",
         "关注用户id"
       ]
@@ -1131,10 +1141,10 @@
     "FollowUser": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "type": "string"
         },
-        "user_name": {
+        "userName": {
           "type": "string"
         },
         "avatar": {
@@ -1143,9 +1153,9 @@
       },
       "title": "FollowUser",
       "required": [
-        "user_id",
+        "userId",
         "用户id",
-        "user_name",
+        "userName",
         "用户名",
         "avatar",
         "头像"
@@ -1154,16 +1164,18 @@
     "GetVideoCommentReq": {
       "type": "object",
       "properties": {
-        "video_id": {
+        "videoId": {
           "$ref": "#/definitions/uint"
         },
-        "comment_id": {
+        "commentId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "GetVideoCommentReq",
       "required": [
+        "videoId",
         "video_id",
+        "commentId",
         "comment_id"
       ]
     },
@@ -1182,7 +1194,7 @@
     "ListFollowersReq": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "$ref": "#/definitions/uint"
         },
         "page": {
@@ -1196,6 +1208,7 @@
       },
       "title": "ListFollowersReq",
       "required": [
+        "userId",
         "user_id",
         "用户id",
         "page",
@@ -1223,7 +1236,7 @@
     "ListFollowingReq": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "$ref": "#/definitions/uint"
         },
         "page": {
@@ -1237,6 +1250,7 @@
       },
       "title": "ListFollowingReq",
       "required": [
+        "userId",
         "user_id",
         "用户id",
         "page",
@@ -1336,22 +1350,23 @@
     "ListVideoCommentsReq": {
       "type": "object",
       "properties": {
-        "video_id": {
+        "videoId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "ListVideoCommentsReq",
       "required": [
+        "videoId",
         "video_id"
       ]
     },
     "ListVideoCommentsResp": {
       "type": "object",
       "properties": {
-        "created_at": {
+        "createdAt": {
           "type": "string"
         },
-        "user_id": {
+        "userId": {
           "type": "string"
         },
         "comments": {
@@ -1363,8 +1378,8 @@
       },
       "title": "ListVideoCommentsResp",
       "required": [
-        "created_at",
-        "user_id",
+        "createdAt",
+        "userId",
         "comments"
       ]
     },
@@ -1455,13 +1470,13 @@
         "id": {
           "type": "string"
         },
-        "video_id": {
+        "videoId": {
           "type": "string"
         },
         "content": {
           "type": "string"
         },
-        "create_time": {
+        "createTime": {
           "type": "integer",
           "format": "int64"
         },
@@ -1469,19 +1484,19 @@
           "type": "integer",
           "format": "int32"
         },
-        "at_users": {
+        "atUsers": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CommentUserInfo"
           }
         },
-        "user_info": {
+        "userInfo": {
           "$ref": "#/definitions/CommentUserInfo"
         },
-        "comment_interact_info": {
+        "commentInteractInfo": {
           "$ref": "#/definitions/CommentInteractInfo"
         },
-        "show_tags": {
+        "showTags": {
           "type": "array",
           "items": {
             "type": "string"
@@ -1491,14 +1506,14 @@
       "title": "SubComments",
       "required": [
         "id",
-        "video_id",
+        "videoId",
         "content",
-        "create_time",
+        "createTime",
         "status",
-        "at_users",
-        "user_info",
-        "comment_interact_info",
-        "show_tags"
+        "atUsers",
+        "userInfo",
+        "commentInteractInfo",
+        "showTags"
       ]
     },
     "TargetCommnet": {
@@ -1507,25 +1522,26 @@
         "id": {
           "type": "string"
         },
-        "user_info": {
+        "userInfo": {
           "$ref": "#/definitions/CommentUserInfo"
         }
       },
       "title": "TargetCommnet",
       "required": [
         "id",
-        "user_info"
+        "userInfo"
       ]
     },
     "UnFollowReq": {
       "type": "object",
       "properties": {
-        "user_id": {
+        "userId": {
           "$ref": "#/definitions/uint"
         }
       },
       "title": "UnFollowReq",
       "required": [
+        "userId",
         "user_id",
         "关注用户id"
       ]
@@ -1717,13 +1733,13 @@
         "trace_id": {
           "type": "string"
         },
-        "info_list": {
+        "infoList": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/VideoCoverInfo"
           }
         },
-        "file_id": {
+        "fileId": {
           "type": "string"
         },
         "height": {
@@ -1741,8 +1757,8 @@
       "title": "VideoCover",
       "required": [
         "trace_id",
-        "info_list",
-        "file_id",
+        "infoList",
+        "fileId",
         "height",
         "width",
         "url"
@@ -1774,7 +1790,7 @@
           "format": "boolean",
           "description": " 当前用户是否已点赞"
         },
-        "liked_count": {
+        "likedCount": {
           "type": "string",
           "description": " 点赞数"
         }
@@ -1782,7 +1798,7 @@
       "title": "VideoInteractInfo",
       "required": [
         "liked",
-        "liked_count"
+        "likedCount"
       ]
     },
     "VideoItem": {
@@ -1798,11 +1814,11 @@
           "format": "int64",
           "description": " 视频ID"
         },
-        "model_type": {
+        "modelType": {
           "type": "string",
           "description": " 发布类型:[video,article]"
         },
-        "video_card": {
+        "videoCard": {
           "$ref": "#/definitions/VideoCard",
           "description": " 视频信息"
         },
@@ -1815,29 +1831,29 @@
       "required": [
         "ignore",
         "id",
-        "model_type",
-        "video_card",
+        "modelType",
+        "videoCard",
         "trace_id"
       ]
     },
     "VideoUserInfo": {
       "type": "object",
       "properties": {
-        "nick_name": {
+        "nickName": {
           "type": "string"
         },
         "avatar": {
           "type": "string"
         },
-        "user_id": {
+        "userId": {
           "type": "string"
         }
       },
       "title": "VideoUserInfo",
       "required": [
-        "nick_name",
+        "nickName",
         "avatar",
-        "user_id"
+        "userId"
       ]
     }
   },
