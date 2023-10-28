@@ -1387,23 +1387,23 @@
     "LoginResp": {
       "type": "object",
       "properties": {
-        "access_token": {
+        "accessToken": {
           "type": "string"
         },
-        "access_expire": {
+        "accessExpire": {
           "type": "integer",
           "format": "int64"
         },
-        "refresh_after": {
+        "refreshAfter": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "LoginResp",
       "required": [
-        "access_token",
-        "access_expire",
-        "refresh_after"
+        "accessToken",
+        "accessExpire",
+        "refreshAfter"
       ]
     },
     "RegisterReq": {
@@ -1415,7 +1415,7 @@
         "password": {
           "type": "string"
         },
-        "nick_name": {
+        "nickName": {
           "type": "string"
         }
       },
@@ -1424,29 +1424,29 @@
         "phone",
         "e164",
         "password",
-        "nick_name"
+        "nickName"
       ]
     },
     "RegisterResp": {
       "type": "object",
       "properties": {
-        "access_token": {
+        "accessToken": {
           "type": "string"
         },
-        "access_expire": {
+        "accessExpire": {
           "type": "integer",
           "format": "int64"
         },
-        "refresh_after": {
+        "refreshAfter": {
           "type": "integer",
           "format": "int64"
         }
       },
       "title": "RegisterResp",
       "required": [
-        "access_token",
-        "access_expire",
-        "refresh_after"
+        "accessToken",
+        "accessExpire",
+        "refreshAfter"
       ]
     },
     "SubComments": {
@@ -1561,14 +1561,14 @@
         "phone": {
           "type": "string"
         },
-        "nick_name": {
+        "nickName": {
           "type": "string"
         },
         "sex": {
           "type": "integer",
           "format": "int64"
         },
-        "avatar_url": {
+        "avatarUrl": {
           "type": "string"
         },
         "info": {
@@ -1579,9 +1579,9 @@
       "required": [
         "id",
         "phone",
-        "nick_name",
+        "nickName",
         "sex",
-        "avatar_url",
+        "avatarUrl",
         "info"
       ]
     },
@@ -1592,13 +1592,13 @@
     "UserInfoResp": {
       "type": "object",
       "properties": {
-        "user_info": {
+        "userInfo": {
           "$ref": "#/definitions/User"
         }
       },
       "title": "UserInfoResp",
       "required": [
-        "user_info"
+        "userInfo"
       ]
     },
     "Video": {

@@ -39,9 +39,9 @@ service main {
 type User {
 	ID        int64  `json:"id"`
 	Phone     string `json:"phone"`
-	NickName  string `json:"nick_name"`
+	NickName  string `json:"nickName"`
 	Sex       int64  `json:"sex"`
-	AvatarUrl string `json:"avatar_url"`
+	AvatarUrl string `json:"avatarUrl"`
 	Info      string `json:"info"`
 }
 
@@ -49,12 +49,12 @@ type (
 	RegisterReq {
 		Phone    string `json:"phone" validate:"e164,required"`
 		Password string `json:"password" validate:"required"`
-		NickName string `json:"nick_name,option"`
+		NickName string `json:"nickName,option"`
 	}
 	RegisterResp {
-		AccessToken  string `json:"access_token"`
-		AccessExpire int64  `json:"access_expire"`
-		RefreshAfter int64  `json:"refresh_after"`
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
 	}
 )
 
@@ -64,9 +64,9 @@ type (
 		Password string `json:"password"`
 	}
 	LoginResp {
-		AccessToken  string `json:"access_token"`
-		AccessExpire int64  `json:"access_expire"`
-		RefreshAfter int64  `json:"refresh_after"`
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
 	}
 )
 
@@ -74,7 +74,7 @@ type (
 	UserInfoReq {
 	}
 	UserInfoResp {
-		UserInfo User `json:"user_info"`
+		UserInfo User `json:"userInfo"`
 	}
 )
 
