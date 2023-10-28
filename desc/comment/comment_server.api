@@ -69,7 +69,7 @@ type TargetCommnet { // 回复的目标评论
 }
 
 type CommentInteractInfo {
-	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
+	Liked      bool   `json:"liked"`      // 当前用户是否已点赞
 	LikedCount string `json:"likedCount"` // 点赞数
 }
 
@@ -97,7 +97,7 @@ type Commnent {
 type (
 	CreateVideoCommentReq {
 		Content string `json:"content"`
-		VideoId uint `json:"videoId" path:"video_id"`
+		VideoId uint   `json:"videoId" path:"video_id"`
 	}
 
 	CreateVideoCommentResp {
@@ -118,7 +118,7 @@ type (
 
 type (
 	DeleteVideoCommentReq {
-		VideoId uint `json:"videoId" path:"video_id"`
+		VideoId   uint `json:"videoId" path:"video_id"`
 		CommentId uint `json:"commentId" path:"comment_id"`
 	}
 
@@ -128,8 +128,8 @@ type (
 
 type (
 	EditVideoCommentReq {
-		VideoId   uint `json:"videoId" path:"video_id"`
-		CommentId uint `json:"commentId" path:"comment_id"`
+		VideoId   uint   `json:"videoId" path:"video_id"`
+		CommentId uint   `json:"commentId" path:"comment_id"`
 		Content   string `json:"content"`
 	}
 
@@ -139,22 +139,22 @@ type (
 
 type (
 	ListVideoCommentsReq {
-		VideoId   uint `json:"videoId" path:"video_id"`
+		VideoId uint `json:"videoId" path:"video_id"`
 	}
 
 	ListVideoCommentsResp {
-		CreatedAt string     `json:"createdAt"`
-		UserID    string     `json:"userId"`
+		CreatedAt string      `json:"createdAt"`
+		UserID    string      `json:"userId"`
 		Comments  []*Commnent `json:"comments"`
 	}
 )
 
 type (
 	CreateReplyCommentReq {
-		Content string `json:"content"`
-		VideoId uint `json:"videoId" path:"video_id"`
-		ParentId uint `json:"parentId"`
-		TargetId uint `json:"targetId"`
+		Content  string `json:"content"`
+		VideoId  uint   `json:"videoId" path:"video_id"`
+		ParentId uint   `json:"parentId"`
+		TargetId uint   `json:"targetId"`
 	}
 
 	CreateReplyCommentResp {

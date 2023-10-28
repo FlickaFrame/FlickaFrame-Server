@@ -12,12 +12,14 @@ gen-api-go: ## generate api go
 .PHONY: gen-api-doc
 gen-api-doc: ## generate api doc
 	rm -rf docs/api/*
+	mkdir -p docs/api/
 	goctl api doc --dir ./desc/  -o docs/api/
 
 .PHONY: gen-api-swagger
 gen-api-swagger: ## generate api swagger
 	GOPROXY=https://goproxy.cn/,direct go install github.com/zeromicro/goctl-swagger@latest
 	rm -rf docs/swagger/*
+	mkdir -p docs/swagger/
 	goctl api plugin -plugin goctl-swagger="swagger -filename main.json" -api desc/main.api -dir docs/swagger
 
 .PHONY: api-format
@@ -32,7 +34,14 @@ lint-go:
 lint-go-fix:
 	$(GO) run $(GOLANGCI_LINT_PACKAGE) run --fix
 
+.PHONY: gen-api
+gen-api: gen-api-go gen-api-doc gen-api-swagger api-format ## generate api
+
 .PHONY: build
 build: ## build
 	GOPROXY=https://goproxy.cn/,direct go mod tidy
 	${GO} build -o main .
+
+.PHONY: run
+run: gen-api
+	${GO} run main.go

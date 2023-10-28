@@ -23,19 +23,19 @@ service main{
 
 type (
 	FeedReq {
-		LatestTime int64  `json:"latestTime,optional" form:"latestTime,optional"`  // 最新视频时间(毫秒时间戳)
-		Limit      int    `json:"limit,optional" form:"limit,optional"`             // 请求数量
-		Token      string `json:"token,optional" form:"token,optional"`             // 登录token
-		AuthorID   uint   `json:"authorId,optional" form:"authorID,optional"`      // 作者ID
-		Tag        string `json:"tag,optional" form:"tag,optional"`                 // 标签
+		LatestTime int64  `json:"latestTime,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
+		Limit      int    `json:"limit,optional" form:"limit,optional"`           // 请求数量
+		Token      string `json:"token,optional" form:"token,optional"`           // 登录token
+		AuthorID   uint   `json:"authorId,optional" form:"authorID,optional"`     // 作者ID
+		Tag        string `json:"tag,optional" form:"tag,optional"`               // 标签
 		CategoryID uint   `json:"categoryId,optional" form:"categoryId,optional"` // 分类
 	}
 	FeedResp {
-		VideoList []*Video `json:"videoList"`
-		Items    []*VideoItem `json:"items"`
-		NextTime  int64    `json:"nextTime"` // 下次请求时间(毫秒时间戳)
-		CursorScore string `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
-		Length    int      `json:"length"`    // 视频列表长度
+		VideoList   []*Video     `json:"videoList"`
+		Items       []*VideoItem `json:"items"`
+		NextTime    int64        `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
+		CursorScore string       `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
+		Length      int          `json:"length"`      // 视频列表长度
 	}
 )
 
@@ -55,7 +55,7 @@ type VideoUserInfo { // 视频作者信息
 
 type VideoCoverInfo {
 	ImageScene string `json:"imageScene"` //视频封面类型
-	URL        string `json:"url"`         //视频封面地址
+	URL        string `json:"url"`        //视频封面地址
 }
 
 type VideoCover {
@@ -68,23 +68,23 @@ type VideoCover {
 }
 
 type VideoInteractInfo {
-	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
+	Liked      bool   `json:"liked"`      // 当前用户是否已点赞
 	LikedCount string `json:"likedCount"` // 点赞数
 }
 
-type VideoItem{
-	Ignore    bool        `json:"ignore"`      // 是否忽略
-	ID 	  int64       `json:"id"`          // 视频ID
-	ModelType string      `json:"modelType"`  // 发布类型:[video,article]
-	VideoCard VideoCard   `json:"videoCard"`  // 视频信息
-	TraceID   string      `json:"traceId"`    // 视频traceID
+type VideoItem {
+	Ignore    bool      `json:"ignore"`    // 是否忽略
+	ID        int64     `json:"id"`        // 视频ID
+	ModelType string    `json:"modelType"` // 发布类型:[video,article]
+	VideoCard VideoCard `json:"videoCard"` // 视频信息
+	TraceID   string    `json:"traceId"`   // 视频traceID
 }
 
 type VideoCard {
-	Cover        VideoCover        `json:"cover"`         // 视频封面
-	Type         string            `json:"type"`          // 视频分类
+	Cover        VideoCover        `json:"cover"`        // 视频封面
+	Type         string            `json:"type"`         // 视频分类
 	DisplayTitle string            `json:"displayTitle"` // 视频标题
-	User         VideoUserInfo     `json:"user"`          // 视频作者信息
+	User         VideoUserInfo     `json:"user"`         // 视频作者信息
 	InteractInfo VideoInteractInfo `json:"interactInfo"` // 视频互动信息
 }
 
