@@ -31,10 +31,10 @@ type (
 		CategoryID uint   `json:"category_id,optional" form:"category_id,optional"` // 分类
 	}
 	FeedResp {
-		VideoList []*Video `json:"video_list"`
+		VideoList []*Video `json:"videoList"`
 		Items    []*VideoItem `json:"items"`
 		NextTime  int64    `json:"next_time"` // 下次请求时间(毫秒时间戳)
-		CursorScore string `json:"cursor_score"` // 下次请求时间(毫秒时间戳)
+		CursorScore string `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
 		Length    int      `json:"length"`    // 视频列表长度
 	}
 )
@@ -48,9 +48,9 @@ type (
 )
 
 type VideoUserInfo { // 视频作者信息
-	NickName string `json:"nick_name"`
+	NickName string `json:"nickName"`
 	Avatar   string `json:"avatar"`
-	UserID   string `json:"user_id"`
+	UserID   string `json:"userId"`
 }
 
 type VideoCoverInfo {
@@ -60,8 +60,8 @@ type VideoCoverInfo {
 
 type VideoCover {
 	TraceID  string           `json:"trace_id"`
-	InfoList []VideoCoverInfo `json:"info_list"`
-	FileID   string           `json:"file_id"`
+	InfoList []VideoCoverInfo `json:"infoList"`
+	FileID   string           `json:"fileId"`
 	Height   int              `json:"height"`
 	Width    int              `json:"width"`
 	URL      string           `json:"url"`
@@ -69,14 +69,14 @@ type VideoCover {
 
 type VideoInteractInfo {
 	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
-	LikedCount string `json:"liked_count"` // 点赞数
+	LikedCount string `json:"likedCount"` // 点赞数
 }
 
 type VideoItem{
 	Ignore    bool        `json:"ignore"`      // 是否忽略
 	ID 	  int64       `json:"id"`          // 视频ID
-	ModelType string      `json:"model_type"`  // 发布类型:[video,article]
-	VideoCard VideoCard   `json:"video_card"`  // 视频信息
+	ModelType string      `json:"modelType"`  // 发布类型:[video,article]
+	VideoCard VideoCard   `json:"videoCard"`  // 视频信息
 	TraceID   string      `json:"trace_id"`    // 视频traceID
 }
 
