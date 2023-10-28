@@ -17,16 +17,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodPost,
-				Path:    "/user/register",
-				Handler: user.RegisterHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/login",
-				Handler: user.LoginHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodGet,
 				Path:    "/user/detail",
 				Handler: user.DetailHandler(serverCtx),
@@ -35,6 +25,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/user/avatar",
 				Handler: user.UpdateAvatarHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/register",
+				Handler: user.RegisterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/login",
+				Handler: user.LoginHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -117,29 +124,35 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodPut,
-				Path:    "/video/:video_id/comments",
-				Handler: comment.CreateVideoCommentHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodGet,
 				Path:    "/video/:video_id/comments/:comment_id",
 				Handler: comment.GetVideoCommentHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/video/:video_id/comments",
+				Handler: comment.ListVideoCommentsHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPut,
+				Path:    "/video/:video_id/comments",
+				Handler: comment.CreateVideoCommentHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodDelete,
-				Path:    "/video/:video_id/comments/:comment_id",
+				Path:    "/comments/:comment_id",
 				Handler: comment.DeleteVideoCommentHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/video/:video_id/comments/:comment_id",
+				Path:    "/comments/:comment_id",
 				Handler: comment.EditVideoCommentHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/video/:video_id/comments",
-				Handler: comment.ListVideoCommentsHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

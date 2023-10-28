@@ -5,6 +5,36 @@ info(
 	desc: "用户中心服务"
 	version: "v1"
 )
+// Need login
+@server(
+	prefix: api/v1
+	group: user
+	jwt: JwtAuth
+)
+service main{
+	@doc "Get User Info Detail"
+	@handler detail
+	get /user/detail (UserInfoReq) returns (UserInfoResp)
+
+	@doc "Update User Avatar"
+	@handler UpdateAvatar
+	post  /user/avatar (UpdateAvatarReq) returns (UpdateAvatarResp)
+}
+
+//no need login
+@server(
+	prefix: api/v1
+	group: user
+)
+service main {
+	@doc "Register User"
+	@handler register
+	post /user/register (RegisterReq) returns (RegisterResp)
+
+	@doc "Login User"
+	@handler login
+	post /user/login (LoginReq) returns (LoginResp)
+}
 
 type User {
 	ID        int64  `json:"id"`
@@ -57,26 +87,3 @@ type (
 	}
 )
 
-//============================> usercenter v1 <============================
-//no need login
-@server(
-	prefix: api/v1
-	group: user
-)
-service main {
-	@doc "register"
-	@handler register
-	post /user/register (RegisterReq) returns (RegisterResp)
-
-	@doc "login"
-	@handler login
-	post /user/login (LoginReq) returns (LoginResp)
-
-	@doc "get user info"
-	@handler detail
-	get /user/detail (UserInfoReq) returns (UserInfoResp)
-
-	@doc "Update Avatar"
-	@handler UpdateAvatar
-	post  /user/avatar (UpdateAvatarReq) returns (UpdateAvatarResp)
-}

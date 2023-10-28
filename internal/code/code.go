@@ -18,4 +18,7 @@ var (
 	ErrUserNoExistsError = xcode.Add(40007, "user not exists")
 	ErrUsernamePwdError  = xcode.Add(40008, "username or password error")
 	ErrUserFollowSelf    = xcode.Add(40009, "can not follow yourself")
+
+	ErrCommentNoExistsError     = xcode.Add(40010, "comment not exists")
+	ErrCommentNoPermissionError = xcode.Add(40011, "no permission to delete comment")
 )

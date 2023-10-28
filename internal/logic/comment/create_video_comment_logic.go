@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,7 @@ func NewCreateVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *CreateVideoCommentLogic) CreateVideoComment(req *types.CreateVideoCommentReq) (resp *types.CreateVideoCommentResp, err error) {
-	// todo: add your logic here and delete this line
-
+	doer := jwt.GetUidFromCtx(l.ctx)
+	err = l.svcCtx.CommentModel.CreateVideoComment(l.ctx, doer, req.VideoId, req.Content)
 	return
 }

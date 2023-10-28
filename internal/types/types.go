@@ -57,9 +57,11 @@ type FeedReq struct {
 }
 
 type FeedResp struct {
-	VideoList []*Video `json:"video_list"`
-	NextTime  int64    `json:"next_time"` // 下次请求时间(毫秒时间戳)
-	Length    int      `json:"length"`    // 视频列表长度
+	VideoList   []*Video     `json:"video_list"`
+	Items       []*VideoItem `json:"items"`
+	NextTime    int64        `json:"next_time"`    // 下次请求时间(毫秒时间戳)
+	CursorScore string       `json:"cursor_score"` // 下次请求时间(毫秒时间戳)
+	Length      int          `json:"length"`       // 视频列表长度
 }
 
 type CategoryReq struct {
@@ -92,6 +94,14 @@ type VideoCover struct {
 type VideoInteractInfo struct {
 	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
 	LikedCount string `json:"liked_count"` // 点赞数
+}
+
+type VideoItem struct {
+	Ignore    bool      `json:"ignore"`     // 是否忽略
+	ID        int64     `json:"id"`         // 视频ID
+	ModelType string    `json:"model_type"` // 发布类型:[video,article]
+	VideoCard VideoCard `json:"video_card"` // 视频信息
+	TraceID   string    `json:"trace_id"`   // 视频traceID
 }
 
 type VideoCard struct {
@@ -252,30 +262,42 @@ type Commnent struct {
 }
 
 type CreateVideoCommentReq struct {
+	Content string `json:"content"`
+	VideoId uint   `json:"video_id" path:"video_id"`
 }
 
 type CreateVideoCommentResp struct {
+	Commnent *Commnent `json:"comment"`
 }
 
 type GetVideoCommentReq struct {
+	VideoId   uint `json:"video_id" path:"video_id"`
+	CommentId uint `json:"comment_id" path:"comment_id"`
 }
 
 type GetVideoCommentResp struct {
+	Commnent *Commnent `json:"comment"`
 }
 
 type DeleteVideoCommentReq struct {
+	VideoId   uint `json:"video_id" path:"video_id"`
+	CommentId uint `json:"comment_id" path:"comment_id"`
 }
 
 type DeleteVideoCommentResp struct {
 }
 
 type EditVideoCommentReq struct {
+	VideoId   uint   `json:"video_id" path:"video_id"`
+	CommentId uint   `json:"comment_id" path:"comment_id"`
+	Content   string `json:"content"`
 }
 
 type EditVideoCommentResp struct {
 }
 
 type ListVideoCommentsReq struct {
+	VideoId uint `json:"video_id" path:"video_id"`
 }
 
 type ListVideoCommentsResp struct {

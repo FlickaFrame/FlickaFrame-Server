@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"github.com/jinzhu/copier"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,13 @@ func NewGetVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 }
 
 func (l *GetVideoCommentLogic) GetVideoComment(req *types.GetVideoCommentReq) (resp *types.GetVideoCommentResp, err error) {
-	// todo: add your logic here and delete this line
-
+	resp = &types.GetVideoCommentResp{}
+	comment, err := l.svcCtx.CommentModel.FindOne(l.ctx, req.CommentId)
+	if err != nil {
+		return nil, err
+	}
+	var commentRsp types.Commnent
+	_ = copier.Copy(&commentRsp, comment)
+	resp.Commnent = &commentRsp
 	return
 }

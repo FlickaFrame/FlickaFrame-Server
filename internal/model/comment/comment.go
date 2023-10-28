@@ -10,15 +10,15 @@ const DefaultLimit = 10
 
 type Comment struct {
 	gorm.Model
-	Content       string            `gorm:"not null"`  			               // 评论内容
-	VideoID       int               `gorm:"index:idx_videoid;not null"`    // 视频ID
-	ParentID      int               `gorm:"index:idx_parentid;"`   				 // 父评论ID
-	TargetID      int               `gorm:"index:idx_targetid;"`           // 回复对应评论ID
-	OwnerUID      int               `gorm:"index:idx_owneruid;not null"`   // 评论者ID
-	User          user_model.User   `gorm:"-"`														 // 评论者信息
-	ToUser        user_model.User   `gorm:"-"`														 // 被回复者信息
-	ReplayCount   int               `gorm:"default:0"`                     // 回复数
-	LikeCount     int               `gorm:"default:0"`                     // 点赞数
+	Content     string          `gorm:"not null"`                    // 评论内容
+	VideoID     uint            `gorm:"index:idx_videoid;not null"`  // 视频ID
+	ParentID    uint            `gorm:"index:idx_parentid;"`         // 父评论ID
+	TargetID    uint            `gorm:"index:idx_targetid;"`         // 回复对应评论ID
+	OwnerUID    uint            `gorm:"index:idx_owneruid;not null"` // 评论者ID
+	User        user_model.User `gorm:"-"`                           // 评论者信息
+	ToUser      user_model.User `gorm:"-"`                           // 被回复者信息
+	ReplayCount int             `gorm:"default:0"`                   // 回复数
+	LikeCount   int             `gorm:"default:0"`                   // 点赞数
 }
 
 func (c *Comment) TableName() string {
@@ -34,11 +34,11 @@ func NewCommentModel(db *gorm.DB) *CommentModel {
 }
 
 type Option struct {
-	VideoID		  int   // 视频ID
-	ParentId		int   // 父评论ID
-	Limit       int   // 单次查询个数
-	LimitOffset int   // 查询偏移量
-	OrderBy			int   // 排序方式(0:按时间倒序,1:按热度倒序)
+	VideoID     uint // 视频ID
+	ParentId    int  // 父评论ID
+	Limit       int  // 单次查询个数
+	LimitOffset int  // 查询偏移量
+	OrderBy     int  // 排序方式(0:按时间倒序,1:按热度倒序)
 }
 
 func (m *CommentModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
@@ -67,15 +67,36 @@ func (m *CommentModel) List(ctx context.Context, opts Option) ([]*Comment, error
 	return result, err
 }
 
-func (c *CommentModel) Insert(ctx context.Context, comment Comment) error {
-	return c.db.WithContext(ctx).Create(&comment).Error
+func (m *CommentModel) CreateVideoComment(ctx context.Context, doer uint, videoId uint, content string) error {
+	comment := Comment{
+		Content:  content,
+		VideoID:  videoId,
+		OwnerUID: doer,
+	}
+	return m.db.WithContext(ctx).
+		Create(&comment).Error
 }
 
-func (c *CommentModel) Delete(ctx context.Context, comment Comment) error {
+func (m *CommentModel) Insert(ctx context.Context, comment Comment) error {
+	return m.db.WithContext(ctx).
+		Create(&comment).Error
+}
+
+func (m *CommentModel) Delete(ctx context.Context, id uint) error {
 	// TODO删除评论时,需要删除对应的回复
-	return c.db.WithContext(ctx).Delete(&comment).Error
+	return m.db.WithContext(ctx).
+		Delete(&Comment{}, id).Error
 }
 
-func (c *CommentModel) Update(ctx context.Context, comment Comment) error {
-	return c.db.WithContext(ctx).Save(&comment).Error
+func (m *CommentModel) Update(ctx context.Context, id uint, content string) error {
+	return m.db.WithContext(ctx).
+		Model(&Comment{}).
+		Where("id = ?", id).
+		Update("content", content).Error
+}
+
+func (m *CommentModel) FindOne(ctx context.Context, id uint) (*Comment, error) {
+	var comment Comment
+	err := m.db.WithContext(ctx).First(&comment, id).Error
+	return &comment, err
 }

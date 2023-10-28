@@ -26,3 +26,13 @@
 ```bash
     docker run -itd --name redis-qiniuyun -p 6379:6379 redis
 ```
+
+## API Doc
+
+```shell
+# 生成openAPI文档, 生成的文档在docs/swagger
+# 可以使用ApiFox订阅 http://localhost:8080/api/v1/swagger
+make gen-api-swagger 
+# 生成api markdown文档, 生成的文档在docs/api
+make gen-api-doc
+```

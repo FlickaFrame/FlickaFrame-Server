@@ -34,4 +34,5 @@ lint-go-fix:
 
 .PHONY: build
 build: ## build
-	${GO} build -o tiktok .
+	GOPROXY=https://goproxy.cn/,direct go mod tidy
+	${GO} build -o main .

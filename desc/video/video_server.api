@@ -12,7 +12,7 @@ info(
 	group: video
 )
 service main{
-	@doc "feed"
+	@doc "Home Video Feed"
 	@handler Feed
 	get /video/feed (FeedReq) returns (FeedResp)
 
@@ -32,7 +32,9 @@ type (
 	}
 	FeedResp {
 		VideoList []*Video `json:"video_list"`
+		Items    []*VideoItem `json:"items"`
 		NextTime  int64    `json:"next_time"` // 下次请求时间(毫秒时间戳)
+		CursorScore string `json:"cursor_score"` // 下次请求时间(毫秒时间戳)
 		Length    int      `json:"length"`    // 视频列表长度
 	}
 )
@@ -68,6 +70,14 @@ type VideoCover {
 type VideoInteractInfo {
 	Liked      bool   `json:"liked"`       // 当前用户是否已点赞
 	LikedCount string `json:"liked_count"` // 点赞数
+}
+
+type VideoItem{
+	Ignore    bool        `json:"ignore"`      // 是否忽略
+	ID 	  int64       `json:"id"`          // 视频ID
+	ModelType string      `json:"model_type"`  // 发布类型:[video,article]
+	VideoCard VideoCard   `json:"video_card"`  // 视频信息
+	TraceID   string      `json:"trace_id"`    // 视频traceID
 }
 
 type VideoCard {

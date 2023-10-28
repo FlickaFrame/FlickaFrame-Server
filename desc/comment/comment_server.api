@@ -10,6 +10,20 @@ info(
 @server(
 	prefix: api/v1
 	group: comment
+)
+service main {
+	@doc "Get a specific comment of an Video"
+	@handler GetVideoComment
+	get /video/:video_id/comments/:comment_id (GetVideoCommentReq) returns (GetVideoCommentResp)
+
+	@doc "List comments of an Video"
+	@handler ListVideoComments
+	get /video/:video_id/comments (ListVideoCommentsReq) returns (ListVideoCommentsResp)
+}
+
+@server(
+	prefix: api/v1
+	group: comment
 	jwt: JwtAuth
 )
 service main {
@@ -17,21 +31,13 @@ service main {
 	@handler CreateVideoComment
 	put /video/:video_id/comments (CreateVideoCommentReq) returns (CreateVideoCommentResp)
 
-	@doc "Get a specific comment of an Video"
-	@handler GetVideoComment
-	get /video/:video_id/comments/:comment_id (GetVideoCommentReq) returns (GetVideoCommentResp)
-
 	@doc "Delete a comment of an Video"
 	@handler DeleteVideoComment
-	delete /video/:video_id/comments/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
+	delete /comments/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
 
 	@doc "Edit comments of an Video"
 	@handler EditVideoComment
-	post /video/:video_id/comments/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
-
-	@doc "List comments of an Video"
-	@handler ListVideoComments
-	get /video/:video_id/comments (ListVideoCommentsReq) returns (ListVideoCommentsResp)
+	post /comments/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
 }
 
 type CommentUserInfo {
@@ -86,22 +92,30 @@ type Commnent {
 
 type (
 	CreateVideoCommentReq {
+		Content string `json:"content"`
+		VideoId uint `json:"video_id" path:"video_id"`
 	}
 
 	CreateVideoCommentResp {
+		Commnent *Commnent `json:"comment"`
 	}
 )
 
 type (
 	GetVideoCommentReq {
+		VideoId   uint `json:"video_id" path:"video_id"`
+		CommentId uint `json:"comment_id" path:"comment_id"`
 	}
 
 	GetVideoCommentResp {
+		Commnent *Commnent `json:"comment"`
 	}
 )
 
 type (
 	DeleteVideoCommentReq {
+		VideoId uint `json:"video_id" path:"video_id"`
+		CommentId uint `json:"comment_id" path:"comment_id"`
 	}
 
 	DeleteVideoCommentResp {
@@ -110,6 +124,9 @@ type (
 
 type (
 	EditVideoCommentReq {
+		VideoId   uint `json:"video_id" path:"video_id"`
+		CommentId uint `json:"comment_id" path:"comment_id"`
+		Content   string `json:"content"`
 	}
 
 	EditVideoCommentResp {
@@ -118,6 +135,7 @@ type (
 
 type (
 	ListVideoCommentsReq {
+		VideoId   uint `json:"video_id" path:"video_id"`
 	}
 
 	ListVideoCommentsResp {
