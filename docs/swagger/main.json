@@ -15,9 +15,75 @@
     "application/json"
   ],
   "paths": {
+    "api/v1/comments/{comment_id}": {
+      "delete": {
+        "summary": "Delete a comment of an Video",
+        "operationId": "DeleteVideoComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DeleteVideoCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteVideoCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      },
+      "post": {
+        "summary": "Edit comments of an Video",
+        "operationId": "EditVideoComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/EditVideoCommentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EditVideoCommentReq"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "comment"
+        ]
+      }
+    },
     "api/v1/user/avatar": {
       "post": {
-        "summary": "Update Avatar",
+        "summary": "Update User Avatar",
         "operationId": "UpdateAvatar",
         "responses": {
           "200": {
@@ -45,7 +111,7 @@
     },
     "api/v1/user/detail": {
       "get": {
-        "summary": "get user info",
+        "summary": "Get User Info Detail",
         "operationId": "detail",
         "responses": {
           "200": {
@@ -221,7 +287,7 @@
     },
     "api/v1/user/login": {
       "post": {
-        "summary": "login",
+        "summary": "Login User",
         "operationId": "login",
         "responses": {
           "200": {
@@ -249,7 +315,7 @@
     },
     "api/v1/user/register": {
       "post": {
-        "summary": "register",
+        "summary": "Register User",
         "operationId": "register",
         "responses": {
           "200": {
@@ -433,7 +499,7 @@
     },
     "api/v1/video/feed": {
       "get": {
-        "summary": "feed",
+        "summary": "Home Video Feed",
         "operationId": "Feed",
         "responses": {
           "200": {
@@ -585,82 +651,6 @@
         "tags": [
           "comment"
         ]
-      },
-      "delete": {
-        "summary": "Delete a comment of an Video",
-        "operationId": "DeleteVideoComment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DeleteVideoCommentResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "comment_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeleteVideoCommentReq"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "comment"
-        ]
-      },
-      "post": {
-        "summary": "Edit comments of an Video",
-        "operationId": "EditVideoComment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/EditVideoCommentResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "comment_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/EditVideoCommentReq"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "comment"
-        ]
       }
     }
   },
@@ -760,6 +750,121 @@
         "是否关注"
       ]
     },
+    "CommentInteractInfo": {
+      "type": "object",
+      "properties": {
+        "liked": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 当前用户是否已点赞"
+        },
+        "liked_count": {
+          "type": "string",
+          "description": " 点赞数"
+        }
+      },
+      "title": "CommentInteractInfo",
+      "required": [
+        "liked",
+        "liked_count"
+      ]
+    },
+    "CommentUserInfo": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      },
+      "title": "CommentUserInfo",
+      "required": [
+        "user_id",
+        "nickname",
+        "image"
+      ]
+    },
+    "Commnent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "video_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "content": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "user_info": {
+          "$ref": "#/definitions/CommentUserInfo"
+        },
+        "comment_interact_info": {
+          "$ref": "#/definitions/CommentInteractInfo"
+        },
+        "sub_comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubComments"
+          }
+        },
+        "sub_comment_count": {
+          "type": "string"
+        },
+        "sub_comment_has_more": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "sub_comment_cursor": {
+          "type": "string"
+        },
+        "at_users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentUserInfo"
+          }
+        },
+        "show_tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ip_address": {
+          "type": "string"
+        }
+      },
+      "title": "Commnent",
+      "required": [
+        "id",
+        "video_id",
+        "status",
+        "content",
+        "create_time",
+        "user_info",
+        "comment_interact_info",
+        "sub_comments",
+        "sub_comment_count",
+        "sub_comment_has_more",
+        "sub_comment_cursor",
+        "at_users",
+        "show_tags",
+        "ip_address"
+      ]
+    },
     "CountFollowReq": {
       "type": "object",
       "properties": {
@@ -795,15 +900,47 @@
     },
     "CreateVideoCommentReq": {
       "type": "object",
-      "title": "CreateVideoCommentReq"
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "video_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "CreateVideoCommentReq",
+      "required": [
+        "content",
+        "video_id"
+      ]
     },
     "CreateVideoCommentResp": {
       "type": "object",
-      "title": "CreateVideoCommentResp"
+      "properties": {
+        "comment": {
+          "$ref": "#/definitions/Commnent"
+        }
+      },
+      "title": "CreateVideoCommentResp",
+      "required": [
+        "comment"
+      ]
     },
     "DeleteVideoCommentReq": {
       "type": "object",
-      "title": "DeleteVideoCommentReq"
+      "properties": {
+        "video_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "DeleteVideoCommentReq",
+      "required": [
+        "video_id",
+        "comment_id"
+      ]
     },
     "DeleteVideoCommentResp": {
       "type": "object",
@@ -811,7 +948,23 @@
     },
     "EditVideoCommentReq": {
       "type": "object",
-      "title": "EditVideoCommentReq"
+      "properties": {
+        "video_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "title": "EditVideoCommentReq",
+      "required": [
+        "video_id",
+        "comment_id",
+        "content"
+      ]
     },
     "EditVideoCommentResp": {
       "type": "object",
@@ -858,9 +1011,19 @@
             "$ref": "#/definitions/Video"
           }
         },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VideoItem"
+          }
+        },
         "next_time": {
           "type": "integer",
           "format": "int64",
+          "description": " 下次请求时间(毫秒时间戳)"
+        },
+        "cursor_score": {
+          "type": "string",
           "description": " 下次请求时间(毫秒时间戳)"
         },
         "length": {
@@ -872,7 +1035,9 @@
       "title": "FeedResp",
       "required": [
         "video_list",
+        "items",
         "next_time",
+        "cursor_score",
         "length"
       ]
     },
@@ -918,11 +1083,31 @@
     },
     "GetVideoCommentReq": {
       "type": "object",
-      "title": "GetVideoCommentReq"
+      "properties": {
+        "video_id": {
+          "$ref": "#/definitions/uint"
+        },
+        "comment_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "GetVideoCommentReq",
+      "required": [
+        "video_id",
+        "comment_id"
+      ]
     },
     "GetVideoCommentResp": {
       "type": "object",
-      "title": "GetVideoCommentResp"
+      "properties": {
+        "comment": {
+          "$ref": "#/definitions/Commnent"
+        }
+      },
+      "title": "GetVideoCommentResp",
+      "required": [
+        "comment"
+      ]
     },
     "ListFollowersReq": {
       "type": "object",
@@ -1080,11 +1265,38 @@
     },
     "ListVideoCommentsReq": {
       "type": "object",
-      "title": "ListVideoCommentsReq"
+      "properties": {
+        "video_id": {
+          "$ref": "#/definitions/uint"
+        }
+      },
+      "title": "ListVideoCommentsReq",
+      "required": [
+        "video_id"
+      ]
     },
     "ListVideoCommentsResp": {
       "type": "object",
-      "title": "ListVideoCommentsResp"
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Commnent"
+          }
+        }
+      },
+      "title": "ListVideoCommentsResp",
+      "required": [
+        "created_at",
+        "user_id",
+        "comments"
+      ]
     },
     "LoginReq": {
       "type": "object",
@@ -1165,6 +1377,74 @@
         "access_token",
         "access_expire",
         "refresh_after"
+      ]
+    },
+    "SubComments": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "video_id": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "at_users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentUserInfo"
+          }
+        },
+        "user_info": {
+          "$ref": "#/definitions/CommentUserInfo"
+        },
+        "comment_interact_info": {
+          "$ref": "#/definitions/CommentInteractInfo"
+        },
+        "show_tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "SubComments",
+      "required": [
+        "id",
+        "video_id",
+        "content",
+        "create_time",
+        "status",
+        "at_users",
+        "user_info",
+        "comment_interact_info",
+        "show_tags"
+      ]
+    },
+    "TargetCommnet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user_info": {
+          "$ref": "#/definitions/CommentUserInfo"
+        }
+      },
+      "title": "TargetCommnet",
+      "required": [
+        "id",
+        "user_info"
       ]
     },
     "UnFollowReq": {
@@ -1328,22 +1608,166 @@
         "author"
       ]
     },
+    "VideoCard": {
+      "type": "object",
+      "properties": {
+        "cover": {
+          "$ref": "#/definitions/VideoCover",
+          "description": " 视频封面"
+        },
+        "type": {
+          "type": "string",
+          "description": " 视频分类"
+        },
+        "display_title": {
+          "type": "string",
+          "description": " 视频标题"
+        },
+        "user": {
+          "$ref": "#/definitions/VideoUserInfo",
+          "description": " 视频作者信息"
+        },
+        "interact_info": {
+          "$ref": "#/definitions/VideoInteractInfo",
+          "description": " 视频互动信息"
+        }
+      },
+      "title": "VideoCard",
+      "required": [
+        "cover",
+        "type",
+        "display_title",
+        "user",
+        "interact_info"
+      ]
+    },
+    "VideoCover": {
+      "type": "object",
+      "properties": {
+        "trace_id": {
+          "type": "string"
+        },
+        "info_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VideoCoverInfo"
+          }
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "width": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "title": "VideoCover",
+      "required": [
+        "trace_id",
+        "info_list",
+        "file_id",
+        "height",
+        "width",
+        "url"
+      ]
+    },
+    "VideoCoverInfo": {
+      "type": "object",
+      "properties": {
+        "image_scene": {
+          "type": "string",
+          "description": "视频封面类型"
+        },
+        "url": {
+          "type": "string",
+          "description": "视频封面地址"
+        }
+      },
+      "title": "VideoCoverInfo",
+      "required": [
+        "image_scene",
+        "url"
+      ]
+    },
+    "VideoInteractInfo": {
+      "type": "object",
+      "properties": {
+        "liked": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 当前用户是否已点赞"
+        },
+        "liked_count": {
+          "type": "string",
+          "description": " 点赞数"
+        }
+      },
+      "title": "VideoInteractInfo",
+      "required": [
+        "liked",
+        "liked_count"
+      ]
+    },
+    "VideoItem": {
+      "type": "object",
+      "properties": {
+        "ignore": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否忽略"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 视频ID"
+        },
+        "model_type": {
+          "type": "string",
+          "description": " 发布类型:[video,article]"
+        },
+        "video_card": {
+          "$ref": "#/definitions/VideoCard",
+          "description": " 视频信息"
+        },
+        "trace_id": {
+          "type": "string",
+          "description": " 视频traceID"
+        }
+      },
+      "title": "VideoItem",
+      "required": [
+        "ignore",
+        "id",
+        "model_type",
+        "video_card",
+        "trace_id"
+      ]
+    },
     "VideoUserInfo": {
       "type": "object",
       "properties": {
-        "nickName": {
-          "type": "string",
-          "description": " 昵称"
+        "nick_name": {
+          "type": "string"
         },
-        "avatarUrl": {
-          "type": "string",
-          "description": " 头像地址"
+        "avatar": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
         }
       },
       "title": "VideoUserInfo",
       "required": [
-        "nickName",
-        "avatarUrl"
+        "nick_name",
+        "avatar",
+        "user_id"
       ]
     }
   },

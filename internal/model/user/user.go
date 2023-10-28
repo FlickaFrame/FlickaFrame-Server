@@ -25,7 +25,7 @@ type User struct {
 	Password  string // 密码
 	Phone     string `gorm:"type:varchar(100);index:idx_phone,unique"` // 手机号
 	Slogan    string // 个人简介
-	TikTokID  string `gorm:"type:varchar(100);index:idx_tiktok,unique"` // 抖音ID
+	TikTokID  string `gorm:"type:varchar(100);index:idx_tiktok"` // 抖音ID
 
 	FollowingCount int
 	FollowerCount  int
