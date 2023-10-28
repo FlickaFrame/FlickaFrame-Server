@@ -30,6 +30,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/detail",
 				Handler: user.DetailHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/avatar",
+				Handler: user.UpdateAvatarHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)
@@ -38,12 +43,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/feed",
+				Path:    "/video/feed",
 				Handler: video.FeedHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/category",
+				Path:    "/video/category",
 				Handler: video.CategoryHandler(serverCtx),
 			},
 		},

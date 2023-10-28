@@ -40,24 +40,11 @@ type UserInfoResp struct {
 	UserInfo User `json:"user_info"`
 }
 
-type VideoUserInfo struct {
-	NickName  string `json:"nickName"`  // 昵称
-	AvatarUrl string `json:"avatarUrl"` // 头像地址
+type UpdateAvatarReq struct {
+	Image string `json:"image" binding:"Required"`
 }
 
-type Video struct {
-	ID            int64         `json:"id"`         // 视频ID
-	Title         string        `json:"title"`      // 视频标题
-	PlayUrl       string        `json:"playUrl"`    // 视频播放地址
-	ThumbUrl      string        `json:"thumbUrl"`   // 视频封面地址
-	FavoriteCount int64         `json:"favNum"`     // 点赞数
-	CommentCount  int64         `json:"commentNum"` // 评论数
-	ShareNum      int64         `json:"shareNum"`   // 分享数
-	CreatedAt     string        `json:"createdAt"`  // 视频创建时间(毫秒时间戳)
-	IsFav         bool          `json:"isFav"`      // 当前用户是否已点赞
-	IsFollow      bool          `json:"isFollow"`   // 当前用户是否已关注该用户
-	Tags          []string      `json:"tags"`       // 视频标签
-	Author        VideoUserInfo `json:"author"`     // 作者信息
+type UpdateAvatarResp struct {
 }
 
 type FeedReq struct {
@@ -78,13 +65,42 @@ type FeedResp struct {
 type CategoryReq struct {
 }
 
+type CategoryResp struct {
+	CategoryList []*Category `json:"category_list"`
+}
+
+type VideoUserInfo struct {
+	NickName  string `json:"nickName"`  // 昵称
+	AvatarUrl string `json:"avatarUrl"` // 头像地址
+}
+
+type Video struct {
+	ID            int64         `json:"id"`         // 视频ID
+	Title         string        `json:"title"`      // 视频标题
+	PlayUrl       string        `json:"playUrl"`    // 视频播放地址
+	ThumbUrl      string        `json:"thumbUrl"`   // 视频封面地址
+	FavoriteCount int64         `json:"favNum"`     // 点赞数
+	CommentCount  int64         `json:"commentNum"` // 评论数
+	ShareNum      int64         `json:"shareNum"`   // 分享数
+	CreatedAt     string        `json:"createdAt"`  // 视频创建时间(毫秒时间戳)
+	IsFav         bool          `json:"isFav"`      // 当前用户是否已点赞
+	IsFollow      bool          `json:"isFollow"`   // 当前用户是否已关注该用户
+	Tags          []string      `json:"tags"`       // 视频标签
+	Author        VideoUserInfo `json:"author"`     // 作者信息
+}
+
 type Category struct {
 	ID   uint   `json:"id"`   // 分类ID
 	Name string `json:"name"` // 分类名称
 }
 
-type CategoryResp struct {
-	CategoryList []*Category `json:"category_list"`
+type CountFollowReq struct {
+	ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
+}
+
+type CountFollowResp struct {
+	FollowingCount int64 `json:"following_count" desc:"关注数量"`
+	FollowersCount int64 `json:"follower_count" desc:"粉丝数量"`
 }
 
 type FollowUser struct {
@@ -160,13 +176,4 @@ type CheckFollowingReq struct {
 
 type CheckFollowingResp struct {
 	Status bool `json:"status" desc:"是否关注"`
-}
-
-type CountFollowReq struct {
-	ContextUserId uint `json:"user_id" path:"user_id" desc:"用户id" validate:"required"`
-}
-
-type CountFollowResp struct {
-	FollowingCount int64 `json:"following_count" desc:"关注数量"`
-	FollowersCount int64 `json:"follower_count" desc:"粉丝数量"`
 }

@@ -13,11 +13,11 @@ info(
 )
 service main{
 	@doc "feed"
-	@handler VideoFeed
+	@handler Feed
 	get /video/feed (FeedReq) returns (FeedResp)
 
 	@doc "category"
-	@handler VideoCategory
+	@handler Category
 	get /video/category (CategoryReq) returns (CategoryResp)
 }
 
