@@ -132,6 +132,14 @@ type Category struct {
 	Name string `json:"name"` // 分类名称
 }
 
+type CreateUpTokenReq struct {
+}
+
+type CreateUpTokenResp struct {
+	UpToken string `json:"upToken"` // 上传凭证
+	Expires int64  `json:"expires"` // 上传凭证过期时间(秒)
+}
+
 type CountFollowReq struct {
 	ContextUserId uint `json:"userId" path:"user_id" desc:"用户id" validate:"required"`
 }

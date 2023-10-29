@@ -6,6 +6,19 @@ info(
 	author: "caicandong"
 	email: "caicandong@shu.edu.cn"
 )
+
+// Need login
+@server(
+	prefix: api/v1
+	group: video
+	jwt: JwtAuth
+)
+service main{
+	@doc "Get Upload Token"
+	@handler CreateUpToken
+	get /video/uptoken (CreateUpTokenReq) returns (CreateUpTokenResp)
+}
+
 //no need login
 @server(
 	prefix: api/v1
@@ -106,4 +119,13 @@ type Video {
 type Category {
 	ID   uint   `json:"id"`   // 分类ID
 	Name string `json:"name"` // 分类名称
+}
+
+type CreateUpTokenReq {
+	
+}
+
+type CreateUpTokenResp {
+	UpToken string `json:"upToken"` // 上传凭证
+	Expires int64 `json:"expires"` // 上传凭证过期时间(秒)
 }
