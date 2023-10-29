@@ -71,6 +71,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/video/category",
 				Handler: video.CategoryHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/video/search",
+				Handler: video.SearchHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)

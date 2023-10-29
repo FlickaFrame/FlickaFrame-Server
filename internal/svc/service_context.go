@@ -9,6 +9,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/go-playground/validator/v10"
+	"github.com/meilisearch/meilisearch-go"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
@@ -24,6 +25,7 @@ type ServiceContext struct {
 	FollowModel   *user.FollowModel
 	FavoriteModel *favorite.FavoriteModel
 	CommentModel  *comment.CommentModel
+	Indexer       *meilisearch.Client
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -44,7 +46,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Pass: c.BizRedis.Pass,
 		Type: c.BizRedis.Type,
 	})
-
+	indexer := meilisearch.NewClient(meilisearch.ClientConfig{
+		Host:   c.MeiliSearch.Host,
+		APIKey: c.MeiliSearch.APIKey,
+		//Timeout: time.Millisecond*c.MeiliSearch.Timeout
+	})
 	return &ServiceContext{
 		Config:   c,
 		Validate: validator.New(),
@@ -59,5 +65,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FollowModel:   user.NewFollowModel(db.DB),
 		FavoriteModel: favorite.NewFavoriteModel(db.DB),
 		CommentModel:  comment.NewCommentModel(db.DB),
+		Indexer:       indexer,
 	}
 }

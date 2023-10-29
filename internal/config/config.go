@@ -20,6 +20,11 @@ type Config struct {
 		ConnectTimeout   int64 `json:",optional"`
 		ReadWriteTimeout int64 `json:",optional"`
 	}
+	MeiliSearch struct {
+		Host    string
+		APIKey  string
+		Timeout int64
+	}
 	Mysql    orm.Config
 	BizRedis redis.RedisConf
 }

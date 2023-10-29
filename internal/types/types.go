@@ -113,18 +113,18 @@ type VideoCard struct {
 }
 
 type Video struct {
-	ID            int64         `json:"id"`         // 视频ID
-	Title         string        `json:"title"`      // 视频标题
-	PlayUrl       string        `json:"playUrl"`    // 视频播放地址
-	ThumbUrl      string        `json:"thumbUrl"`   // 视频封面地址
-	FavoriteCount int64         `json:"favNum"`     // 点赞数
-	CommentCount  int64         `json:"commentNum"` // 评论数
-	ShareNum      int64         `json:"shareNum"`   // 分享数
-	CreatedAt     string        `json:"createdAt"`  // 视频创建时间(毫秒时间戳)
-	IsFav         bool          `json:"isFav"`      // 当前用户是否已点赞
-	IsFollow      bool          `json:"isFollow"`   // 当前用户是否已关注该用户
-	Tags          []string      `json:"tags"`       // 视频标签
-	Author        VideoUserInfo `json:"author"`     // 作者信息
+	ID            int64         `json:"id" copier:"id"`       // 视频ID
+	Title         string        `json:"title" copier:"title"` // 视频标题
+	PlayUrl       string        `json:"playUrl"`              // 视频播放地址
+	ThumbUrl      string        `json:"thumbUrl"`             // 视频封面地址
+	FavoriteCount int64         `json:"favNum"`               // 点赞数
+	CommentCount  int64         `json:"commentNum"`           // 评论数
+	ShareNum      int64         `json:"shareNum"`             // 分享数
+	CreatedAt     string        `json:"createdAt"`            // 视频创建时间(毫秒时间戳)
+	IsFav         bool          `json:"isFav"`                // 当前用户是否已点赞
+	IsFollow      bool          `json:"isFollow"`             // 当前用户是否已关注该用户
+	Tags          []string      `json:"tags"`                 // 视频标签
+	Author        VideoUserInfo `json:"author"`               // 作者信息
 }
 
 type Category struct {
@@ -138,6 +138,18 @@ type CreateUpTokenReq struct {
 type CreateUpTokenResp struct {
 	UpToken string `json:"upToken"` // 上传凭证
 	Expires int64  `json:"expires"` // 上传凭证过期时间(秒)
+}
+
+type SearchReq struct {
+	Keyword string `json:"keyword"` // 搜索关键字
+	Offset  int64  `json:"offset"`  // 偏移量
+	Limit   int64  `json:"limit"`   // 请求数量
+}
+
+type SearchResp struct {
+	Hits   interface{} `json:"hits"`
+	Offset int64       `json:"offset"`
+	Limit  int64       `json:"limit"`
 }
 
 type CountFollowReq struct {
