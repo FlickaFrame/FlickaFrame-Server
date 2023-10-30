@@ -50,7 +50,6 @@ type UpdateAvatarResp struct {
 type FeedReq struct {
 	LatestTime int64  `json:"latestTime,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
 	Limit      int    `json:"limit,optional" form:"limit,optional"`           // 请求数量
-	Token      string `json:"token,optional" form:"token,optional"`           // 登录token
 	AuthorID   uint   `json:"authorId,optional" form:"authorID,optional"`     // 作者ID
 	Tag        string `json:"tag,optional" form:"tag,optional"`               // 标签
 	CategoryID uint   `json:"categoryId,optional" form:"categoryId,optional"` // 分类
@@ -147,9 +146,24 @@ type SearchReq struct {
 }
 
 type SearchResp struct {
-	Hits   interface{} `json:"hits"`
-	Offset int64       `json:"offset"`
-	Limit  int64       `json:"limit"`
+	Hits               interface{} `json:"hits"`               // 搜索结果
+	Query              string      `json:"query"`              // 搜索关键字
+	ProcessingTimeMs   int64       `json:"processingTimeMs"`   // 搜索耗时(毫秒)
+	Offset             int64       `json:"offset"`             // 偏移量
+	Limit              int64       `json:"limit"`              // 请求数量
+	EstimatedTotalHits int64       `json:"estimatedTotalHits"` // 搜索结果总数
+}
+
+type CreateVideoReq struct {
+}
+
+type CreateVideoResp struct {
+}
+
+type DeleteVideoReq struct {
+}
+
+type DeleteVideoResp struct {
 }
 
 type CountFollowReq struct {

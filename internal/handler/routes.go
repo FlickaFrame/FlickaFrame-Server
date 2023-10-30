@@ -55,6 +55,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/video/uptoken",
 				Handler: video.CreateUpTokenHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/video/create",
+				Handler: video.CreateVideoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/video/delete",
+				Handler: video.DeleteVideoHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
