@@ -1,0 +1,85 @@
+syntax = "v1"
+
+info(
+	title: "点赞"
+	desc: "点赞(视频/评论)"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
+)
+
+@server(
+	prefix: api/v1
+	group: favorite
+	jwt: JwtAuth
+)
+service main {
+	@doc "Favorite a Video for Authenticated User"
+	@handler FavoriteVideo
+	post /favorite/video/:videoId (FavoriteVideoReq) returns (FavoriteVideoResp)
+
+	@doc "Check Favorite Status of a Video for Authenticated User"
+	@handler CheckVideoFavorite
+	get /favorite/video/:videoId/status (CheckVideoFavoriteReq) returns (CheckVideoFavoriteResp)
+
+	@doc "List Favorite Videos for Authenticated User"
+	@handler ListVideoFavorite
+	get /favorite/videos (ListVideoFavoriteReq) returns (ListVideoFavoriteResp)
+
+	@doc "Favorite a Comment for Authenticated User"
+	@handler FavoriteComment
+	post /favorite/comment/:commentId (FavoriteCommentReq) returns (FavoriteCommentResp)
+
+	@doc "Check Favorite Status of a Comment for Authenticated User"
+	@handler CheckCommentFavorite
+	get /favorite/comment/:commentId/status (CheckCommentFavoriteReq) returns (CheckCommentFavoriteResp)
+
+	@doc "List Favorite Comments for Authenticated User"
+	@handler ListCommentFavorite
+	get /favorite/comments (ListCommentFavoriteReq) returns (ListCommentFavoriteResp)
+}
+
+type (
+	FavoriteVideoReq {
+		VideoId string `json:"videoId"`
+	}
+	FavoriteVideoResp {
+		Favorite bool `json:"favorite"`
+	}
+)
+
+type (
+	FavoriteCommentReq {
+		VideoId string `json:"videoId"`
+	}
+	FavoriteCommentResp {
+		Favorite bool `json:"favorite"`
+	}
+)
+
+type (
+	CheckVideoFavoriteReq {
+		VideoId string `json:"videoId"`
+	}
+	CheckVideoFavoriteResp {
+		Favorite bool `json:"favorite"`
+	}
+)
+
+type (
+	CheckCommentFavoriteReq {
+		VideoId string `json:"videoId"`
+	}
+	CheckCommentFavoriteResp {
+		Favorite bool `json:"favorite"`
+	}
+)
+
+type (
+	ListVideoFavoriteReq  struct{}
+	ListVideoFavoriteResp struct{}
+)
+
+type (
+	ListCommentFavoriteReq  struct{}
+	ListCommentFavoriteResp struct{}
+)

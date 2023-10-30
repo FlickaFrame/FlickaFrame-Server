@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	comment "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/comment"
+	favorite "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/favorite"
 	follow "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/follow"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
@@ -175,6 +176,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPut,
 				Path:    "/video/:video_id/reply",
 				Handler: comment.CreateReplyCommentHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/favorite/video/:videoId",
+				Handler: favorite.FavoriteVideoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/favorite/video/:videoId/status",
+				Handler: favorite.CheckVideoFavoriteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/favorite/videos",
+				Handler: favorite.ListVideoFavoriteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/favorite/comment/:commentId",
+				Handler: favorite.FavoriteCommentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/favorite/comment/:commentId/status",
+				Handler: favorite.CheckCommentFavoriteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/favorite/comments",
+				Handler: favorite.ListCommentFavoriteHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

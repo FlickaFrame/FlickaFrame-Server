@@ -336,3 +336,47 @@ type CreateReplyCommentReq struct {
 type CreateReplyCommentResp struct {
 	Commnent *Commnent `json:"comment"`
 }
+
+type FavoriteVideoReq struct {
+	VideoId string `json:"videoId"`
+}
+
+type FavoriteVideoResp struct {
+	Favorite bool `json:"favorite"`
+}
+
+type FavoriteCommentReq struct {
+	VideoId string `json:"videoId"`
+}
+
+type FavoriteCommentResp struct {
+	Favorite bool `json:"favorite"`
+}
+
+type CheckVideoFavoriteReq struct {
+	VideoId string `json:"videoId"`
+}
+
+type CheckVideoFavoriteResp struct {
+	Favorite bool `json:"favorite"`
+}
+
+type CheckCommentFavoriteReq struct {
+	VideoId string `json:"videoId"`
+}
+
+type CheckCommentFavoriteResp struct {
+	Favorite bool `json:"favorite"`
+}
+
+type ListVideoFavoriteReq struct {
+}
+
+type ListVideoFavoriteResp struct {
+}
+
+type ListCommentFavoriteReq struct {
+}
+
+type ListCommentFavoriteResp struct {
+}
