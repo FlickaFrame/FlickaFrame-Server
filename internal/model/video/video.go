@@ -29,6 +29,24 @@ func (v *Video) TableName() string {
 	return "video"
 }
 
+func (v *Video) loadAuthor(ctx context.Context, db *gorm.DB) error {
+	var author user.User
+	err := db.WithContext(ctx).
+		Where("id = ?", v.AuthorID).
+		First(&author).Error
+	v.Author = &author
+	return err
+}
+
+type VideoModelInterface interface {
+	Insert(ctx context.Context, video *Video) error
+	FindOne(ctx context.Context, id int64) (*Video, error)
+	List(ctx context.Context, opts ListOption) ([]*Video, error)
+	Count(ctx context.Context, opts ListOption) (count int64, err error)
+}
+
+var _ VideoModelInterface = (*VideoModel)(nil)
+
 type VideoModel struct {
 	db *gorm.DB
 }
@@ -51,8 +69,8 @@ func (m *VideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
 	return &result, err
 }
 
-// Option 查找选项
-type Option struct {
+// ListOption 查找选项
+type ListOption struct {
 	AuthorID   uint      // 作者ID
 	LatestTime time.Time // 最新时间(分页)
 	Limit      int       // 限制数量(分页)
@@ -60,7 +78,7 @@ type Option struct {
 	CategoryID uint      // 分类ID
 }
 
-func (m *VideoModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
+func (m *VideoModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB {
 	session := m.db.WithContext(ctx)
 	// 根据作者ID
 	if opts.AuthorID != 0 {
@@ -82,14 +100,32 @@ func (m *VideoModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
 }
 
 // List 通过时间点来获取比该时间点早的十个视频
-func (m *VideoModel) List(ctx context.Context, opts Option) ([]*Video, error) {
+func (m *VideoModel) List(ctx context.Context, opts ListOption) ([]*Video, error) {
 	var result []*Video
 	err := m.applyOption(ctx, opts).Find(&result).Error
+	for _, v := range result {
+		err = v.loadAuthor(ctx, m.db)
+		if err != nil {
+			return nil, err
+		}
+	}
 	return result, err
 }
 
 // Count 通过作者 ID 获取视频数量
-func (m *VideoModel) Count(ctx context.Context, opts Option) (count int64, err error) {
+func (m *VideoModel) Count(ctx context.Context, opts ListOption) (count int64, err error) {
 	err = m.applyOption(ctx, opts).Count(&count).Error
 	return
+}
+
+func (m *VideoModel) ListVideoByAuthorId(ctx context.Context, authorId uint) ([]*Video, error) {
+	var result []*Video
+	err := m.db.WithContext(ctx).Where("author_id = ?", authorId).Find(&result).Error
+	return result, err
+}
+
+func (m *VideoModel) ListVideoByCategoryId(ctx context.Context, categoryId uint) ([]*Video, error) {
+	var result []*Video
+	err := m.db.WithContext(ctx).Where("category_id = ?", categoryId).Find(&result).Error
+	return result, err
 }
