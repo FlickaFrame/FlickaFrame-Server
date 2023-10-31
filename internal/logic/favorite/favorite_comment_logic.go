@@ -2,6 +2,7 @@ package favorite
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,7 @@ func NewFavoriteCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *F
 }
 
 func (l *FavoriteCommentLogic) FavoriteComment(req *types.FavoriteCommentReq) (resp *types.FavoriteCommentResp, err error) {
-	// todo: add your logic here and delete this line
-
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	err = l.svcCtx.FavoriteModel.FavoriteComment(l.ctx, doerId, req.VideoId, req.IsFavorite)
 	return
 }

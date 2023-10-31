@@ -352,35 +352,37 @@ type CreateReplyCommentResp struct {
 }
 
 type FavoriteVideoReq struct {
-	VideoId string `json:"videoId"`
+	VideoId    uint `json:"videoId"`
+	IsFavorite bool `json:"isFavorite"` //true: favorite, false: unfavorite
 }
 
 type FavoriteVideoResp struct {
-	Favorite bool `json:"favorite"`
+	IsFavorite bool `json:"favorite"`
 }
 
 type FavoriteCommentReq struct {
-	VideoId string `json:"videoId"`
+	VideoId    uint `json:"videoId"`
+	IsFavorite bool `json:"isFavorite"` //true: favorite, false: unfavorite
 }
 
 type FavoriteCommentResp struct {
-	Favorite bool `json:"favorite"`
+	IsFavorite bool `json:"favorite"`
 }
 
 type CheckVideoFavoriteReq struct {
-	VideoId string `json:"videoId"`
+	VideoId uint `json:"videoId"`
 }
 
 type CheckVideoFavoriteResp struct {
-	Favorite bool `json:"favorite"`
+	IsFavorite bool `json:"isFavorite"`
 }
 
 type CheckCommentFavoriteReq struct {
-	VideoId string `json:"videoId"`
+	VideoId uint `json:"videoId"`
 }
 
 type CheckCommentFavoriteResp struct {
-	Favorite bool `json:"favorite"`
+	IsFavorite bool `json:"isFavorite"`
 }
 
 type ListVideoFavoriteReq struct {

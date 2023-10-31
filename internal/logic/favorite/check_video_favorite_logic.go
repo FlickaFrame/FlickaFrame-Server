@@ -2,6 +2,7 @@ package favorite
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,10 @@ func NewCheckVideoFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *CheckVideoFavoriteLogic) CheckVideoFavorite(req *types.CheckVideoFavoriteReq) (resp *types.CheckVideoFavoriteResp, err error) {
-	// todo: add your logic here and delete this line
-
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	isFavorite, err := l.svcCtx.FavoriteModel.IsFavoriteVideo(l.ctx, req.VideoId, doerId)
+	resp = &types.CheckVideoFavoriteResp{
+		IsFavorite: isFavorite,
+	}
 	return
 }
