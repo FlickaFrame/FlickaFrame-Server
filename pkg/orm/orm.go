@@ -68,7 +68,9 @@ func NewMysql(conf *Config) (*DB, error) {
 		conf.MaxLifetime = 3600
 	}
 	db, err := gorm.Open(mysql.Open(conf.DSN), &gorm.Config{
-		Logger: &ormLog{}, // 集成go-zero日志组件
+		Logger: &ormLog{
+			LogLevel: logger.Info,
+		}, // 集成go-zero日志组件
 	})
 	if err != nil {
 		return nil, err

@@ -75,7 +75,7 @@ type FollowUser {
 
 type (
 	FollowReq {
-		ContextUserId uint `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+		ContextUserId uint `json:"userId,optional" path:"user_id" desc:"关注用户id" validate:"required"`
 	}
 	FollowResp {
 	}
@@ -100,8 +100,9 @@ type (
 
 type (
 	ListMyFollowersReq {
-		Page  int `json:"page" desc:"页码" validate:"required"`
-		Limit int `json:"limit" desc:"每页数量" validate:"required"`
+		PageSize int  `form:"pageSize"`
+		Page     int  `form:"page"`    // start from 1
+		ListAll  bool `form:"listAll"` // if true, then PageSize and Page will not be taken
 	}
 	ListMyFollowersResp {
 		FollowUser []*FollowUser `json:"followers" desc:"用户id"`

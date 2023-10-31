@@ -3,6 +3,7 @@ package video
 import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
 	"time"
 )
@@ -128,4 +129,16 @@ func (m *VideoModel) ListVideoByCategoryId(ctx context.Context, categoryId uint)
 	var result []*Video
 	err := m.db.WithContext(ctx).Where("category_id = ?", categoryId).Find(&result).Error
 	return result, err
+}
+
+// FollowingUserVideo 关注用户的视频
+func (m *VideoModel) FollowingUserVideo(ctx context.Context, userId uint, options orm.ListOptions) ([]*Video, error) {
+	sess := m.db.WithContext(ctx)
+	sess = sess.
+		Select("video.*").
+		Joins("LEFT JOIN follow ON video.author_id = follow.followed_user_id ").
+		Where("follow.user_id = ?", userId)
+	//sess = orm.SetSessionPagination(sess, &options)
+	videos := make([]*Video, 0, options.PageSize)
+	return videos, sess.Find(&videos).Error
 }

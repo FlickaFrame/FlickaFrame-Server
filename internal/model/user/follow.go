@@ -55,10 +55,10 @@ func (m *UserModel) FollowUser(ctx context.Context, userId, followID uint) error
 		if err := tx.Create(&Follow{UserID: userId, FollowedUserID: followID}).Error; err != nil {
 			return err
 		}
-		if err := tx.Model(&User{}).Where("id = ?", followID).Update("num_followers", gorm.Expr("num_followers + ?", 1)).Error; err != nil {
+		if err := tx.Model(&User{}).Where("id = ?", followID).Update("follower_count", gorm.Expr("follower_count + ?", 1)).Error; err != nil {
 			return err
 		}
-		if err := tx.Model(&User{}).Where("id = ?", userId).Update("num_following", gorm.Expr("num_following + ?", 1)).Error; err != nil {
+		if err := tx.Model(&User{}).Where("id = ?", userId).Update("following_count", gorm.Expr("following_count + ?", 1)).Error; err != nil {
 			return err
 		}
 		return nil

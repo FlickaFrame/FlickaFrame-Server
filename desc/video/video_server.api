@@ -25,6 +25,10 @@ service main{
 	@doc "Delete Video" // 删除视频
 	@handler DeleteVideo
 	post /video/delete (DeleteVideoReq) returns (DeleteVideoResp)
+
+	@doc "List video of following User for authenticated user"
+	@handler Following
+	get /video/following (FollowingReq) returns (FollowingResp)
 }
 
 //no need login
@@ -74,7 +78,7 @@ type (
 type VideoUserInfo { // 视频作者信息
 	NickName string `json:"nickName"`
 	Avatar   string `json:"avatar"`
-	UserID   string `json:"userId"`
+	UserID   uint   `json:"userId"`
 }
 
 type VideoCoverInfo {
@@ -165,4 +169,19 @@ type (
 type (
 	DeleteVideoReq  struct{}
 	DeleteVideoResp struct{}
+)
+
+type (
+	FollowingReq {
+		PageSize int  `form:"pageSize"` // 分页大小,默认为 10
+		Page     int  `form:"page"`     // 当前页码,默认为 1
+		ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
+	}
+	FollowingResp {
+		VideoList   []*Video     `json:"videoList"`
+		Items       []*VideoItem `json:"items"`
+		NextTime    int64        `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
+		CursorScore string       `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
+		Length      int          `json:"length"`      // 视频列表长度
+	}
 )

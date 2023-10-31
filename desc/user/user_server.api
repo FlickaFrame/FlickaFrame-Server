@@ -34,6 +34,10 @@ service main {
 	@doc "Login User"
 	@handler login
 	post /user/login (LoginReq) returns (LoginResp)
+
+	@doc "List User Ranking"
+	@handler Ranking
+	get /user/ranking (RankingReq) returns (RankingResp)
 }
 
 type User {
@@ -84,5 +88,16 @@ type (
 		Image string `json:"image" binding:"Required"`
 	}
 	UpdateAvatarResp {
+	}
+)
+
+type (
+	RankingReq {
+		PageSize int  `form:"pageSize"` // 分页大小,默认为 10
+		Page     int  `form:"page"`     // 当前页码,默认为 1
+		ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
+	}
+	RankingResp {
+		Users []*User `json:"users"`
 	}
 )

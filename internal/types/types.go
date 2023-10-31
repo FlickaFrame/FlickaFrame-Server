@@ -47,6 +47,16 @@ type UpdateAvatarReq struct {
 type UpdateAvatarResp struct {
 }
 
+type RankingReq struct {
+	PageSize int  `form:"pageSize"` // 分页大小,默认为 10
+	Page     int  `form:"page"`     // 当前页码,默认为 1
+	ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
+}
+
+type RankingResp struct {
+	Users []*User `json:"users"`
+}
+
 type FeedReq struct {
 	LatestTime int64  `json:"latestTime,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
 	Limit      int    `json:"limit,optional" form:"limit,optional"`           // 请求数量
@@ -73,7 +83,7 @@ type CategoryResp struct {
 type VideoUserInfo struct {
 	NickName string `json:"nickName"`
 	Avatar   string `json:"avatar"`
-	UserID   string `json:"userId"`
+	UserID   uint   `json:"userId"`
 }
 
 type VideoCoverInfo struct {
@@ -166,6 +176,20 @@ type DeleteVideoReq struct {
 type DeleteVideoResp struct {
 }
 
+type FollowingReq struct {
+	PageSize int  `form:"pageSize"` // 分页大小,默认为 10
+	Page     int  `form:"page"`     // 当前页码,默认为 1
+	ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
+}
+
+type FollowingResp struct {
+	VideoList   []*Video     `json:"videoList"`
+	Items       []*VideoItem `json:"items"`
+	NextTime    int64        `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
+	CursorScore string       `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
+	Length      int          `json:"length"`      // 视频列表长度
+}
+
 type CountFollowReq struct {
 	ContextUserId uint `json:"userId" path:"user_id" desc:"用户id" validate:"required"`
 }
@@ -182,7 +206,7 @@ type FollowUser struct {
 }
 
 type FollowReq struct {
-	ContextUserId uint `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+	ContextUserId uint `json:"userId,optional" path:"user_id" desc:"关注用户id" validate:"required"`
 }
 
 type FollowResp struct {
@@ -204,8 +228,9 @@ type CheckMyFollowingResp struct {
 }
 
 type ListMyFollowersReq struct {
-	Page  int `json:"page" desc:"页码" validate:"required"`
-	Limit int `json:"limit" desc:"每页数量" validate:"required"`
+	PageSize int  `form:"pageSize"`
+	Page     int  `form:"page"`    // start from 1
+	ListAll  bool `form:"listAll"` // if true, then PageSize and Page will not be taken
 }
 
 type ListMyFollowersResp struct {

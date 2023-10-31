@@ -29,7 +29,7 @@ func NewListMyFollowersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *L
 func (l *ListMyFollowersLogic) ListMyFollowers(req *types.ListMyFollowersReq) (resp *types.ListMyFollowersResp, err error) {
 	userID := jwt.GetUidFromCtx(l.ctx)
 	followers, err := l.svcCtx.UserModel.GetUserFollowers(l.ctx, userID, orm.ListOptions{
-		PageSize: req.Limit,
+		PageSize: req.PageSize,
 		Page:     req.Page,
 		ListAll:  false,
 	})
