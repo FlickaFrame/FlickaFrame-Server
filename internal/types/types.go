@@ -58,19 +58,45 @@ type RankingResp struct {
 }
 
 type FeedReq struct {
-	LatestTime int64  `json:"latestTime,optional" form:"latestTime,optional"` // 最新视频时间(毫秒时间戳)
-	Limit      int    `json:"limit,optional" form:"limit,optional"`           // 请求数量
-	AuthorID   uint   `json:"authorId,optional" form:"authorID,optional"`     // 作者ID
-	Tag        string `json:"tag,optional" form:"tag,optional"`               // 标签
-	CategoryID uint   `json:"categoryId,optional" form:"categoryId,optional"` // 分类
+	Cursor     int64  `form:"cursor,optional"`     // 最新视频时间(毫秒时间戳)
+	Limit      int    `form:"limit,optional"`      // 请求数量
+	AuthorID   uint   `form:"authorID,optional"`   // 作者ID(是否根据用户ID过滤)
+	Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
+	CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
+}
+
+type VideoInteractInfo struct {
+	Liked      bool   `json:"liked"`      // 当前用户是否已点赞
+	LikedCount string `json:"likedCount"` // 点赞数
+	IsFollow   bool   `json:"isFollow"`   // 当前用户是否已关注该用户
+	ShareNum   uint   `json:"shareNum"`   // 分享数
+	CommentNum uint   `json:"commentNum"` // 评论数
+}
+
+type VideoUserInfo struct {
+	UserID   uint   `json:"userId"`   // 用户ID
+	NickName string `json:"nickName"` // 昵称
+	Avatar   string `json:"avatar"`   // 用户头像地址
+}
+
+type VideoItem struct {
+	ID          int64              `json:"id"`          // 视频ID
+	Title       string             `json:"title"`       // 视频标题
+	Description string             `json:"description"` // 视频描述
+	Tags        []string           `json:"tags"`        // 视频标签
+	VideoUrl    string             `json:"videoUrl"`    // 视频播放地址
+	Height      uint               `json:"height"`      // 视频高度
+	Width       uint               `json:"width"`       // 视频宽度
+	CoverUrl    string             `json:"coverUrl"`    // 视频封面地址
+	Interaction *VideoInteractInfo `json:"interaction"` // 视频互动信息
+	User        *VideoUserInfo     `json:"user"`        // 视频作者信息
+	PublishTime string             `json:"publishTime"` // 视频创建时间(毫秒时间戳)
 }
 
 type FeedResp struct {
-	VideoList   []*Video     `json:"videoList"`
-	Items       []*VideoItem `json:"items"`
-	NextTime    int64        `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
-	CursorScore string       `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
-	Length      int          `json:"length"`      // 视频列表长度
+	Next  string       `json:"next"`  // 请求游标
+	List  []*VideoItem `json:"list"`  // 视频列表
+	IsEnd bool         `json:"isEnd"` // 是否已到最后一页
 }
 
 type CategoryReq struct {
@@ -78,47 +104,6 @@ type CategoryReq struct {
 
 type CategoryResp struct {
 	CategoryList []*Category `json:"categoryList"`
-}
-
-type VideoUserInfo struct {
-	NickName string `json:"nickName"`
-	Avatar   string `json:"avatar"`
-	UserID   uint   `json:"userId"`
-}
-
-type VideoCoverInfo struct {
-	ImageScene string `json:"imageScene"` //视频封面类型
-	URL        string `json:"url"`        //视频封面地址
-}
-
-type VideoCover struct {
-	TraceID  string           `json:"traceId"`
-	InfoList []VideoCoverInfo `json:"infoList"`
-	FileID   string           `json:"fileId"`
-	Height   int              `json:"height"`
-	Width    int              `json:"width"`
-	URL      string           `json:"url"`
-}
-
-type VideoInteractInfo struct {
-	Liked      bool   `json:"liked"`      // 当前用户是否已点赞
-	LikedCount string `json:"likedCount"` // 点赞数
-}
-
-type VideoItem struct {
-	Ignore    bool      `json:"ignore"`    // 是否忽略
-	ID        int64     `json:"id"`        // 视频ID
-	ModelType string    `json:"modelType"` // 发布类型:[video,article]
-	VideoCard VideoCard `json:"videoCard"` // 视频信息
-	TraceID   string    `json:"traceId"`   // 视频traceID
-}
-
-type VideoCard struct {
-	Cover        VideoCover        `json:"cover"`        // 视频封面
-	Type         string            `json:"type"`         // 视频分类
-	DisplayTitle string            `json:"displayTitle"` // 视频标题
-	User         VideoUserInfo     `json:"user"`         // 视频作者信息
-	InteractInfo VideoInteractInfo `json:"interactInfo"` // 视频互动信息
 }
 
 type Video struct {
@@ -169,14 +154,15 @@ type SearchResp struct {
 }
 
 type CreateVideoReq struct {
-	Title       string   `form:"title" copier:"title"` // 视频标题
-	PlayUrl     string   `form:"playUrl"`              // 视频播放地址
-	ThumbUrl    string   `form:"thumbUrl"`             // 视频封面地址
-	Description string   `form:"description"`          // 视频描述
-	Category    uint     `form:"category"`             // 视频分类
-	Tags        []string `form:"tags"`                 // 视频标签
-	PublishTime string   `form:"publishTime"`          // 视频发布时间
-	Visibility  int      `form:"visibility"`           // 视频可见性
+	Title       string   `json:"title"`       // 视频标题
+	PlayUrl     string   `json:"playUrl"`     // 视频播放地址
+	ThumbUrl    string   `json:"thumbUrl"`    // 视频封面地址
+	Description string   `json:"description"` // 视频描述
+	Category    uint     `json:"category"`    // 视频分类
+	Tags        []string `json:"tags"`        // 视频标签
+	PublishTime int64    `json:"publishTime"` // 视频发布时间(毫秒时间戳)
+	VideoKey    string   `json:"videoKey"`    // 视频上传key
+	Visibility  int      `json:"visibility"`  // 视频可见性(1:公开,2:私密)
 }
 
 type CreateVideoResp struct {
