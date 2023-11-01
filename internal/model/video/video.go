@@ -12,18 +12,24 @@ const DefaultLimit = 10
 
 type Video struct {
 	gorm.Model
-	Title    string
+	Title    string // 视频标题
 	ETag     string
-	PlayUrl  string
-	CoverUrl string
+	PlayUrl  string // 播放地址
+	CoverUrl string // 封面地址
 
-	FavoriteCount int
-	CommentCount  int
+	FavoriteCount int // 收藏数量
+	CommentCount  int // 评论数量
 
-	AuthorID uint       `gorm:"index"`
-	Author   *user.User `gorm:"-"`
+	AuthorID uint       `gorm:"index"` // 作者ID
+	Author   *user.User `gorm:"-"` // 作者
 
-	CategoryID uint `gorm:"index"`
+	CategoryID uint `gorm:"index"` // 分类ID
+
+	Description string // 视频描述
+	PublishTime time.Time // 发布时间
+	PublishStatus int `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
+	Visibility int `gorm:"default:0"` // 可见性 0:公开 1:私有
+
 }
 
 func (v *Video) TableName() string {
