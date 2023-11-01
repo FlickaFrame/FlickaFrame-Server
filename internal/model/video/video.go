@@ -15,10 +15,10 @@ type Video struct {
 	Title    string // 视频标题
 	ETag     string
 	PlayUrl  string // 播放地址
-	CoverUrl string // 封面地址
+	ThumbUrl string // 封面地址
 
-	FavoriteCount int // 收藏数量
-	CommentCount  int // 评论数量
+	FavoriteCount int `gorm:"default:0"` // 收藏数量
+	CommentCount  int `gorm:"default:0"` // 评论数量
 
 	AuthorID uint       `gorm:"index"` // 作者ID
 	Author   *user.User `gorm:"-"` // 作者
