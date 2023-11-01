@@ -134,6 +134,10 @@ type Video struct {
 	IsFollow      bool          `json:"isFollow"`             // 当前用户是否已关注该用户
 	Tags          []string      `json:"tags"`                 // 视频标签
 	Author        VideoUserInfo `json:"author"`               // 作者信息
+	Description   string        `json:"description"`          // 视频描述
+	PublishTime   string        `json:"publishTime"`          // 视频发布时间
+	PublishStatus int           `json:"publishStatus"`        // 视频发布状态
+	Visibility    int           `json:"visibility"`           // 视频可见性
 }
 
 type Category struct {
@@ -165,6 +169,14 @@ type SearchResp struct {
 }
 
 type CreateVideoReq struct {
+	Title       string   `form:"title" copier:"title"` // 视频标题
+	PlayUrl     string   `form:"playUrl"`              // 视频播放地址
+	ThumbUrl    string   `form:"thumbUrl"`             // 视频封面地址
+	Description string   `form:"description"`          // 视频描述
+	Category    int      `form:"category"`             // 视频分类
+	Tags        []string `form:"tags"`                 // 视频标签
+	PublishTime string   `form:"publishTime"`          // 视频发布时间
+	Visibility  int      `form:"visibility"`           // 视频可见性
 }
 
 type CreateVideoResp struct {
