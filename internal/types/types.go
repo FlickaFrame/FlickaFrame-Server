@@ -173,7 +173,7 @@ type CreateVideoReq struct {
 	PlayUrl     string   `form:"playUrl"`              // 视频播放地址
 	ThumbUrl    string   `form:"thumbUrl"`             // 视频封面地址
 	Description string   `form:"description"`          // 视频描述
-	Category    int      `form:"category"`             // 视频分类
+	Category    uint     `form:"category"`             // 视频分类
 	Tags        []string `form:"tags"`                 // 视频标签
 	PublishTime string   `form:"publishTime"`          // 视频发布时间
 	Visibility  int      `form:"visibility"`           // 视频可见性

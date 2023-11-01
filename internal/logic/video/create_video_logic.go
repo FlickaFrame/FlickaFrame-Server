@@ -30,15 +30,15 @@ func (l *CreateVideoLogic) CreateVideo(req *types.CreateVideoReq) (resp *types.C
 	publishStatus := 1 // TODO 更新发布状态
 	video := &video_model.Video{
 		AuthorID: doerId,
-		CategoryID: req.CategoryID,
+		CategoryID: req.Category,
 		Title: req.Title,
 		Description: req.Description,
 		PlayUrl: req.PlayUrl,
 		ThumbUrl: req.ThumbUrl,
-		PublishTime: req.PublishTime,
+		// PublishTime: req.PublishTime, // TODO
 		PublishStatus: publishStatus,
 		Visibility: req.Visibility,
 	}
-	err := l.svcCtx.VideoModel.Insert(l.ctx, video)
-	return err
+	err = l.svcCtx.VideoModel.Insert(l.ctx, video)
+	return
 }
