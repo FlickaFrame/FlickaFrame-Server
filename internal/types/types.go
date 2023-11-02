@@ -131,6 +131,7 @@ type Category struct {
 }
 
 type CreateUpTokenReq struct {
+	UploadType string `form:"uploadType"` // 上传类型(video:视频,cover:封面,avatar:头像)
 }
 
 type CreateUpTokenResp struct {

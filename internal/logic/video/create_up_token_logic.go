@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -9,6 +10,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/qiniu/go-sdk/v7/auth"
 	"github.com/qiniu/go-sdk/v7/storage"
+	"github.com/deckarep/golang-set"
 )
 
 type CreateUpTokenLogic struct {
@@ -31,9 +33,14 @@ func (l *CreateUpTokenLogic) CreateUpToken(req *types.CreateUpTokenReq) (resp *t
 		secretKey = l.svcCtx.Config.Oss.AccessKeySecret
 		bucket = l.svcCtx.Config.Oss.BucketName
 	)
-
+	UploadTypeSet := mapset.NewSet("video", "avatar", "cover") // filter upload type
+	if (!UploadTypeSet.Contains(req.UploadType)) {
+		err = fmt.Errorf("upload type error")
+		return
+	}
 	putPolicy := storage.PutPolicy{
-		Scope: bucket,
+		Scope: fmt.Sprintf("%s:%s/", bucket, req.UploadType),
+		IsPrefixalScope: 1,
 	}
 	mac := auth.New(accessKey, secretKey)
 	putPolicy.Expires = 3600 //1小时有效期

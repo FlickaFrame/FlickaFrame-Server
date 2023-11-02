@@ -125,6 +125,7 @@ type Category {
 
 type (
 	CreateUpTokenReq {
+		UploadType string `form:"uploadType"` // 上传类型(video:视频,cover:封面,avatar:头像)
 	}
 	CreateUpTokenResp {
 		UpToken string `json:"upToken"` // 上传凭证
