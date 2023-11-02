@@ -37,24 +37,24 @@ service main{
 	group: video
 )
 service main{
-	@doc "Home Video Feed"
-	@handler Feed
-	get /video/feed (FeedReq) returns (FeedResp)
-
-	@doc "Get Video Category List"
+	@doc "Get Video Category List" // 获取视频分区列表
 	@handler Category
 	get /video/category (CategoryReq) returns (CategoryResp)
 
-	@doc "Search Video By Keyword"
+	@doc "Home Video Feed" // 获取主页视频Feed
+	@handler Feed
+	get /video/feed (FeedReq) returns (FeedResp)
+
+	@doc "Search Video By Keyword" // 搜索视频(根据标题和描述内容)
 	@handler Search
 	post /video/search (SearchReq) returns (SearchResp)
 }
 
 type (
 	FeedReq {
-		Cursor     int64  `form:"cursor,optional"`     // 最新视频时间(毫秒时间戳)
-		Limit      int    `form:"limit,optional"`      // 请求数量
-		AuthorID   uint   `form:"authorID,optional"`   // 作者ID(是否根据用户ID过滤)
+		Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
+		Limit      int    `form:"limit,default=10"`    // 请求数量
+		AuthorID   uint   `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
 		Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
 		CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 	}

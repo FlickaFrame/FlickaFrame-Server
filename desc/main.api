@@ -6,4 +6,5 @@ import (
 	"follow/follow_server.api"
 	"comment/comment_server.api"
 	"favorite/favorite_server.api"
+	"tag/tag_server.api"
 )

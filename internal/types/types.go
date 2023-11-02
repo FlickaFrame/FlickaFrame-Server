@@ -58,9 +58,9 @@ type RankingResp struct {
 }
 
 type FeedReq struct {
-	Cursor     int64  `form:"cursor,optional"`     // 最新视频时间(毫秒时间戳)
-	Limit      int    `form:"limit,optional"`      // 请求数量
-	AuthorID   uint   `form:"authorID,optional"`   // 作者ID(是否根据用户ID过滤)
+	Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
+	Limit      int    `form:"limit,default=10"`    // 请求数量
+	AuthorID   uint   `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
 	Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
 	CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 }
@@ -418,4 +418,18 @@ type ListCommentFavoriteReq struct {
 }
 
 type ListCommentFavoriteResp struct {
+}
+
+type Tag struct {
+	Id     uint   `json:"id"`     // 标签id
+	Name   string `json:"name"`   // 标签名
+	Weight uint   `json:"weight"` // 权重(根据用户的投稿的分区进行推荐,未传入分区时全部为1)
+}
+
+type TagReq struct {
+	Category uint `form:"category,optional"` // 是否推荐(根据用户的投稿的分区进行推荐)
+}
+
+type TagRsp struct {
+	TagList []*Tag `json:"tag_list"` // 标签列表
 }

@@ -7,6 +7,7 @@ import (
 	comment "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/comment"
 	favorite "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/favorite"
 	follow "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/follow"
+	tag "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/tag"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
@@ -84,13 +85,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/video/feed",
-				Handler: video.FeedHandler(serverCtx),
+				Path:    "/video/category",
+				Handler: video.CategoryHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/video/category",
-				Handler: video.CategoryHandler(serverCtx),
+				Path:    "/video/feed",
+				Handler: video.FeedHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
@@ -236,6 +237,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/tag",
+				Handler: tag.RankHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/api/v1"),
 	)
 }

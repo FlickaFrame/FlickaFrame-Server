@@ -1,0 +1,33 @@
+syntax = "v1"
+
+info(
+	title: "用户关注"
+	desc: "用户关注"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
+)
+//need login
+@server(
+	prefix: api/v1
+	group: tag
+)
+service main {
+	@doc "Rank"
+	@handler Rank
+	get /tag (TagReq) returns (TagRsp)
+}
+
+type Tag {
+	Id     uint   `json:"id"`     // 标签id
+	Name   string `json:"name"`   // 标签名
+	Weight uint   `json:"weight"` // 权重(根据用户的投稿的分区进行推荐,未传入分区时全部为1)
+}
+
+type (
+	TagReq {
+		Category uint `form:"category,optional"` // 是否推荐(根据用户的投稿的分区进行推荐)
+	}
+	TagRsp {
+		TagList []*Tag `json:"tag_list"` // 标签列表
+	}
+)
