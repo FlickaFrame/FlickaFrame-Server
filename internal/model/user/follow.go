@@ -88,8 +88,8 @@ func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID uint) err
 func (m *UserModel) GetUserFollowers(ctx context.Context, userId uint, listOptions orm.ListOptions) ([]*User, error) {
 	sess := m.db.WithContext(ctx).
 		Select("`user`.*").
-		Joins("LEFT", "follow", "`user`.id=follow.user_id").
-		Where("follow.follow_id=?", userId)
+		Joins("join follow on`user`.id=`follow`.user_id").
+		Where("`follow`.followed_user_id=?", userId)
 
 	if listOptions.Page != 0 {
 		sess = orm.SetSessionPagination(sess, &listOptions)
@@ -106,16 +106,16 @@ func (m *UserModel) GetUserFollowers(ctx context.Context, userId uint, listOptio
 func (m *UserModel) GetUserFollowing(ctx context.Context, userId uint, listOptions orm.ListOptions) ([]*User, error) {
 	sess := m.db.WithContext(ctx).
 		Select("`user`.*").
-		Joins("LEFT", "follow", "`user`.id=follow.follow_id").
-		Where("follow.user_id=?", userId)
-
+		Joins("join follow on `user`.id=`follow`.followed_user_id").
+		Where("`follow`.user_id=?", userId)
+	var users []*User
 	if listOptions.Page != 0 {
 		sess = orm.SetSessionPagination(sess, &listOptions)
-		users := make([]*User, 0, listOptions.PageSize)
-		return users, sess.Find(&users).Error
+		users = make([]*User, 0, listOptions.PageSize)
+	} else {
+		users = make([]*User, 0, 8)
 	}
 
-	users := make([]*User, 0, 8)
 	return users, sess.Find(&users).Error
 }
 

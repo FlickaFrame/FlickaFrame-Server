@@ -3,11 +3,10 @@ package user
 import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
-	"github.com/jinzhu/copier"
-
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
+	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,18 +30,15 @@ func (l *ListMyFollowersLogic) ListMyFollowers(req *types.ListMyFollowersReq) (r
 	followers, err := l.svcCtx.UserModel.GetUserFollowers(l.ctx, userID, orm.ListOptions{
 		PageSize: req.PageSize,
 		Page:     req.Page,
-		ListAll:  false,
+		ListAll:  req.ListAll,
 	})
 	if err != nil {
 		return nil, err
 	}
+	list, err := NewConvert(l.ctx, l.svcCtx).buildUserBasicInfoList(l.ctx, followers)
 	resp = &types.ListMyFollowersResp{
-		FollowUser: make([]*types.UserBasicInfo, 0, len(followers)),
+		FollowUser: make([]*types.FollowUser, len(list)),
 	}
-	for _, follower := range followers {
-		followUser := &types.UserBasicInfo{}
-		_ = copier.Copy(&follower, followUser)
-		resp.FollowUser = append(resp.FollowUser, followUser)
-	}
+	err = copier.Copy(&resp.FollowUser, &list)
 	return
 }

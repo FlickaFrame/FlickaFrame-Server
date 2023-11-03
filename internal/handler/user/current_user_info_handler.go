@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func ChangePasswordHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func CurrentUserInfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ChangePasswordReq
+		var req types.CurrentUserInfoReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := user.NewChangePasswordLogic(r.Context(), svcCtx)
-		resp, err := l.ChangePassword(&req)
+		l := user.NewCurrentUserInfoLogic(r.Context(), svcCtx)
+		resp, err := l.CurrentUserInfo()
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

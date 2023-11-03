@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func GetSpecificUserDetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func UpdatePasswordHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.UserDetailInfoReq
+		var req types.UpdatePasswordReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := user.NewGetSpecificUserDetailLogic(r.Context(), svcCtx)
-		resp, err := l.GetSpecificUserDetail(&req)
+		l := user.NewUpdatePasswordLogic(r.Context(), svcCtx)
+		resp, err := l.UpdatePassword(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
