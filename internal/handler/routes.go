@@ -6,6 +6,7 @@ import (
 
 	comment "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/comment"
 	favorite "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/favorite"
+	oss "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/oss"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
@@ -62,7 +63,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/user/detail",
-				Handler: user.DetailHandler(serverCtx),
+				Handler: user.CurrentUserInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
@@ -76,8 +77,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/user/changePassword",
-				Handler: user.ChangePasswordHandler(serverCtx),
+				Path:    "/user/updatepwd",
+				Handler: user.UpdatePasswordHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
@@ -99,7 +100,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/user/detail/:userId",
-				Handler: user.GetSpecificUserDetailHandler(serverCtx),
+				Handler: user.GetUserDetailInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
@@ -112,11 +113,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/video/uptoken",
-				Handler: video.CreateUpTokenHandler(serverCtx),
-			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/video/create",
@@ -237,6 +233,29 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/favorite/comments",
 				Handler: favorite.ListCommentFavoriteHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/oss/endpoint",
+				Handler: oss.EndpointHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/oss/uptoken",
+				Handler: oss.CreateUpTokenHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

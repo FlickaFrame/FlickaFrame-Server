@@ -51,8 +51,17 @@ type LoginResp struct {
 	RefreshAfter int64  `json:"refreshAfter"`
 }
 
+type CurrentUserInfoReq struct {
+}
+
+type CurrentUserInfoResp struct {
+	UserBasicInfo
+	UserStatisticalInfo
+	UserInteractionInfo
+}
+
 type UserDetailInfoReq struct {
-	UserId int64 `path:"userId"`
+	ContextUserId uint `path:"userId"`
 }
 
 type UserDetailInfoResp struct {
@@ -82,10 +91,10 @@ type UpdateInfoReq struct {
 type UpdateInfoResp struct {
 }
 
-type ChangePasswordReq struct {
+type UpdatePasswordReq struct {
 }
 
-type ChangePasswordResp struct {
+type UpdatePasswordResp struct {
 }
 
 type FollowReq struct {
@@ -102,12 +111,17 @@ type UnFollowReq struct {
 type UnFollowResp struct {
 }
 
+type FollowUser struct {
+	UserBasicInfo
+	UserInteractionInfo
+}
+
 type ListMyFollowersReq struct {
 	ListUserOption
 }
 
 type ListMyFollowersResp struct {
-	FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	FollowUser []*FollowUser `json:"users" desc:"用户id"`
 }
 
 type ListFollowingReq struct {
@@ -116,7 +130,7 @@ type ListFollowingReq struct {
 }
 
 type ListFollowingResp struct {
-	FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	FollowUser []*FollowUser `json:"users" desc:"用户id"`
 }
 
 type ListMyFollowingReq struct {
@@ -124,7 +138,7 @@ type ListMyFollowingReq struct {
 }
 
 type ListMyFollowingResp struct {
-	FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	FollowUser []*FollowUser `json:"users" desc:"用户id"`
 }
 
 type ListFollowersReq struct {
@@ -133,7 +147,7 @@ type ListFollowersReq struct {
 }
 
 type ListFollowersResp struct {
-	FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	FollowUser []*FollowUser `json:"users" desc:"用户id"`
 }
 
 type Category struct {
@@ -146,7 +160,7 @@ type Tag struct {
 	Name string `json:"name"` // 标签名称
 }
 
-type VideoOwnerInfo struct {
+type VideoUserInfo struct {
 	ID        uint   `json:"userId"`    // 用户ID
 	NickName  string `json:"nickName"`  // 用户名
 	AvatarUrl string `json:"avatarUrl"` // 头像
@@ -156,33 +170,31 @@ type VideoOwnerInfo struct {
 }
 
 type VideoBasicInfo struct {
-	ID            int64           `json:"id" copier:"id"`       // 视频ID
-	Title         string          `json:"title" copier:"title"` // 视频标题
-	Description   string          `json:"description"`          // 视频描述
-	PlayUrl       string          `json:"playUrl"`              // 视频播放地址
-	ThumbUrl      string          `json:"thumbUrl"`             // 视频封面地址
-	CreatedAt     string          `json:"createdAt"`            // 视频创建时间(毫秒时间戳)
-	Category      *Category       `json:"category"`             // 视频分类
-	Tags          []*Tag          `json:"tags"`                 // 视频标签
-	VideoUserInfo *VideoOwnerInfo `json:"owner"`                // 视频作者信息
+	ID            uint           `json:"id"`          // 视频ID
+	Title         string         `json:"title"`       // 视频标题
+	Description   string         `json:"description"` // 视频描述
+	PlayUrl       string         `json:"playUrl"`     // 视频播放地址
+	ThumbUrl      string         `json:"thumbUrl"`    // 视频封面地址
+	CreatedAt     int64          `json:"createdAt"`   // 视频创建时间(毫秒时间戳)
+	Category      *Category      `json:"category"`    // 视频分类
+	Tags          []*Tag         `json:"tags"`        // 视频标签
+	VideoUserInfo *VideoUserInfo `json:"author"`      // 视频作者信息
 }
 
 type VideoManageInfo struct {
-	IsFollow      bool   `json:"isFollow"`      // 当前用户是否已关注该用户
 	PublishTime   string `json:"publishTime"`   // 视频发布时间
 	PublishStatus int    `json:"publishStatus"` // 视频发布状态
 	Visibility    int    `json:"visibility"`    // 视频可见性
 }
 
 type VideoStatisticalInfo struct {
-	VideoID       int64 `json:"videoId"`       // 视频ID
 	FavoriteCount int64 `json:"favoriteCount"` // 点赞数
 	CommentCount  int64 `json:"commentNum"`    // 评论数
 	ShareCount    int64 `json:"shareNum"`      // 分享数
 }
 
 type VideoInteractInfo struct {
-	Liked bool `json:"liked"` // 当前用户是否已点赞
+	IsFavorite bool `json:"isFavorite"` // 当前用户是否已点赞
 }
 
 type FeedReq struct {
@@ -193,10 +205,16 @@ type FeedReq struct {
 	CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 }
 
+type FeedVideoItem struct {
+	VideoBasicInfo
+	VideoStatisticalInfo
+	VideoInteractInfo
+}
+
 type FeedResp struct {
-	Next  string            `json:"next"`  // 请求游标
-	List  []*VideoBasicInfo `json:"list"`  // 视频列表
-	IsEnd bool              `json:"isEnd"` // 是否已到最后一页
+	Next  string           `json:"next"`  // 请求游标
+	List  []*FeedVideoItem `json:"list"`  // 视频列表
+	IsEnd bool             `json:"isEnd"` // 是否已到最后一页
 }
 
 type CategoryReq struct {
@@ -204,15 +222,6 @@ type CategoryReq struct {
 
 type CategoryResp struct {
 	CategoryList []*Category `json:"categoryList"`
-}
-
-type CreateUpTokenReq struct {
-	UploadType string `form:"uploadType"` // 上传类型(video:视频,cover:封面,avatar:头像)
-}
-
-type CreateUpTokenResp struct {
-	UpToken string `json:"upToken"` // 上传凭证
-	Expires int64  `json:"expires"` // 上传凭证过期时间(秒)
 }
 
 type SearchReq struct {
@@ -417,4 +426,17 @@ type ListCommentFavoriteReq struct {
 }
 
 type ListCommentFavoriteResp struct {
+}
+
+type OssEndpointResponse struct {
+	EndPoint string `json:"endpoint"`
+}
+
+type CreateUpTokenReq struct {
+	UploadType string `form:"uploadType"` // 上传类型(video:视频,cover:封面,avatar:头像)
+}
+
+type CreateUpTokenResp struct {
+	UpToken string `json:"upToken"` // 上传凭证
+	Expires int64  `json:"expires"` // 上传凭证过期时间(秒)
 }
