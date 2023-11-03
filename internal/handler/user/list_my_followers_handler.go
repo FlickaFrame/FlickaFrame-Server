@@ -1,24 +1,24 @@
-package follow
+package user
 
 import (
 	"net/http"
 
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/follow"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func ListFollowersHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ListMyFollowersHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ListFollowersReq
+		var req types.ListMyFollowersReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := follow.NewListFollowersLogic(r.Context(), svcCtx)
-		resp, err := l.ListFollowers(&req)
+		l := user.NewListMyFollowersLogic(r.Context(), svcCtx)
+		resp, err := l.ListMyFollowers(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

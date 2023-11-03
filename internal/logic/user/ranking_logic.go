@@ -36,7 +36,7 @@ func (l *RankingLogic) Ranking(req *types.RankingReq) (resp *types.RankingResp, 
 		UserIds: nil,
 	})
 	resp = &types.RankingResp{
-		Users: make([]*types.User, 0, len(users)),
+		Users: make([]*types.UserBasicInfo, 0, len(users)),
 	}
 	err = copier.Copy(&resp.Users, &users)
 	return

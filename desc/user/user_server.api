@@ -5,6 +5,46 @@ info(
 	desc: "用户中心服务"
 	version: "v1"
 )
+
+//need login
+@server(
+	prefix: api/v1
+	group: user
+	jwt: JwtAuth
+)
+service main {
+	@doc "(关注) Follow a user"
+	@handler Follow
+	put /user/follow_action/:user_id (FollowReq) returns (FollowResp)
+
+	@doc "(取消关注)Unfollow a user"
+	@handler Unfollow
+	delete /user/follow_action/:user_id (UnFollowReq) returns (UnFollowResp)
+
+	@doc "(当前用户粉丝列表)List the followers of the authenticated user"
+	@handler ListMyFollowers
+	get /user/me/followers (ListMyFollowersReq) returns (ListMyFollowersResp)
+
+	@doc "(当前用户关注列表)List the users that the authenticated user is following"
+	@handler ListMyFollowing
+	get /user/me/following(ListMyFollowingReq) returns (ListMyFollowingResp)
+}
+
+//need login
+@server(
+	prefix: api/v1
+	group: user
+)
+service main {
+	@doc "List Followers list the given user's followers"
+	@handler ListFollowers
+	get /users/:user_id/followers(ListFollowersReq) returns (ListFollowersResp)
+
+	@doc "ListFollowing list the users that the given user is following"
+	@handler ListFollowing
+	get /users/:user_id/following(ListFollowingReq) returns (ListFollowingResp)
+}
+
 // Need login
 @server(
 	prefix: api/v1
@@ -72,6 +112,11 @@ type (
 	UserInteractionInfo {
 		IsFollow bool `json:"isFollow"` // 是否关注
 	}
+	ListUserOption {
+		PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
+		Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
+		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
+	}
 )
 
 type (
@@ -121,9 +166,7 @@ type (
 
 type (
 	RankingReq {
-		PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
-		Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
-		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
+		ListUserOption
 	}
 	RankingResp {
 		Users []*UserBasicInfo `json:"users"`
@@ -138,4 +181,49 @@ type (
 type (
 	ChangePasswordReq  struct{}
 	ChangePasswordResp struct{}
+)
+
+type (
+	FollowReq {
+		ContextUserId uint `path:"user_id"`
+	}
+	FollowResp {
+	}
+	UnFollowReq {
+		ContextUserId uint `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+	}
+	UnFollowResp {
+	}
+)
+
+type (
+	ListMyFollowersReq {
+		ListUserOption
+	}
+	ListMyFollowersResp {
+		FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	}
+	ListFollowingReq {
+		ContextUserId uint `path:"user_id"`
+		ListUserOption
+	}
+	ListFollowingResp {
+		FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	}
+)
+
+type (
+	ListMyFollowingReq {
+		ListUserOption
+	}
+	ListMyFollowingResp {
+		FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	}
+	ListFollowersReq {
+		ContextUserId uint `path:"user_id"`
+		ListUserOption
+	}
+	ListFollowersResp {
+		FollowUser []*UserBasicInfo `json:"followers" desc:"用户id"`
+	}
 )

@@ -5,8 +5,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
-	"github.com/jinzhu/copier"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,17 +22,11 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 	}
 }
 
-func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
+func (l *DetailLogic) Detail(req *types.UserDetailInfoReq) (resp *types.UserDetailInfoResp, err error) {
 	userId := jwt.GetUidFromCtx(l.ctx)
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
 	if err != nil {
 		return nil, err
 	}
-
-	var userInfo types.User
-	_ = copier.Copy(&userInfo, user)
-
-	return &types.UserInfoResp{
-		UserInfo: userInfo,
-	}, nil
+	return newConvert(l.ctx, l.svcCtx).buildUserDetailInfo(l.ctx, user, user)
 }

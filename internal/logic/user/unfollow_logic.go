@@ -1,4 +1,4 @@
-package follow
+package user
 
 import (
 	"context"
@@ -10,22 +10,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type CheckMyFollowingLogic struct {
+type UnfollowLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCheckMyFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CheckMyFollowingLogic {
-	return &CheckMyFollowingLogic{
+func NewUnfollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UnfollowLogic {
+	return &UnfollowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CheckMyFollowingLogic) CheckMyFollowing(req *types.CheckMyFollowingReq) (resp *types.CheckMyFollowingResp, err error) {
+func (l *UnfollowLogic) Unfollow(req *types.UnFollowReq) (resp *types.UnFollowResp, err error) {
 	doerUserId := jwt.GetUidFromCtx(l.ctx)
-	resp.Status = l.svcCtx.UserModel.IsFollowing(l.ctx, doerUserId, req.ContextUserId)
-	return
+	return nil, l.svcCtx.UserModel.UnfollowUser(l.ctx, doerUserId, req.ContextUserId)
 }

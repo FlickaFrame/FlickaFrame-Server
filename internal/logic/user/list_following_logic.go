@@ -1,4 +1,4 @@
-package follow
+package user
 
 import (
 	"context"
@@ -11,34 +11,35 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type ListFollowersLogic struct {
+type ListFollowingLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewListFollowersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListFollowersLogic {
-	return &ListFollowersLogic{
+func NewListFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListFollowingLogic {
+	return &ListFollowingLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *ListFollowersLogic) ListFollowers(req *types.ListFollowersReq) (resp *types.ListFollowersResp, err error) {
-	followers, err := l.svcCtx.UserModel.GetUserFollowers(l.ctx, req.ContextUserId, orm.ListOptions{
-		PageSize: req.Limit,
+func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowingReq) (resp *types.ListFollowingResp, err error) {
+	followings, err := l.svcCtx.UserModel.GetUserFollowing(l.ctx, req.ContextUserId, orm.ListOptions{
+		PageSize: req.PageSize,
 		Page:     req.Page,
 		ListAll:  false,
 	})
 	if err != nil {
 		return nil, err
 	}
-	resp = &types.ListFollowersResp{
-		FollowUser: make([]*types.FollowUser, 0, len(followers)),
+
+	resp = &types.ListFollowingResp{
+		FollowUser: make([]*types.UserBasicInfo, 0, len(followings)),
 	}
-	for _, follower := range followers {
-		followUser := &types.FollowUser{}
+	for _, follower := range followings {
+		followUser := &types.UserBasicInfo{}
 		_ = copier.Copy(&follower, followUser)
 		resp.FollowUser = append(resp.FollowUser, followUser)
 	}

@@ -1,9 +1,9 @@
-package follow
+package user
 
 import (
 	"net/http"
 
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/follow"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -17,7 +17,7 @@ func UnfollowHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := follow.NewUnfollowLogic(r.Context(), svcCtx)
+		l := user.NewUnfollowLogic(r.Context(), svcCtx)
 		resp, err := l.Unfollow(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

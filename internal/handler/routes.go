@@ -6,8 +6,6 @@ import (
 
 	comment "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/comment"
 	favorite "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/favorite"
-	follow "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/follow"
-	tag "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/tag"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
@@ -19,6 +17,49 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodPut,
+				Path:    "/user/follow_action/:user_id",
+				Handler: user.FollowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/user/follow_action/:user_id",
+				Handler: user.UnfollowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/me/followers",
+				Handler: user.ListMyFollowersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/me/following",
+				Handler: user.ListMyFollowingHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/users/:user_id/followers",
+				Handler: user.ListFollowersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/users/:user_id/following",
+				Handler: user.ListFollowingHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
 				Method:  http.MethodGet,
 				Path:    "/user/detail",
 				Handler: user.DetailHandler(serverCtx),
@@ -27,6 +68,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/user/avatar",
 				Handler: user.UpdateAvatarHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/info",
+				Handler: user.UpdateInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/changePassword",
+				Handler: user.ChangePasswordHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
@@ -44,6 +95,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/user/login",
 				Handler: user.LoginHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/detail/:userId",
+				Handler: user.GetSpecificUserDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
@@ -85,6 +141,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
+				Path:    "/video/detail/:videoId",
+				Handler: video.GetVideoInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/video/category",
 				Handler: video.CategoryHandler(serverCtx),
 			},
@@ -97,64 +158,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/video/search",
 				Handler: video.SearchHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPut,
-				Path:    "/user/following/:user_id",
-				Handler: follow.FollowHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/user/following/:user_id",
-				Handler: follow.UnfollowHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/following/:user_id",
-				Handler: follow.CheckMyFollowingHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/followers",
-				Handler: follow.ListMyFollowersHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/following",
-				Handler: follow.ListMyFollowingHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/users/:user_id/followers",
-				Handler: follow.ListFollowersHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/users/:user_id/following",
-				Handler: follow.ListFollowingHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/users/:doer_id/following/:context_user_id",
-				Handler: follow.CheckFollowingHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/users/follow/:user_id/count",
-				Handler: follow.CountFollowersHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1"),
@@ -237,17 +240,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/tag",
-				Handler: tag.RankHandler(serverCtx),
-			},
-		},
 		rest.WithPrefix("/api/v1"),
 	)
 }

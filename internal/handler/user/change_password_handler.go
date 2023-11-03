@@ -1,24 +1,24 @@
-package follow
+package user
 
 import (
 	"net/http"
 
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/follow"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func CheckMyFollowingHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ChangePasswordHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CheckMyFollowingReq
+		var req types.ChangePasswordReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := follow.NewCheckMyFollowingLogic(r.Context(), svcCtx)
-		resp, err := l.CheckMyFollowing(&req)
+		l := user.NewChangePasswordLogic(r.Context(), svcCtx)
+		resp, err := l.ChangePassword(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
