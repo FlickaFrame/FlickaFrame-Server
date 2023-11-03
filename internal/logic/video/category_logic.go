@@ -26,6 +26,7 @@ func NewCategoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Category
 func (l *CategoryLogic) Category(req *types.CategoryReq) (resp *types.CategoryResp, err error) {
 	categories, err := l.svcCtx.VideoModel.FindCategories(l.ctx)
 	if err != nil {
+		logx.Info(err)
 		return nil, err
 	}
 	CategoryList := make([]*types.Category, 0, len(categories))

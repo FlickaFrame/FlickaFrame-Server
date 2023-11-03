@@ -14,10 +14,6 @@ info(
 	jwt: JwtAuth
 )
 service main{
-	@doc "Get Upload Token" // 获取上传凭证
-	@handler CreateUpToken
-	get /video/uptoken (CreateUpTokenReq) returns (CreateUpTokenResp)
-
 	@doc "Create Video" // 创建视频
 	@handler CreateVideo
 	post /video/create (CreateVideoReq) returns (CreateVideoResp)
@@ -26,9 +22,10 @@ service main{
 	@handler DeleteVideo
 	post /video/delete (DeleteVideoReq) returns (DeleteVideoResp)
 
-	@doc "List video of following User for authenticated user"
+	@doc "List video of following User for authenticated user" // 获取关注用户的视频列表
 	@handler Following
 	get /video/following (FollowingReq) returns (FollowingResp)
+
 }
 
 //no need login
@@ -37,6 +34,10 @@ service main{
 	group: video
 )
 service main{
+	@doc "Get Video Info" // 获取视频详情
+	@handler GetVideoInfo
+	get /video/detail/:videoId (GetVideoInfoReq) returns (GetVideoInfoResp)
+
 	@doc "Get Video Category List" // 获取视频分区列表
 	@handler Category
 	get /video/category (CategoryReq) returns (CategoryResp)
@@ -51,6 +52,51 @@ service main{
 }
 
 type (
+	Category { // 视频分区
+		ID   uint   `json:"id"`   // 分类ID
+		Name string `json:"name"` // 分类名称
+	}
+	Tag {
+		Id   uint   `json:"id"`   // 标签id
+		Name string `json:"name"` // 标签名称
+	}
+	VideoUserInfo { // 视频作者信息
+		//UserBasicInfo
+		ID        uint   `json:"userId"`    // 用户ID
+		NickName  string `json:"nickName"`  // 用户名
+		AvatarUrl string `json:"avatarUrl"` // 头像
+		Slogan    string `json:"slogan"`    // 个性签名
+		Gender    int64  `json:"gender"`    // 性别
+		// UserInteractionInfo
+		IsFollow bool `json:"isFollow"` // 是否关注
+	}
+	VideoBasicInfo { //视频的基本信息
+		ID            uint           `json:"id"`          // 视频ID
+		Title         string         `json:"title"`       // 视频标题
+		Description   string         `json:"description"` // 视频描述
+		PlayUrl       string         `json:"playUrl"`     // 视频播放地址
+		ThumbUrl      string         `json:"thumbUrl"`    // 视频封面地址
+		CreatedAt     int64          `json:"createdAt"`   // 视频创建时间(毫秒时间戳)
+		Category      *Category      `json:"category"`    // 视频分类
+		Tags          []*Tag         `json:"tags"`        // 视频标签
+		VideoUserInfo *VideoUserInfo `json:"author"`      // 视频作者信息
+	}
+	VideoManageInfo {
+		PublishTime   string `json:"publishTime"`   // 视频发布时间
+		PublishStatus int    `json:"publishStatus"` // 视频发布状态
+		Visibility    int    `json:"visibility"`    // 视频可见性
+	}
+	VideoStatisticalInfo { // 视频统计信息
+		FavoriteCount int64 `json:"favoriteCount"` // 点赞数
+		CommentCount  int64 `json:"commentNum"`    // 评论数
+		ShareCount    int64 `json:"shareNum"`      // 分享数
+	}
+	VideoInteractInfo { // 视频互动信息
+		IsFavorite bool `json:"isFavorite"` // 当前用户是否已点赞
+	}
+)
+
+type (
 	FeedReq {
 		Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
 		Limit      int    `form:"limit,default=10"`    // 请求数量
@@ -58,36 +104,15 @@ type (
 		Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
 		CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 	}
-	VideoInteractInfo {
-		Liked      bool   `json:"liked"`      // 当前用户是否已点赞
-		LikedCount string `json:"likedCount"` // 点赞数
-		IsFollow   bool   `json:"isFollow"`   // 当前用户是否已关注该用户
-		ShareNum   uint   `json:"shareNum"`   // 分享数
-		CommentNum uint   `json:"commentNum"` // 评论数
+	FeedVideoItem {
+		VideoBasicInfo
+		VideoStatisticalInfo
+		VideoInteractInfo
 	}
-	VideoUserInfo { // 视频作者信息
-		UserID   uint   `json:"userId"`   // 用户ID
-		NickName string `json:"nickName"` // 昵称
-		Avatar   string `json:"avatar"`   // 用户头像地址
-	}
-	VideoItem {
-		ID          int64              `json:"id"`          // 视频ID
-		Title       string             `json:"title"`       // 视频标题
-		Description string             `json:"description"` // 视频描述
-		Tags        []string           `json:"tags"`        // 视频标签
-		VideoUrl    string             `json:"videoUrl"`    // 视频播放地址
-		Height      uint               `json:"height"`      // 视频高度
-		Width       uint               `json:"width"`       // 视频宽度
-		CoverUrl    string             `json:"coverUrl"`    // 视频封面地址
-		Interaction *VideoInteractInfo `json:"interaction"` // 视频互动信息
-		User        *VideoUserInfo     `json:"user"`        // 视频作者信息
-		PublishTime string             `json:"publishTime"` // 视频创建时间(毫秒时间戳)
-	}
-
 	FeedResp {
-		Next  string       `json:"next"`  // 请求游标
-		List  []*VideoItem `json:"list"`  // 视频列表
-		IsEnd bool         `json:"isEnd"` // 是否已到最后一页
+		Next  string           `json:"next"`  // 请求游标
+		List  []*FeedVideoItem `json:"list"`  // 视频列表
+		IsEnd bool             `json:"isEnd"` // 是否已到最后一页
 	}
 )
 
@@ -96,40 +121,6 @@ type (
 	}
 	CategoryResp {
 		CategoryList []*Category `json:"categoryList"`
-	}
-)
-
-type Video {
-	ID            int64         `json:"id" copier:"id"`       // 视频ID
-	Title         string        `json:"title" copier:"title"` // 视频标题
-	PlayUrl       string        `json:"playUrl"`              // 视频播放地址
-	ThumbUrl      string        `json:"thumbUrl"`             // 视频封面地址
-	FavoriteCount int64         `json:"favNum"`               // 点赞数
-	CommentCount  int64         `json:"commentNum"`           // 评论数
-	ShareNum      int64         `json:"shareNum"`             // 分享数
-	CreatedAt     string        `json:"createdAt"`            // 视频创建时间(毫秒时间戳)
-	IsFav         bool          `json:"isFav"`                // 当前用户是否已点赞
-	IsFollow      bool          `json:"isFollow"`             // 当前用户是否已关注该用户
-	Tags          []string      `json:"tags"`                 // 视频标签
-	Author        VideoUserInfo `json:"author"`               // 作者信息
-	Description   string        `json:"description"`          // 视频描述
-	PublishTime   string        `json:"publishTime"`          // 视频发布时间
-	PublishStatus int           `json:"publishStatus"`        // 视频发布状态
-	Visibility    int           `json:"visibility"`           // 视频可见性
-}
-
-type Category {
-	ID   uint   `json:"id"`   // 分类ID
-	Name string `json:"name"` // 分类名称
-}
-
-type (
-	CreateUpTokenReq {
-		UploadType string `form:"uploadType"` // 上传类型(video:视频,cover:封面,avatar:头像)
-	}
-	CreateUpTokenResp {
-		UpToken string `json:"upToken"` // 上传凭证
-		Expires int64  `json:"expires"` // 上传凭证过期时间(秒)
 	}
 )
 
@@ -151,15 +142,15 @@ type (
 
 type (
 	CreateVideoReq {
-		Title       string   `json:"title"`       // 视频标题
-		PlayUrl     string   `json:"playUrl"`     // 视频播放地址
-		ThumbUrl    string   `json:"thumbUrl"`    // 视频封面地址
-		Description string   `json:"description"` // 视频描述
-		Category    uint     `json:"category"`    // 视频分类
-		Tags        []string `json:"tags"`        // 视频标签
-		PublishTime int64    `json:"publishTime"` // 视频发布时间(毫秒时间戳)
-		VideoKey    string   `json:"videoKey"`    // 视频上传key
-		Visibility  int      `json:"visibility"`  // 视频可见性(1:公开,2:私密)
+		Title       string   `json:"title"`                // 视频标题
+		PlayUrl     string   `json:"playUrl"`              // 视频播放地址
+		ThumbUrl    string   `json:"thumbUrl"`             // 视频封面地址
+		Description string   `json:"description"`          // 视频描述
+		Category    uint     `json:"category"`             // 视频分类
+		Tags        []string `json:"tags"`                 // 视频标签
+		PublishTime int64    `json:"publishTime,optional"` // 视频发布时间(毫秒时间戳)
+		VideoKey    string   `json:"videoKey,optional"`    // 视频上传key
+		Visibility  int      `json:"visibility"`           // 视频可见性(1:公开,2:私密)
 	}
 	CreateVideoResp {
 	}
@@ -177,10 +168,18 @@ type (
 		ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
 	}
 	FollowingResp {
-		VideoList   []*Video     `json:"videoList"`
-		Items       []*VideoItem `json:"items"`
-		NextTime    int64        `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
-		CursorScore string       `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
-		Length      int          `json:"length"`      // 视频列表长度
+		VideoList   []*VideoBasicInfo `json:"videoList"`
+		NextTime    int64             `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
+		CursorScore string            `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
+		Length      int               `json:"length"`      // 视频列表长度
+	}
+)
+
+type (
+	GetVideoInfoReq {
+		VideoId int64 `path:"videoId"`
+	}
+	GetVideoInfoResp {
+		Video *VideoBasicInfo `json:"video"`
 	}
 )

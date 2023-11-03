@@ -21,22 +21,24 @@ type Video struct {
 	CommentCount  int `gorm:"default:0"` // 评论数量
 
 	AuthorID uint       `gorm:"index"` // 作者ID
-	Author   *user.User `gorm:"-"` // 作者
+	Author   *user.User `gorm:"-"`     // 作者
 
-	CategoryID uint `gorm:"index"` // 分类ID
+	CategoryID uint      `gorm:"index"` // 分类ID
+	Category   *Category `gorm:"-"`     // 分类 `gorm:"-"`
 
-	Description string // 视频描述
-	PublishTime time.Time // 发布时间
-	PublishStatus int `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
-	Visibility int `gorm:"default:0"` // 可见性 0:公开 1:私有
+	Tags []*Tag `gorm:"-"`
 
+	Description   string    // 视频描述
+	PublishTime   time.Time // 发布时间
+	PublishStatus int       `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
+	Visibility    int       `gorm:"default:0"` // 可见性 0:公开 1:私有
 }
 
 func (v *Video) TableName() string {
 	return "video"
 }
 
-func (v *Video) loadAuthor(ctx context.Context, db *gorm.DB) error {
+func (v *Video) LoadAuthor(ctx context.Context, db *orm.DB) error {
 	var author user.User
 	err := db.WithContext(ctx).
 		Where("id = ?", v.AuthorID).
@@ -45,14 +47,41 @@ func (v *Video) loadAuthor(ctx context.Context, db *gorm.DB) error {
 	return err
 }
 
-type VideoModelInterface interface {
-	Insert(ctx context.Context, video *Video) error
-	FindOne(ctx context.Context, id int64) (*Video, error)
-	List(ctx context.Context, opts ListOption) ([]*Video, error)
-	Count(ctx context.Context, opts ListOption) (count int64, err error)
+func (v *Video) LoadCategory(ctx context.Context, db *orm.DB) error {
+	var category Category
+	err := db.WithContext(ctx).
+		Where("id = ?", v.CategoryID).
+		First(&category).Error
+	v.Category = &category
+	return err
 }
 
-var _ VideoModelInterface = (*VideoModel)(nil)
+func (v *Video) LoadTags(ctx context.Context, db *orm.DB) error {
+	var tags []*Tag
+	err := db.WithContext(ctx).
+		Select("tags.*").
+		Joins("LEFT JOIN video_tags ON video_tags.tag_id = tags.id").
+		Where("video_id = ?", v.ID).
+		Find(&tags).Error
+	v.Tags = tags
+	return err
+}
+
+func (v *Video) LoadAttributes(ctx context.Context, db *orm.DB) error {
+	err := v.LoadAuthor(ctx, db)
+	if err != nil {
+		return err
+	}
+	err = v.LoadCategory(ctx, db)
+	if err != nil {
+		return err
+	}
+	err = v.LoadTags(ctx, db)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 type VideoModel struct {
 	db *gorm.DB
@@ -109,14 +138,7 @@ func (m *VideoModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB 
 // List 通过时间点来获取比该时间点早的十个视频
 func (m *VideoModel) List(ctx context.Context, opts ListOption) ([]*Video, error) {
 	var result []*Video
-	err := m.applyOption(ctx, opts).Find(&result).Error
-	for _, v := range result {
-		err = v.loadAuthor(ctx, m.db)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return result, err
+	return result, m.applyOption(ctx, opts).Find(&result).Error
 }
 
 // Count 通过作者 ID 获取视频数量
