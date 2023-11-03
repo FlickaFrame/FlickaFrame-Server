@@ -12,13 +12,21 @@ info(
 	jwt: JwtAuth
 )
 service main{
-	@doc "Get User Info Detail"
+	@doc "Get Current Logined User Detail Info"
 	@handler detail
-	get /user/detail (UserInfoReq) returns (UserInfoResp)
+	get /user/detail (UserDetailInfoReq) returns (UserDetailInfoResp)
 
 	@doc "Update User Avatar"
 	@handler UpdateAvatar
 	post  /user/avatar (UpdateAvatarReq) returns (UpdateAvatarResp)
+
+	@doc "Update User Info"
+	@handler UpdateInfo
+	post /user/info (UpdateInfoReq) returns (UpdateInfoResp)
+
+	@doc "Change User Password" // 修改用户密码
+	@handler ChangePassword
+	post /user/changePassword (ChangePasswordReq) returns (ChangePasswordResp)
 }
 
 //no need login
@@ -35,19 +43,36 @@ service main {
 	@handler login
 	post /user/login (LoginReq) returns (LoginResp)
 
+	@doc "Get Sepcific User Detail Info"
+	@handler GetSpecificUserDetail
+	get /user/detail/:userId (UserDetailInfoReq) returns (UserDetailInfoResp)
+
 	@doc "List User Ranking"
 	@handler Ranking
 	get /user/ranking (RankingReq) returns (RankingResp)
 }
 
-type User {
-	ID        int64  `json:"id"`
-	Phone     string `json:"phone"`
-	NickName  string `json:"nickName"`
-	Sex       int64  `json:"sex"`
-	AvatarUrl string `json:"avatarUrl"`
-	Info      string `json:"info"`
-}
+type (
+	UserBasicInfo {
+		ID        uint   `json:"userId"`    // 用户ID
+		NickName  string `json:"nickName"`  // 用户名
+		AvatarUrl string `json:"avatarUrl"` // 头像
+		Slogan    string `json:"slogan"`    // 个性签名
+		Gender    int64  `json:"gender"`    // 性别
+	}
+	UserStatisticalInfo { //用户统计信息
+		FollowingCount int `json:"followingCount"` // 关注数
+		FollowerCount  int `json:"followerCount"`  // 粉丝数
+		LikeCount      int `json:"likeCount"`      // 获赞数量
+
+		PublishedVideoCount   int `json:"publishVideoCount"`     // 发布作品数量
+		LikeVideoCount        int `json:"likeVideoCount"`        // 点赞作品数量
+		CollectionsVideoCount int `json:"collectionsVideoCount"` // 收藏作品数量
+	}
+	UserInteractionInfo {
+		IsFollow bool `json:"isFollow"` // 是否关注
+	}
+)
 
 type (
 	RegisterReq {
@@ -75,10 +100,13 @@ type (
 )
 
 type (
-	UserInfoReq {
+	UserDetailInfoReq {
+		UserId int64 `path:"userId"`
 	}
-	UserInfoResp {
-		UserInfo User `json:"userInfo"`
+	UserDetailInfoResp {
+		UserBasicInfo
+		UserStatisticalInfo
+		UserInteractionInfo
 	}
 )
 
@@ -93,11 +121,21 @@ type (
 
 type (
 	RankingReq {
-		PageSize int  `form:"pageSize"` // 分页大小,默认为 10
-		Page     int  `form:"page"`     // 当前页码,默认为 1
-		ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
+		PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
+		Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
+		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 	}
 	RankingResp {
-		Users []*User `json:"users"`
+		Users []*UserBasicInfo `json:"users"`
 	}
+)
+
+type (
+	UpdateInfoReq  struct{}
+	UpdateInfoResp struct{}
+)
+
+type (
+	ChangePasswordReq  struct{}
+	ChangePasswordResp struct{}
 )
