@@ -7,4 +7,5 @@ import (
 	"action/comment_server.api"
 	"action/favorite_server.api"
 	"action/collection_server.api"
+	"oss/oss_server.api"
 )

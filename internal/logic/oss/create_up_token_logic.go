@@ -1,4 +1,4 @@
-package video
+package oss
 
 import (
 	"context"
@@ -7,10 +7,10 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 
-	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/deckarep/golang-set"
 	"github.com/qiniu/go-sdk/v7/auth"
 	"github.com/qiniu/go-sdk/v7/storage"
-	"github.com/deckarep/golang-set"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type CreateUpTokenLogic struct {
@@ -31,15 +31,16 @@ func (l *CreateUpTokenLogic) CreateUpToken(req *types.CreateUpTokenReq) (resp *t
 	var (
 		accessKey = l.svcCtx.Config.Oss.AccessKeyId
 		secretKey = l.svcCtx.Config.Oss.AccessKeySecret
-		bucket = l.svcCtx.Config.Oss.BucketName
+		bucket    = l.svcCtx.Config.Oss.BucketName
 	)
 	UploadTypeSet := mapset.NewSet("video", "avatar", "cover") // filter upload type
-	if (!UploadTypeSet.Contains(req.UploadType)) {
+	if !UploadTypeSet.Contains(req.UploadType) {
 		err = fmt.Errorf("upload type error")
+		logx.Info(err)
 		return
 	}
 	putPolicy := storage.PutPolicy{
-		Scope: fmt.Sprintf("%s:%s/", bucket, req.UploadType),
+		Scope:           fmt.Sprintf("%s:%s/", bucket, req.UploadType),
 		IsPrefixalScope: 1,
 	}
 	mac := auth.New(accessKey, secretKey)

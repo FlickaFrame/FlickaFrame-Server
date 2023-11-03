@@ -1,4 +1,4 @@
-package tag
+package oss
 
 import (
 	"context"
@@ -9,22 +9,23 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type RankLogic struct {
+type EndpointLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewRankLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RankLogic {
-	return &RankLogic{
+func NewEndpointLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EndpointLogic {
+	return &EndpointLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *RankLogic) Rank(req *types.TagReq) (resp *types.FollowResp, err error) {
-	// todo: add your logic here and delete this line
-
+func (l *EndpointLogic) Endpoint() (resp *types.OssEndpointResponse, err error) {
+	resp = &types.OssEndpointResponse{
+		EndPoint: l.svcCtx.Config.Oss.Endpoint,
+	}
 	return
 }
