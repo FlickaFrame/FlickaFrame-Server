@@ -74,10 +74,10 @@ func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID uint) err
 		if err := tx.Where("user_id = ? AND followed_user_id = ?", userID, followID).Delete(&Follow{}).Error; err != nil {
 			return err
 		}
-		if err := tx.Model(&User{}).Where("id = ?", followID).Update("num_followers", gorm.Expr("num_followers - ?", 1)).Error; err != nil {
+		if err := tx.Model(&User{}).Where("id = ?", followID).Update("follower_count", gorm.Expr("follower_count - ?", 1)).Error; err != nil {
 			return err
 		}
-		if err := tx.Model(&User{}).Where("id = ?", userID).Update("num_following", gorm.Expr("num_following - ?", 1)).Error; err != nil {
+		if err := tx.Model(&User{}).Where("id = ?", userID).Update("following_count", gorm.Expr("following_count - ?", 1)).Error; err != nil {
 			return err
 		}
 		return nil
