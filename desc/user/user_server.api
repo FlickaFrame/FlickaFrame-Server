@@ -23,11 +23,11 @@ service main {
 
 	@doc "ListMyFollowers list the followers user of the authenticated user"
 	@handler ListMyFollowers
-	get /user/me/followers (ListMyFollowersReq) returns (ListMyFollowersResp)
+	get /user/me/followers (ListFollowReq) returns (ListFollowUserResp)
 
 	@doc "ListMyFollowing list the following users of the authenticated user"
 	@handler ListMyFollowing
-	get /user/me/following(ListMyFollowingReq) returns (ListMyFollowingResp)
+	get /user/me/following(ListFollowReq) returns (ListFollowUserResp)
 }
 
 //need login
@@ -38,11 +38,11 @@ service main {
 service main {
 	@doc "ListFollowers list the given user's followers"
 	@handler ListFollowers
-	get /users/:user_id/followers(ListFollowersReq) returns (ListFollowersResp)
+	get /users/:user_id/followers(ListFollowReq) returns (ListFollowUserResp)
 
 	@doc "ListFollowing list the users that the given user is following"
 	@handler ListFollowing
-	get /users/:user_id/following(ListFollowingReq) returns (ListFollowingResp)
+	get /users/:user_id/following(ListFollowReq) returns (ListFollowUserResp)
 }
 
 // Need login
@@ -208,31 +208,11 @@ type (
 		UserBasicInfo
 		UserInteractionInfo
 	}
-	ListMyFollowersReq {
+	ListFollowReq {
+		ContextUserId int64 `path:"user_id,optional"`
 		ListUserOption
 	}
-	ListMyFollowersResp {
-		FollowUser []*FollowUser `json:"users" desc:"用户id"`
-	}
-	ListFollowingReq {
-		ContextUserId int64 `path:"user_id"`
-		ListUserOption
-	}
-	ListFollowingResp {
-		FollowUser []*FollowUser `json:"users" desc:"用户id"`
-	}
-	ListMyFollowingReq {
-		ListUserOption
-	}
-
-	ListMyFollowingResp {
-		FollowUser []*FollowUser `json:"users" desc:"用户id"`
-	}
-	ListFollowersReq {
-		ContextUserId int64 `path:"user_id"`
-		ListUserOption
-	}
-	ListFollowersResp {
-		FollowUser []*FollowUser `json:"users" desc:"用户id"`
+	ListFollowUserResp {
+		FollowUser []*FollowUser `json:"users"`
 	}
 )

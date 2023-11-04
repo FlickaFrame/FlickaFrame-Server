@@ -116,38 +116,13 @@ type FollowUser struct {
 	UserInteractionInfo
 }
 
-type ListMyFollowersReq struct {
+type ListFollowReq struct {
+	ContextUserId int64 `path:"user_id,optional"`
 	ListUserOption
 }
 
-type ListMyFollowersResp struct {
-	FollowUser []*FollowUser `json:"users" desc:"用户id"`
-}
-
-type ListFollowingReq struct {
-	ContextUserId int64 `path:"user_id"`
-	ListUserOption
-}
-
-type ListFollowingResp struct {
-	FollowUser []*FollowUser `json:"users" desc:"用户id"`
-}
-
-type ListMyFollowingReq struct {
-	ListUserOption
-}
-
-type ListMyFollowingResp struct {
-	FollowUser []*FollowUser `json:"users" desc:"用户id"`
-}
-
-type ListFollowersReq struct {
-	ContextUserId int64 `path:"user_id"`
-	ListUserOption
-}
-
-type ListFollowersResp struct {
-	FollowUser []*FollowUser `json:"users" desc:"用户id"`
+type ListFollowUserResp struct {
+	FollowUser []*FollowUser `json:"users"`
 }
 
 type Category struct {

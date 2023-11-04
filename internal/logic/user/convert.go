@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 )
 
 type Convert struct {
@@ -47,9 +48,45 @@ func (c *Convert) BuildUserDetailInfo(ctx context.Context, doer *user_model.User
 
 func (c *Convert) BuildUserBasicInfo(ctx context.Context, user *user_model.User) (*types.UserBasicInfo, error) {
 	var userInfo types.UserBasicInfo
-	_ = copier.Copy(&userInfo, user)
+	err := copier.Copy(&userInfo, user)
+	if err != nil {
+		logx.Info("copy user to userInfo fail: ", err)
+	}
+	userInfo.ID = strconv.FormatInt(user.ID, 10)
 	userInfo.AvatarUrl = c.getAccessUrl(ctx, user.AvatarUrl)
 	return &userInfo, nil
+}
+
+func (c *Convert) BuildUserInteractionInfo(ctx context.Context, doer, contextUser int64) (*types.UserInteractionInfo, error) {
+	// 关注信息
+	isFollow := c.svcCtx.UserModel.IsFollowing(ctx, doer, contextUser)
+	return &types.UserInteractionInfo{
+		IsFollow: isFollow,
+	}, nil
+}
+
+func (c *Convert) BuildUserInteractionInfoList(ctx context.Context, doer int64, userList []*user_model.User) ([]*types.UserInteractionInfo, error) {
+	var userInfoList []*types.UserInteractionInfo
+	for _, user := range userList {
+		userInfo, err := c.BuildUserInteractionInfo(ctx, doer, user.ID)
+		if err != nil {
+			logx.Info("build user interaction info fail: ", err)
+			return nil, err
+		}
+		userInfoList = append(userInfoList, userInfo)
+	}
+	return userInfoList, nil
+}
+
+func (c *Convert) BuildUserStatisticalInfo(ctx context.Context, user *user_model.User) (*types.UserStatisticalInfo, error) {
+	return &types.UserStatisticalInfo{
+		FollowingCount:        0,
+		FollowerCount:         0,
+		LikeCount:             0,
+		PublishedVideoCount:   0,
+		LikeVideoCount:        0,
+		CollectionsVideoCount: 0,
+	}, nil
 }
 
 func (c *Convert) buildUserBasicInfoList(ctx context.Context, userList []*user_model.User) ([]*types.UserBasicInfo, error) {
@@ -57,6 +94,7 @@ func (c *Convert) buildUserBasicInfoList(ctx context.Context, userList []*user_m
 	for _, user := range userList {
 		userInfo, err := c.BuildUserBasicInfo(ctx, user)
 		if err != nil {
+			logx.Info("build user basic info fail: ", err)
 			return nil, err
 		}
 		userInfoList = append(userInfoList, userInfo)

@@ -5,9 +5,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
-	"github.com/jinzhu/copier"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,20 +22,7 @@ func NewListMyFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *L
 	}
 }
 
-func (l *ListMyFollowingLogic) ListMyFollowing(req *types.ListMyFollowingReq) (resp *types.ListMyFollowingResp, err error) {
-	userId := jwt.GetUidFromCtx(l.ctx)
-	followings, err := l.svcCtx.UserModel.GetUserFollowing(l.ctx, userId, orm.ListOptions{
-		PageSize: req.PageSize,
-		Page:     req.Page,
-		ListAll:  req.ListAll,
-	})
-	if err != nil {
-		return nil, err
-	}
-	list, err := NewConvert(l.ctx, l.svcCtx).buildUserBasicInfoList(l.ctx, followings)
-	resp = &types.ListMyFollowingResp{
-		FollowUser: make([]*types.FollowUser, len(list)),
-	}
-	err = copier.Copy(&resp.FollowUser, &list)
-	return
+func (l *ListMyFollowingLogic) ListMyFollowing(req *types.ListFollowReq) (resp *types.ListFollowUserResp, err error) {
+	req.ContextUserId = jwt.GetUidFromCtx(l.ctx)
+	return NewListFollowingLogic(l.ctx, l.svcCtx).ListFollowing(req)
 }

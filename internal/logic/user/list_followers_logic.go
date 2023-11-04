@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
@@ -24,7 +25,8 @@ func NewListFollowersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 	}
 }
 
-func (l *ListFollowersLogic) ListFollowers(req *types.ListFollowersReq) (resp *types.ListFollowersResp, err error) {
+func (l *ListFollowersLogic) ListFollowers(req *types.ListFollowReq) (resp *types.ListFollowUserResp, err error) {
+	doerId := jwt.GetUidFromCtx(l.ctx)
 	followers, err := l.svcCtx.UserModel.GetUserFollowers(l.ctx, req.ContextUserId, orm.ListOptions{
 		PageSize: req.PageSize,
 		Page:     req.Page,
@@ -33,10 +35,20 @@ func (l *ListFollowersLogic) ListFollowers(req *types.ListFollowersReq) (resp *t
 	if err != nil {
 		return nil, err
 	}
-	list, err := NewConvert(l.ctx, l.svcCtx).buildUserBasicInfoList(l.ctx, followers)
-	resp = &types.ListFollowersResp{
-		FollowUser: make([]*types.FollowUser, len(list)),
+	// 基本信息
+	basicUsers, err := NewConvert(l.ctx, l.svcCtx).buildUserBasicInfoList(l.ctx, followers)
+	// 互动信息(与当前登录用户)
+	info, err := NewConvert(l.ctx, l.svcCtx).BuildUserInteractionInfoList(l.ctx, doerId, followers)
+	if err != nil {
+		return nil, err
 	}
-	err = copier.Copy(&resp.FollowUser, &list)
+	resp = &types.ListFollowUserResp{
+		FollowUser: make([]*types.FollowUser, len(followers)),
+	}
+	for i := range basicUsers {
+		resp.FollowUser[i] = &types.FollowUser{}
+		_ = copier.Copy(resp.FollowUser[i], basicUsers[i])
+		_ = copier.Copy(resp.FollowUser[i], info[i])
+	}
 	return
 }
