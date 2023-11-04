@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
@@ -52,8 +53,11 @@ func (m *UserModel) IsFollowing(ctx context.Context, userId, followID int64) boo
 
 // FollowUser marks someone be  follower.
 func (m *UserModel) FollowUser(ctx context.Context, userId, followID int64) error {
-	if userId == followID || m.IsFollowing(ctx, userId, followID) {
-		return nil
+	if userId == followID {
+		return code.CannotFollowSelf
+	}
+	if m.IsFollowing(ctx, userId, followID) {
+		return code.HadFollowed
 	}
 	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&Follow{UserID: userId, FollowedUserID: followID}).Error; err != nil {
@@ -71,17 +75,23 @@ func (m *UserModel) FollowUser(ctx context.Context, userId, followID int64) erro
 
 // UnfollowUser unmarks someone as another's follower.
 func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID int64) error {
-	if userID == followID || !m.IsFollowing(ctx, userID, followID) {
-		return nil
+	if userID == followID {
+		return code.CannotUnfollowSelf
+	}
+	if !m.IsFollowing(ctx, userID, followID) {
+		return code.HadNotFollowed
 	}
 	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("user_id = ? AND followed_user_id = ?", userID, followID).Delete(&Follow{}).Error; err != nil {
+			logx.Info(err)
 			return err
 		}
 		if err := tx.Model(&User{}).Where("id = ?", followID).Update("follower_count", gorm.Expr("follower_count - ?", 1)).Error; err != nil {
+			logx.Info(err)
 			return err
 		}
 		if err := tx.Model(&User{}).Where("id = ?", userID).Update("following_count", gorm.Expr("following_count - ?", 1)).Error; err != nil {
+			logx.Info(err)
 			return err
 		}
 		return nil
@@ -121,16 +131,4 @@ func (m *UserModel) GetUserFollowing(ctx context.Context, userId int64, listOpti
 	}
 
 	return users, sess.Find(&users).Error
-}
-
-func (m *UserModel) CountFollowers(ctx context.Context, userId uint) (int64, error) {
-	var count int64
-	err := m.db.WithContext(ctx).Model(&Follow{}).Where("followed_user_id = ?", userId).Count(&count).Error
-	return count, err
-}
-
-func (m *UserModel) CountFollowing(ctx context.Context, userId uint) (int64, error) {
-	var count int64
-	err := m.db.WithContext(ctx).Model(&Follow{}).Where("user_id = ?", userId).Count(&count).Error
-	return count, err
 }

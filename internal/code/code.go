@@ -6,19 +6,33 @@ import (
 )
 
 var (
-	ErrNotFound         = gorm.ErrRecordNotFound
-	FollowUserIdEmpty   = xcode.Add(40001, "关注用户id为空")
-	FollowedUserIdEmpty = xcode.Add(40002, "被关注用户id为空")
-	CannotFollowSelf    = xcode.Add(40003, "不能关注自己")
-	UserIdEmpty         = xcode.Add(40004, "用户id为空")
+	ErrNotFound = gorm.ErrRecordNotFound
+)
 
-	ErrUserAlreadyRegisterError = xcode.Add(40005, "user has been registered")
-	ErrGenerateTokenError       = xcode.Add(40006, "generate token error")
+const ( // 40000 - 40099
+	FollowUserIdEmptyCode = 40000 + iota
+	FollowedUserIdEmptyCode
+	CannotFollowSelfCode
+	CannotUnfollowSelfCode
+	HadFollowedCode
+	HadNotFollowedCode
+)
 
-	ErrUserNoExistsError = xcode.Add(40007, "user not exists")
-	ErrUsernamePwdError  = xcode.Add(40008, "username or password error")
-	ErrUserFollowSelf    = xcode.Add(40009, "can not follow yourself")
+var ( // 关注相关错误
+	FollowUserIdEmpty   = xcode.Add(FollowUserIdEmptyCode, "关注用户id为空")
+	FollowedUserIdEmpty = xcode.Add(FollowedUserIdEmptyCode, "被关注用户id为空")
+	CannotFollowSelf    = xcode.Add(CannotFollowSelfCode, "Can not follow yourself")
+	CannotUnfollowSelf  = xcode.Add(CannotUnfollowSelfCode, "Can not unfollow yourself")
+	HadFollowed         = xcode.Add(HadFollowedCode, "Had followed")
+	HadNotFollowed      = xcode.Add(HadNotFollowedCode, "you have not followed this user")
+)
 
-	ErrCommentNoExistsError     = xcode.Add(40010, "comment not exists")
-	ErrCommentNoPermissionError = xcode.Add(40011, "no permission to delete comment")
+var (
+	UserIdEmpty                 = xcode.Add(40011, "用户id为空")
+	ErrUserAlreadyRegisterError = xcode.Add(40012, "user has been registered")
+	ErrGenerateTokenError       = xcode.Add(40013, "generate token error")
+	ErrUserNoExistsError        = xcode.Add(40021, "user not exists")
+	ErrUsernamePwdError         = xcode.Add(40021, "username or password error")
+	ErrCommentNoExistsError     = xcode.Add(40031, "comment not exists")
+	ErrCommentNoPermissionError = xcode.Add(40032, "no permission to delete comment")
 )
