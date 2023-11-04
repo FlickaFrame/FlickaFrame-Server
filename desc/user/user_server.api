@@ -197,7 +197,7 @@ type (
 	FollowResp {
 	}
 	UnFollowReq {
-		ContextUserId int64 `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+		ContextUserId int64 `path:"user_id"`
 	}
 	UnFollowResp {
 	}

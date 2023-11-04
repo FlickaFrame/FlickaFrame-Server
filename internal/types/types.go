@@ -105,7 +105,7 @@ type FollowResp struct {
 }
 
 type UnFollowReq struct {
-	ContextUserId int64 `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+	ContextUserId int64 `path:"user_id"`
 }
 
 type UnFollowResp struct {
