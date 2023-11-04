@@ -61,7 +61,7 @@ type CurrentUserInfoResp struct {
 }
 
 type UserDetailInfoReq struct {
-	ContextUserId int64 `path:"userId"`
+	ContextUserId int64 `path:"userId,optional"`
 }
 
 type UserDetailInfoResp struct {

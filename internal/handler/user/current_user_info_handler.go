@@ -11,14 +11,14 @@ import (
 
 func CurrentUserInfoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CurrentUserInfoReq
+		var req types.UserDetailInfoReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
 		l := user.NewCurrentUserInfoLogic(r.Context(), svcCtx)
-		resp, err := l.CurrentUserInfo()
+		resp, err := l.CurrentUserInfo(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

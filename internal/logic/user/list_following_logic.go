@@ -26,8 +26,10 @@ func NewListFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 }
 
 func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *types.ListFollowUserResp, err error) {
-	userId := jwt.GetUidFromCtx(l.ctx)
-	followings, err := l.svcCtx.UserModel.GetUserFollowing(l.ctx, userId, orm.ListOptions{
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	contextUserId := req.ContextUserId
+
+	followings, err := l.svcCtx.UserModel.GetUserFollowing(l.ctx, contextUserId, orm.ListOptions{
 		PageSize: req.PageSize,
 		Page:     req.Page,
 		ListAll:  req.ListAll,
@@ -38,7 +40,7 @@ func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *type
 	// 基本信息
 	list, err := NewConvert(l.ctx, l.svcCtx).buildUserBasicInfoList(l.ctx, followings)
 	// 互动信息(与当前登录用户)
-	info, err := NewConvert(l.ctx, l.svcCtx).BuildUserInteractionInfoList(l.ctx, userId, followings)
+	info, err := NewConvert(l.ctx, l.svcCtx).BuildUserInteractionInfoList(l.ctx, doerId, followings)
 	resp = &types.ListFollowUserResp{
 		FollowUser: make([]*types.FollowUser, len(list)),
 	}

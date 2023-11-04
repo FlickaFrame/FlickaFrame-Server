@@ -54,7 +54,7 @@ service main {
 service main{
 	@doc "Get Current Logined User Detail Info"
 	@handler CurrentUserInfo
-	get /user/detail  returns (UserDetailInfoResp)
+	get /user/detail(UserDetailInfoReq)  returns (UserDetailInfoResp)
 
 	@doc "Update User Avatar"
 	@handler UpdateAvatar
@@ -153,7 +153,7 @@ type (
 		UserInteractionInfo
 	}
 	UserDetailInfoReq {
-		ContextUserId int64 `path:"userId"`
+		ContextUserId int64 `path:"userId,optional"`
 	}
 	UserDetailInfoResp {
 		UserBasicInfo

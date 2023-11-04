@@ -25,27 +25,6 @@ func NewConvert(ctx context.Context, svcCtx *svc.ServiceContext) *Convert {
 	}
 }
 
-func (c *Convert) BuildUserDetailInfo(ctx context.Context, doer *user_model.User, user *user_model.User) (*types.UserDetailInfoResp, error) {
-	var userInfo types.UserDetailInfoResp
-	_ = copier.Copy(&userInfo, user)
-	userInfo.AvatarUrl = c.getAccessUrl(ctx, user.AvatarUrl)
-	if doer != user {
-		// TODO: 做权限判断用户属性可见性&交互信息获取
-		//userInfo.IsFollow = c.svcCtx.UserModel.IsFollowing(ctx, doer.ID, user.ID)
-	}
-	// TODO: 通过redis缓存获取统计信息
-	//userInfo.UserStatisticalInfo = types.UserStatisticalInfo{
-	//	FollowingCount:        0, //关注数
-	//	FollowerCount:         0, //粉丝数
-
-	//	LikeCount:             0, //获赞数
-	//	PublishedVideoCount:   0, //作品数
-	//	LikeVideoCount:        0, //点赞数
-	//	CollectionsVideoCount: 0, //收藏数
-	//}
-	return &userInfo, nil
-}
-
 func (c *Convert) BuildUserBasicInfo(ctx context.Context, user *user_model.User) (*types.UserBasicInfo, error) {
 	var userInfo types.UserBasicInfo
 	err := copier.Copy(&userInfo, user)
@@ -80,8 +59,8 @@ func (c *Convert) BuildUserInteractionInfoList(ctx context.Context, doer int64, 
 
 func (c *Convert) BuildUserStatisticalInfo(ctx context.Context, user *user_model.User) (*types.UserStatisticalInfo, error) {
 	return &types.UserStatisticalInfo{
-		FollowingCount:        0,
-		FollowerCount:         0,
+		FollowingCount:        user.FollowingCount,
+		FollowerCount:         user.FollowerCount,
 		LikeCount:             0,
 		PublishedVideoCount:   0,
 		LikeVideoCount:        0,

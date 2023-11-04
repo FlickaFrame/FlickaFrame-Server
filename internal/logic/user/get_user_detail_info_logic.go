@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 
@@ -23,10 +24,28 @@ func NewGetUserDetailInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetUserDetailInfoLogic) GetUserDetailInfo(req *types.UserDetailInfoReq) (resp *types.UserDetailInfoResp, err error) {
-	userId := req.ContextUserId
-	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	contextUserId := req.ContextUserId
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, contextUserId)
 	if err != nil {
 		return nil, err
 	}
-	return NewConvert(l.ctx, l.svcCtx).BuildUserDetailInfo(l.ctx, user, user)
+	basicInfo, err := NewConvert(l.ctx, l.svcCtx).BuildUserBasicInfo(l.ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	interInfo, err := NewConvert(l.ctx, l.svcCtx).BuildUserInteractionInfo(l.ctx, doerId, contextUserId)
+	if err != nil {
+		return nil, err
+	}
+	statInfo, err := NewConvert(l.ctx, l.svcCtx).BuildUserStatisticalInfo(l.ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	resp = &types.UserDetailInfoResp{
+		UserBasicInfo:       *basicInfo,
+		UserInteractionInfo: *interInfo,
+		UserStatisticalInfo: *statInfo,
+	}
+	return
 }
