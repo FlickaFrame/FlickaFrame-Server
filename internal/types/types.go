@@ -217,9 +217,6 @@ type FeedResp struct {
 	IsEnd bool             `json:"isEnd"` // 是否已到最后一页
 }
 
-type CategoryReq struct {
-}
-
 type CategoryResp struct {
 	CategoryList []*Category `json:"categoryList"`
 }

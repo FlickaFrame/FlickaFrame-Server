@@ -5,20 +5,13 @@ import (
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func CategoryHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CategoryReq
-		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-			return
-		}
-
 		l := video.NewCategoryLogic(r.Context(), svcCtx)
-		resp, err := l.Category(&req)
+		resp, err := l.Category()
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

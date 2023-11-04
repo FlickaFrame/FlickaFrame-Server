@@ -29,6 +29,4 @@ func (l *GetUserDetailInfoLogic) GetUserDetailInfo(req *types.UserDetailInfoReq)
 		return nil, err
 	}
 	return NewConvert(l.ctx, l.svcCtx).BuildUserDetailInfo(l.ctx, user, user)
-
-	return
 }

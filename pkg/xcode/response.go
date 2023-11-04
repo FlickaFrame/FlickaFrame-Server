@@ -17,7 +17,7 @@ func ErrHandler(err error) (int, any) {
 }
 
 func OkHandler(ctx context.Context, v any) any {
-	var success bool = true
+	success := true
 	return Status{
 		Code:    0,
 		Message: "ok",
