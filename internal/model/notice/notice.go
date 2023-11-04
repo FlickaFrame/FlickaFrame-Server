@@ -2,7 +2,7 @@ package notice
 
 import (
 	"fmt"
-	"gorm.io/gorm"
+	"time"
 )
 
 const (
@@ -17,7 +17,10 @@ const (
 )
 
 type Notice struct {
-	gorm.Model
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	Checked    bool   `json:"checked"`     // 是否已读
 	Content    string `json:"content"`     // 内容(标题)
 	NoticeType int    `json:"notice_type"` // 消息类型

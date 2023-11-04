@@ -3,6 +3,7 @@ package video
 import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
 	"time"
@@ -11,7 +12,10 @@ import (
 const DefaultLimit = 10
 
 type Video struct {
-	gorm.Model
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	Title    string // 视频标题
 	ETag     string
 	PlayUrl  string // 播放地址
@@ -95,6 +99,7 @@ func NewVideoModel(db *gorm.DB) *VideoModel {
 
 // Insert 创建视频记录
 func (m *VideoModel) Insert(ctx context.Context, video *Video) error {
+	video.ID = snowflake.VideoIDNode.Generate().Int64()
 	return m.db.WithContext(ctx).Create(video).Error
 }
 
@@ -147,12 +152,14 @@ func (m *VideoModel) Count(ctx context.Context, opts ListOption) (count int64, e
 	return
 }
 
+// ListVideoByAuthorId 通过作者 ID 获取视频列表
 func (m *VideoModel) ListVideoByAuthorId(ctx context.Context, authorId uint) ([]*Video, error) {
 	var result []*Video
 	err := m.db.WithContext(ctx).Where("author_id = ?", authorId).Find(&result).Error
 	return result, err
 }
 
+// ListVideoByCategoryId 通过分类 ID 获取视频列表
 func (m *VideoModel) ListVideoByCategoryId(ctx context.Context, categoryId uint) ([]*Video, error) {
 	var result []*Video
 	err := m.db.WithContext(ctx).Where("category_id = ?", categoryId).Find(&result).Error

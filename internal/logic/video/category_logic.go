@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -32,7 +33,7 @@ func (l *CategoryLogic) Category() (resp *types.CategoryResp, err error) {
 	CategoryList := make([]*types.Category, 0, len(categories))
 	for _, v := range categories {
 		CategoryList = append(CategoryList, &types.Category{
-			ID:   v.ID,
+			ID:   strconv.Itoa(int(v.ID)),
 			Name: v.Name,
 		})
 	}

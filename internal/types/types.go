@@ -151,17 +151,17 @@ type ListFollowersResp struct {
 }
 
 type Category struct {
-	ID   uint   `json:"id"`   // 分类ID
+	ID   string `json:"id"`   // 分类ID
 	Name string `json:"name"` // 分类名称
 }
 
 type Tag struct {
-	Id   uint   `json:"id"`   // 标签id
+	Id   string `json:"id"`   // 标签id
 	Name string `json:"name"` // 标签名称
 }
 
 type VideoUserInfo struct {
-	ID        uint   `json:"userId"`    // 用户ID
+	ID        string `json:"userId"`    // 用户ID
 	NickName  string `json:"nickName"`  // 用户名
 	AvatarUrl string `json:"avatarUrl"` // 头像
 	Slogan    string `json:"slogan"`    // 个性签名
@@ -170,7 +170,7 @@ type VideoUserInfo struct {
 }
 
 type VideoBasicInfo struct {
-	ID            uint           `json:"id"`          // 视频ID
+	ID            string         `json:"id"`          // 视频ID
 	Title         string         `json:"title"`       // 视频标题
 	Description   string         `json:"description"` // 视频描述
 	PlayUrl       string         `json:"playUrl"`     // 视频播放地址

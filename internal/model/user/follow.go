@@ -5,11 +5,15 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
+	"time"
 )
 
 // Follow 关注
 type Follow struct {
-	gorm.Model
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	UserID         uint  `gorm:"uniqueIndex:idx_follow"`
 	User           *User `gorm:"-"`
 	FollowedUserID uint  `gorm:"uniqueIndex:idx_follow"`

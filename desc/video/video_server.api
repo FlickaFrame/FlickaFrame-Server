@@ -53,16 +53,16 @@ service main{
 
 type (
 	Category { // 视频分区
-		ID   uint   `json:"id"`   // 分类ID
+		ID   string `json:"id"`   // 分类ID
 		Name string `json:"name"` // 分类名称
 	}
 	Tag {
-		Id   uint   `json:"id"`   // 标签id
+		Id   string `json:"id"`   // 标签id
 		Name string `json:"name"` // 标签名称
 	}
 	VideoUserInfo { // 视频作者信息
 		//UserBasicInfo
-		ID        uint   `json:"userId"`    // 用户ID
+		ID        string `json:"userId"`    // 用户ID
 		NickName  string `json:"nickName"`  // 用户名
 		AvatarUrl string `json:"avatarUrl"` // 头像
 		Slogan    string `json:"slogan"`    // 个性签名
@@ -71,7 +71,7 @@ type (
 		IsFollow bool `json:"isFollow"` // 是否关注
 	}
 	VideoBasicInfo { //视频的基本信息
-		ID            uint           `json:"id"`          // 视频ID
+		ID            string         `json:"id"`          // 视频ID
 		Title         string         `json:"title"`       // 视频标题
 		Description   string         `json:"description"` // 视频描述
 		PlayUrl       string         `json:"playUrl"`     // 视频播放地址

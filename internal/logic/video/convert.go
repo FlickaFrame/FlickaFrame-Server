@@ -42,6 +42,7 @@ func (c *convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 	// 加载视频作者
 	videoBasicInfo.VideoUserInfo = &types.VideoUserInfo{}
 	err = copier.Copy(&videoBasicInfo.VideoUserInfo, video.Author)
+	videoBasicInfo.VideoUserInfo.AvatarUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, videoBasicInfo.VideoUserInfo.AvatarUrl)
 	if err != nil {
 		logx.Info("loading video user fail: ", err)
 		return nil, err

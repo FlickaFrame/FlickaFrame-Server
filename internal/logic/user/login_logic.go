@@ -29,7 +29,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
-	var userId uint
+	var userId int64
 	userId, err = l.loginByPhone(req.Phone, req.Password)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	return &tokenResp, err
 }
 
-func (l *LoginLogic) loginByPhone(mobile, password string) (uint, error) {
+func (l *LoginLogic) loginByPhone(mobile, password string) (int64, error) {
 	user, err := l.svcCtx.UserModel.FindOneByPhone(l.ctx, mobile)
 	if err != nil && !errors.Is(err, code.ErrNotFound) {
 		return 0, errors.Wrapf(xcode.DB_ERROR, "根据手机号查询用户信息失败，mobile:%s,err:%v", mobile, err)

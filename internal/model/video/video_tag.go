@@ -1,18 +1,33 @@
 package video
 
-import "gorm.io/gorm"
+import (
+	"time"
+)
 
 type Tag struct {
-	gorm.Model
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	Name string `gorm:"unique"`
 }
 
-type VideoTag struct {
-	gorm.Model
+func (t *Tag) TableName() string {
+	return "tags"
+}
 
-	VideoID int64 `gorm:"index"`
-	Video   *Video
+type VideoTag struct {
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
+	VideoID int64  `gorm:"index"`
+	Video   *Video `gorm:"-"`
 
 	TagID int64 `gorm:"index"`
-	Tag   *Tag
+	Tag   *Tag  `gorm:"-"`
+}
+
+func (vt *VideoTag) TableName() string {
+	return "video_tags"
 }

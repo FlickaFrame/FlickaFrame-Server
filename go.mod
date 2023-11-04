@@ -3,6 +3,7 @@ module github.com/FlickaFrame/FlickaFrame-Server
 go 1.21.3
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/deckarep/golang-set v1.8.0
 	github.com/go-playground/validator/v10 v10.8.0
 	github.com/golang-jwt/jwt/v4 v4.5.0

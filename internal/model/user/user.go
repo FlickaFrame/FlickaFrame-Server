@@ -1,8 +1,12 @@
 package user
 
 import (
+	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"gorm.io/gorm"
+	"time"
 )
 
 const (
@@ -17,7 +21,10 @@ const (
 )
 
 type User struct {
-	gorm.Model
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	NickName  string `gorm:"type:varchar(32)"` // 昵称
 	AvatarUrl string // 头像地址
 	Age       int    // 年龄
@@ -53,4 +60,49 @@ func (u *User) ValidatePassword(password string) bool {
 // IsPasswordSet checks if the password is set or left empty
 func (u *User) IsPasswordSet() bool {
 	return len(u.Password) != 0
+}
+
+type UserModel struct {
+	db *gorm.DB
+}
+
+func NewUserModel(db *gorm.DB) *UserModel {
+	return &UserModel{
+		db: db,
+	}
+}
+
+func (m *UserModel) Insert(ctx context.Context, data *User) error {
+	data.ID = snowflake.UserIDNode.Generate().Int64()
+	return m.db.WithContext(ctx).Create(data).Error
+}
+
+func (m *UserModel) FindOne(ctx context.Context, id uint) (*User, error) {
+	var result User
+	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
+	return &result, err
+}
+
+func (m *UserModel) MustFindOne(ctx context.Context, id uint) *User {
+	user, _ := m.FindOne(ctx, id)
+	return user
+}
+
+func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, error) {
+	var result User
+	err := m.db.WithContext(ctx).Where("phone = ?", phone).First(&result).Error
+	return &result, err
+}
+
+type ListOptions struct {
+	orm.ListOptions
+	UserIds []uint
+}
+
+func (m *UserModel) List(ctx context.Context, listOptions ListOptions) ([]*User, error) {
+	var result []*User
+	sess := m.db.WithContext(ctx)
+	sess = orm.SetSessionPagination(sess, &listOptions) // set pagination
+	err := sess.Find(&result).Error
+	return result, err
 }

@@ -3,13 +3,18 @@ package comment
 import (
 	"context"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
 	"gorm.io/gorm"
+	"time"
 )
 
 const DefaultLimit = 10
 
 type Comment struct {
-	gorm.Model
+	ID        int64 `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	Content     string          `gorm:"not null"`                    // 评论内容
 	VideoID     uint            `gorm:"index:idx_videoid;not null"`  // 视频ID
 	ParentID    uint            `gorm:"index:idx_parentid;"`         // 父评论ID
@@ -70,6 +75,7 @@ func (m *CommentModel) List(ctx context.Context, opts Option) ([]*Comment, error
 // CreateVideoComment 创建视频的一级评论
 func (m *CommentModel) CreateVideoComment(ctx context.Context, doer uint, videoId uint, content string) error {
 	comment := Comment{
+		ID:       snowflake.CommentIDNode.Generate().Int64(),
 		Content:  content,
 		VideoID:  videoId,
 		OwnerUID: doer,
@@ -81,6 +87,7 @@ func (m *CommentModel) CreateVideoComment(ctx context.Context, doer uint, videoI
 // CreateReplyComment 创建视频的二级评论（评论的回复）
 func (m *CommentModel) CreateReplyComment(ctx context.Context, doer uint, videoId uint, content string, parentId uint, targetId uint) error {
 	comment := Comment{
+		ID:       snowflake.CommentIDNode.Generate().Int64(),
 		Content:  content,
 		VideoID:  videoId,
 		OwnerUID: doer,

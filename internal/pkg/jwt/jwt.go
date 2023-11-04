@@ -31,7 +31,7 @@ type JwtToken struct {
 	RefreshAfter int64
 }
 
-func GenerateToken(UserId uint, accessSecret string, accessExpire int64) (*JwtToken, error) {
+func GenerateToken(UserId int64, accessSecret string, accessExpire int64) (*JwtToken, error) {
 	now := time.Now().Unix()
 	accessToken, err := GetJwtToken(accessSecret, now, accessExpire, UserId)
 	if err != nil {
@@ -45,7 +45,7 @@ func GenerateToken(UserId uint, accessSecret string, accessExpire int64) (*JwtTo
 	}, nil
 }
 
-func GetJwtToken(secretKey string, iat, seconds int64, userId uint) (string, error) {
+func GetJwtToken(secretKey string, iat, seconds int64, userId int64) (string, error) {
 	claims := make(jwt.MapClaims)
 	claims["exp"] = iat + seconds
 	claims["iat"] = iat
