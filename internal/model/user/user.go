@@ -94,6 +94,10 @@ func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, er
 	return &result, err
 }
 
+func (m *UserModel) Update(ctx context.Context, user *User) error {
+	return m.db.WithContext(ctx).Model(user).Updates(user).Error
+}
+
 type ListOptions struct {
 	orm.ListOptions
 	UserIds []uint

@@ -7,6 +7,7 @@ type UserBasicInfo struct {
 	AvatarUrl string `json:"avatarUrl"` // 头像
 	Slogan    string `json:"slogan"`    // 个性签名
 	Gender    int64  `json:"gender"`    // 性别
+	Age       int    `json:"age"`
 }
 
 type UserStatisticalInfo struct {
@@ -86,9 +87,11 @@ type RankingResp struct {
 }
 
 type UpdateInfoReq struct {
-}
-
-type UpdateInfoResp struct {
+	NickName string `json:"nickName,optional"` // 用户名
+	Slogan   string `json:"slogan,optional"`   // 个性签名
+	Gender   int    `json:"gender,optional"`   // 性别
+	Age      int    `json:"age,optional"`
+	Password string `json:"password,optional"`
 }
 
 type UpdatePasswordReq struct {
