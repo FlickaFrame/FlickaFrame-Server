@@ -24,7 +24,14 @@ func NewGetVideoInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetV
 }
 
 func (l *GetVideoInfoLogic) GetVideoInfo(req *types.GetVideoInfoReq) (resp *types.GetVideoInfoResp, err error) {
-	// todo: add your logic here and delete this line
-
+	video, err := l.svcCtx.VideoModel.FindOne(l.ctx, req.VideoId)
+	if err != nil {
+		logx.Info(err)
+		return nil, err
+	}
+	videoBasicInfo, err := NewConvert(l.ctx, l.svcCtx).BuildVideoBasicInfo(l.ctx, video)
+	resp = &types.GetVideoInfoResp{
+		Video: videoBasicInfo,
+	}
 	return
 }
