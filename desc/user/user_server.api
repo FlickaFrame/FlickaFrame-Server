@@ -38,11 +38,11 @@ service main {
 service main {
 	@doc "ListFollowers list the given user's followers"
 	@handler ListFollowers
-	get /users/:user_id/followers(ListFollowReq) returns (ListFollowUserResp)
+	get /user/:user_id/followers(ListFollowReq) returns (ListFollowUserResp)
 
 	@doc "ListFollowing list the users that the given user is following"
 	@handler ListFollowing
-	get /users/:user_id/following(ListFollowReq) returns (ListFollowUserResp)
+	get /user/:user_id/following(ListFollowReq) returns (ListFollowUserResp)
 }
 
 // Need login
@@ -99,6 +99,7 @@ type (
 		AvatarUrl string `json:"avatarUrl"` // 头像
 		Slogan    string `json:"slogan"`    // 个性签名
 		Gender    int64  `json:"gender"`    // 性别
+		Age       int    `json:"age"`
 	}
 	UserStatisticalInfo { //用户统计信息
 		FollowingCount int `json:"followingCount"` // 关注数
@@ -181,8 +182,14 @@ type (
 )
 
 type (
-	UpdateInfoReq  struct{}
-	UpdateInfoResp struct{}
+	UpdateInfoReq {
+		NickName string `json:"nickName,optional"` // 用户名
+		Slogan   string `json:"slogan,optional"`   // 个性签名
+		Gender   int    `json:"gender,optional"`   // 性别
+		Age      int    `json:"age,optional"`
+		Password string `json:"password,optional"`
+	}
+	// UserDetailInfoResp
 )
 
 type (

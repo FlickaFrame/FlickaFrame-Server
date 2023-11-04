@@ -358,7 +358,7 @@ type CreateReplyCommentResp struct {
 }
 
 type FavoriteVideoReq struct {
-	VideoId    int64 `json:"videoId"`
+	VideoId    int64 `path:"videoId"`
 	IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
 }
 

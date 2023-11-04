@@ -61,10 +61,10 @@ func (c *Convert) BuildUserStatisticalInfo(ctx context.Context, user *user_model
 	return &types.UserStatisticalInfo{
 		FollowingCount:        user.FollowingCount,
 		FollowerCount:         user.FollowerCount,
-		LikeCount:             0,
-		PublishedVideoCount:   0,
-		LikeVideoCount:        0,
-		CollectionsVideoCount: 0,
+		LikeCount:             0, //TODO: 点赞统计
+		PublishedVideoCount:   0, //TODO: 发布视频统计
+		LikeVideoCount:        0, //TODO: 点赞视频统计
+		CollectionsVideoCount: 0, //TODO: 收藏视频统计
 	}, nil
 }
 
