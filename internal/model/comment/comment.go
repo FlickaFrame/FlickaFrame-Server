@@ -16,10 +16,10 @@ type Comment struct {
 	UpdatedAt time.Time
 
 	Content     string          `gorm:"not null"`                    // 评论内容
-	VideoID     uint            `gorm:"index:idx_videoid;not null"`  // 视频ID
-	ParentID    uint            `gorm:"index:idx_parentid;"`         // 父评论ID
-	TargetID    uint            `gorm:"index:idx_targetid;"`         // 回复对应评论ID
-	OwnerUID    uint            `gorm:"index:idx_owneruid;not null"` // 评论者ID
+	VideoID     int64           `gorm:"index:idx_videoid;not null"`  // 视频ID
+	ParentID    int64           `gorm:"index:idx_parentid;"`         // 父评论ID
+	TargetID    int64           `gorm:"index:idx_targetid;"`         // 回复对应评论ID
+	OwnerUID    int64           `gorm:"index:idx_owneruid;not null"` // 评论者ID
 	User        user_model.User `gorm:"-"`                           // 评论者信息
 	ToUser      user_model.User `gorm:"-"`                           // 被回复者信息
 	ReplayCount int             `gorm:"default:0"`                   // 回复数
@@ -39,11 +39,11 @@ func NewCommentModel(db *gorm.DB) *CommentModel {
 }
 
 type Option struct {
-	VideoID     uint // 视频ID
-	ParentId    int  // 父评论ID
-	Limit       int  // 单次查询个数
-	LimitOffset int  // 查询偏移量
-	OrderBy     int  // 排序方式(0:按时间倒序,1:按热度倒序)
+	VideoID     int64 // 视频ID
+	ParentId    int   // 父评论ID
+	Limit       int   // 单次查询个数
+	LimitOffset int   // 查询偏移量
+	OrderBy     int   // 排序方式(0:按时间倒序,1:按热度倒序)
 }
 
 func (m *CommentModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
@@ -73,7 +73,7 @@ func (m *CommentModel) List(ctx context.Context, opts Option) ([]*Comment, error
 }
 
 // CreateVideoComment 创建视频的一级评论
-func (m *CommentModel) CreateVideoComment(ctx context.Context, doer uint, videoId uint, content string) error {
+func (m *CommentModel) CreateVideoComment(ctx context.Context, doer, videoId int64, content string) error {
 	comment := Comment{
 		ID:       snowflake.CommentIDNode.Generate().Int64(),
 		Content:  content,
@@ -85,7 +85,7 @@ func (m *CommentModel) CreateVideoComment(ctx context.Context, doer uint, videoI
 }
 
 // CreateReplyComment 创建视频的二级评论（评论的回复）
-func (m *CommentModel) CreateReplyComment(ctx context.Context, doer uint, videoId uint, content string, parentId uint, targetId uint) error {
+func (m *CommentModel) CreateReplyComment(ctx context.Context, doer int64, videoId int64, content string, parentId int64, targetId int64) error {
 	comment := Comment{
 		ID:       snowflake.CommentIDNode.Generate().Int64(),
 		Content:  content,
@@ -103,20 +103,20 @@ func (m *CommentModel) Insert(ctx context.Context, comment Comment) error {
 		Create(&comment).Error
 }
 
-func (m *CommentModel) Delete(ctx context.Context, id uint) error {
+func (m *CommentModel) Delete(ctx context.Context, id int64) error {
 	// TODO删除评论时,需要删除对应的回复
 	return m.db.WithContext(ctx).
 		Delete(&Comment{}, id).Error
 }
 
-func (m *CommentModel) Update(ctx context.Context, id uint, content string) error {
+func (m *CommentModel) Update(ctx context.Context, id int64, content string) error {
 	return m.db.WithContext(ctx).
 		Model(&Comment{}).
 		Where("id = ?", id).
 		Update("content", content).Error
 }
 
-func (m *CommentModel) FindOne(ctx context.Context, id uint) (*Comment, error) {
+func (m *CommentModel) FindOne(ctx context.Context, id int64) (*Comment, error) {
 	var comment Comment
 	err := m.db.WithContext(ctx).First(&comment, id).Error
 	return &comment, err

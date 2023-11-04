@@ -2,7 +2,7 @@
 package types
 
 type UserBasicInfo struct {
-	ID        uint   `json:"userId"`    // 用户ID
+	ID        string `json:"userId"`    // 用户ID
 	NickName  string `json:"nickName"`  // 用户名
 	AvatarUrl string `json:"avatarUrl"` // 头像
 	Slogan    string `json:"slogan"`    // 个性签名
@@ -61,7 +61,7 @@ type CurrentUserInfoResp struct {
 }
 
 type UserDetailInfoReq struct {
-	ContextUserId uint `path:"userId"`
+	ContextUserId int64 `path:"userId"`
 }
 
 type UserDetailInfoResp struct {
@@ -98,14 +98,14 @@ type UpdatePasswordResp struct {
 }
 
 type FollowReq struct {
-	ContextUserId uint `path:"user_id"`
+	ContextUserId int64 `path:"user_id"`
 }
 
 type FollowResp struct {
 }
 
 type UnFollowReq struct {
-	ContextUserId uint `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+	ContextUserId int64 `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
 }
 
 type UnFollowResp struct {
@@ -125,7 +125,7 @@ type ListMyFollowersResp struct {
 }
 
 type ListFollowingReq struct {
-	ContextUserId uint `path:"user_id"`
+	ContextUserId int64 `path:"user_id"`
 	ListUserOption
 }
 
@@ -142,7 +142,7 @@ type ListMyFollowingResp struct {
 }
 
 type ListFollowersReq struct {
-	ContextUserId uint `path:"user_id"`
+	ContextUserId int64 `path:"user_id"`
 	ListUserOption
 }
 
@@ -200,9 +200,9 @@ type VideoInteractInfo struct {
 type FeedReq struct {
 	Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
 	Limit      int    `form:"limit,default=10"`    // 请求数量
-	AuthorID   uint   `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
+	AuthorID   int64  `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
 	Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
-	CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
+	CategoryID int64  `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 }
 
 type FeedVideoItem struct {
@@ -241,7 +241,7 @@ type CreateVideoReq struct {
 	PlayUrl     string   `json:"playUrl"`              // 视频播放地址
 	ThumbUrl    string   `json:"thumbUrl"`             // 视频封面地址
 	Description string   `json:"description"`          // 视频描述
-	Category    uint     `json:"category"`             // 视频分类
+	Category    int64    `json:"category"`             // 视频分类
 	Tags        []string `json:"tags"`                 // 视频标签
 	PublishTime int64    `json:"publishTime,optional"` // 视频发布时间(毫秒时间戳)
 	VideoKey    string   `json:"videoKey,optional"`    // 视频上传key
@@ -325,7 +325,7 @@ type Commnent struct {
 
 type CreateVideoCommentReq struct {
 	Content string `json:"content"`
-	VideoId uint   `json:"videoId" path:"video_id"`
+	VideoId int64  `json:"videoId" path:"video_id"`
 }
 
 type CreateVideoCommentResp struct {
@@ -333,8 +333,8 @@ type CreateVideoCommentResp struct {
 }
 
 type GetVideoCommentReq struct {
-	VideoId   uint `json:"videoId" path:"video_id"`
-	CommentId uint `json:"commentId" path:"comment_id"`
+	VideoId   int64 `json:"videoId" path:"video_id"`
+	CommentId int64 `json:"commentId" path:"comment_id"`
 }
 
 type GetVideoCommentResp struct {
@@ -342,16 +342,16 @@ type GetVideoCommentResp struct {
 }
 
 type DeleteVideoCommentReq struct {
-	VideoId   uint `json:"videoId" path:"video_id"`
-	CommentId uint `json:"commentId" path:"comment_id"`
+	VideoId   int64 `json:"videoId" path:"video_id"`
+	CommentId int64 `json:"commentId" path:"comment_id"`
 }
 
 type DeleteVideoCommentResp struct {
 }
 
 type EditVideoCommentReq struct {
-	VideoId   uint   `json:"videoId" path:"video_id"`
-	CommentId uint   `json:"commentId" path:"comment_id"`
+	VideoId   int64  `json:"videoId" path:"video_id"`
+	CommentId int64  `json:"commentId" path:"comment_id"`
 	Content   string `json:"content"`
 }
 
@@ -359,7 +359,7 @@ type EditVideoCommentResp struct {
 }
 
 type ListVideoCommentsReq struct {
-	VideoId uint `json:"videoId" path:"video_id"`
+	VideoId int64 `json:"videoId" path:"video_id"`
 }
 
 type ListVideoCommentsResp struct {
@@ -370,9 +370,9 @@ type ListVideoCommentsResp struct {
 
 type CreateReplyCommentReq struct {
 	Content  string `json:"content"`
-	VideoId  uint   `json:"videoId" path:"video_id"`
-	ParentId uint   `json:"parentId"`
-	TargetId uint   `json:"targetId"`
+	VideoId  int64  `json:"videoId" path:"video_id"`
+	ParentId int64  `json:"parentId"`
+	TargetId int64  `json:"targetId"`
 }
 
 type CreateReplyCommentResp struct {
@@ -380,8 +380,8 @@ type CreateReplyCommentResp struct {
 }
 
 type FavoriteVideoReq struct {
-	VideoId    uint `json:"videoId"`
-	IsFavorite bool `json:"isFavorite"` //true: favorite, false: unfavorite
+	VideoId    int64 `json:"videoId"`
+	IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
 }
 
 type FavoriteVideoResp struct {
@@ -389,8 +389,8 @@ type FavoriteVideoResp struct {
 }
 
 type FavoriteCommentReq struct {
-	VideoId    uint `json:"videoId"`
-	IsFavorite bool `json:"isFavorite"` //true: favorite, false: unfavorite
+	VideoId    int64 `json:"videoId"`
+	IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
 }
 
 type FavoriteCommentResp struct {
@@ -398,7 +398,7 @@ type FavoriteCommentResp struct {
 }
 
 type CheckVideoFavoriteReq struct {
-	VideoId uint `json:"videoId"`
+	VideoId int64 `json:"videoId"`
 }
 
 type CheckVideoFavoriteResp struct {
@@ -406,7 +406,7 @@ type CheckVideoFavoriteResp struct {
 }
 
 type CheckCommentFavoriteReq struct {
-	VideoId uint `json:"videoId"`
+	VideoId int64 `json:"videoId"`
 }
 
 type CheckCommentFavoriteResp struct {

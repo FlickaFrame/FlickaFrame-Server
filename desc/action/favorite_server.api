@@ -40,8 +40,8 @@ service main {
 
 type (
 	FavoriteVideoReq {
-		VideoId    uint `json:"videoId"`
-		IsFavorite bool `json:"isFavorite"` //true: favorite, false: unfavorite
+		VideoId    int64 `json:"videoId"`
+		IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
 	}
 	FavoriteVideoResp {
 		IsFavorite bool `json:"favorite"`
@@ -50,8 +50,8 @@ type (
 
 type (
 	FavoriteCommentReq {
-		VideoId    uint `json:"videoId"`
-		IsFavorite bool `json:"isFavorite"` //true: favorite, false: unfavorite
+		VideoId    int64 `json:"videoId"`
+		IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
 	}
 	FavoriteCommentResp {
 		IsFavorite bool `json:"favorite"`
@@ -60,7 +60,7 @@ type (
 
 type (
 	CheckVideoFavoriteReq {
-		VideoId uint `json:"videoId"`
+		VideoId int64 `json:"videoId"`
 	}
 	CheckVideoFavoriteResp {
 		IsFavorite bool `json:"isFavorite"`
@@ -69,7 +69,7 @@ type (
 
 type (
 	CheckCommentFavoriteReq {
-		VideoId uint `json:"videoId"`
+		VideoId int64 `json:"videoId"`
 	}
 	CheckCommentFavoriteResp {
 		IsFavorite bool `json:"isFavorite"`

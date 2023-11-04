@@ -97,7 +97,7 @@ type Commnent {
 type (
 	CreateVideoCommentReq {
 		Content string `json:"content"`
-		VideoId uint   `json:"videoId" path:"video_id"`
+		VideoId int64  `json:"videoId" path:"video_id"`
 	}
 
 	CreateVideoCommentResp {
@@ -107,8 +107,8 @@ type (
 
 type (
 	GetVideoCommentReq {
-		VideoId   uint `json:"videoId" path:"video_id"`
-		CommentId uint `json:"commentId" path:"comment_id"`
+		VideoId   int64 `json:"videoId" path:"video_id"`
+		CommentId int64 `json:"commentId" path:"comment_id"`
 	}
 
 	GetVideoCommentResp {
@@ -118,8 +118,8 @@ type (
 
 type (
 	DeleteVideoCommentReq {
-		VideoId   uint `json:"videoId" path:"video_id"`
-		CommentId uint `json:"commentId" path:"comment_id"`
+		VideoId   int64 `json:"videoId" path:"video_id"`
+		CommentId int64 `json:"commentId" path:"comment_id"`
 	}
 
 	DeleteVideoCommentResp {
@@ -128,8 +128,8 @@ type (
 
 type (
 	EditVideoCommentReq {
-		VideoId   uint   `json:"videoId" path:"video_id"`
-		CommentId uint   `json:"commentId" path:"comment_id"`
+		VideoId   int64  `json:"videoId" path:"video_id"`
+		CommentId int64  `json:"commentId" path:"comment_id"`
 		Content   string `json:"content"`
 	}
 
@@ -139,7 +139,7 @@ type (
 
 type (
 	ListVideoCommentsReq {
-		VideoId uint `json:"videoId" path:"video_id"`
+		VideoId int64 `json:"videoId" path:"video_id"`
 	}
 
 	ListVideoCommentsResp {
@@ -152,9 +152,9 @@ type (
 type (
 	CreateReplyCommentReq {
 		Content  string `json:"content"`
-		VideoId  uint   `json:"videoId" path:"video_id"`
-		ParentId uint   `json:"parentId"`
-		TargetId uint   `json:"targetId"`
+		VideoId  int64  `json:"videoId" path:"video_id"`
+		ParentId int64  `json:"parentId"`
+		TargetId int64  `json:"targetId"`
 	}
 
 	CreateReplyCommentResp {

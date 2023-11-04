@@ -23,10 +23,10 @@ type Favorite struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
-	TargetID uint `gorm:"index:idx_target_user_type;not null"`
-	UserID   uint `gorm:"index:idx_target_user_type;not null"`
-	Type     int  `gorm:"index:idx_target_user_type;not null"` // 0:视频 1:评论
-	Status   bool `gorm:"index;not null"`                      // false:未点赞 true:点赞
+	TargetID int64 `gorm:"index:idx_target_user_type;not null"`
+	UserID   int64 `gorm:"index:idx_target_user_type;not null"`
+	Type     int   `gorm:"index:idx_target_user_type;not null"` // 0:视频 1:评论
+	Status   bool  `gorm:"index;not null"`                      // false:未点赞 true:点赞
 }
 
 type FavoriteModel struct {
@@ -37,15 +37,15 @@ func NewFavoriteModel(db *gorm.DB) *FavoriteModel {
 	return &FavoriteModel{db}
 }
 
-func (m *FavoriteModel) IsFavoriteVideo(ctx context.Context, videoId, userId uint) (bool, error) {
+func (m *FavoriteModel) IsFavoriteVideo(ctx context.Context, videoId, userId int64) (bool, error) {
 	return m.isFavorite(ctx, videoId, userId, Video)
 }
 
-func (m *FavoriteModel) IsFavoriteComment(ctx context.Context, commentId, userId uint) (bool, error) {
+func (m *FavoriteModel) IsFavoriteComment(ctx context.Context, commentId, userId int64) (bool, error) {
 	return m.isFavorite(ctx, commentId, userId, Comment)
 }
 
-func (m *FavoriteModel) isFavorite(ctx context.Context, targetId, userId uint, _type int) (bool, error) {
+func (m *FavoriteModel) isFavorite(ctx context.Context, targetId, userId int64, _type int) (bool, error) {
 	var result Favorite
 	err := m.db.WithContext(ctx).
 		Where("target_id = ? AND user_id = ? AND type = ?", targetId, userId, _type).
@@ -56,15 +56,15 @@ func (m *FavoriteModel) isFavorite(ctx context.Context, targetId, userId uint, _
 	return result.Status, nil
 }
 
-func (m *FavoriteModel) FavoriteVideo(ctx context.Context, userId, videoId uint, action bool) error {
+func (m *FavoriteModel) FavoriteVideo(ctx context.Context, userId, videoId int64, action bool) error {
 	return m.favorite(ctx, userId, videoId, Video, action)
 }
 
-func (m *FavoriteModel) FavoriteComment(ctx context.Context, userId, commentId uint, action bool) error {
+func (m *FavoriteModel) FavoriteComment(ctx context.Context, userId, commentId int64, action bool) error {
 	return m.favorite(ctx, userId, commentId, Comment, action)
 }
 
-func (m *FavoriteModel) favorite(ctx context.Context, userId, targetId uint, _type int, action bool) error {
+func (m *FavoriteModel) favorite(ctx context.Context, userId, targetId int64, _type int, action bool) error {
 	result := Favorite{
 		ID:       snowflake.FavoriteIDNode.Generate().Int64(),
 		TargetID: targetId,

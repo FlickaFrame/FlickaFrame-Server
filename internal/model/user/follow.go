@@ -14,9 +14,9 @@ type Follow struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
-	UserID         uint  `gorm:"uniqueIndex:idx_follow"`
+	UserID         int64 `gorm:"uniqueIndex:idx_follow"`
 	User           *User `gorm:"-"`
-	FollowedUserID uint  `gorm:"uniqueIndex:idx_follow"`
+	FollowedUserID int64 `gorm:"uniqueIndex:idx_follow"`
 	FollowedUser   *User `gorm:"-"`
 }
 
@@ -35,7 +35,7 @@ func NewFollowModel(db *gorm.DB) *FollowModel {
 }
 
 // IsFollowing returns true if user is following followID.
-func (m *UserModel) IsFollowing(ctx context.Context, userId, followID uint) bool {
+func (m *UserModel) IsFollowing(ctx context.Context, userId, followID int64) bool {
 	if userId == 0 || followID == 0 {
 		return false
 	}
@@ -51,7 +51,7 @@ func (m *UserModel) IsFollowing(ctx context.Context, userId, followID uint) bool
 }
 
 // FollowUser marks someone be  follower.
-func (m *UserModel) FollowUser(ctx context.Context, userId, followID uint) error {
+func (m *UserModel) FollowUser(ctx context.Context, userId, followID int64) error {
 	if userId == followID || m.IsFollowing(ctx, userId, followID) {
 		return nil
 	}
@@ -70,7 +70,7 @@ func (m *UserModel) FollowUser(ctx context.Context, userId, followID uint) error
 }
 
 // UnfollowUser unmarks someone as another's follower.
-func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID uint) error {
+func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID int64) error {
 	if userID == followID || !m.IsFollowing(ctx, userID, followID) {
 		return nil
 	}
@@ -89,7 +89,7 @@ func (m *UserModel) UnfollowUser(ctx context.Context, userID, followID uint) err
 }
 
 // GetUserFollowers returns range of user's followers.
-func (m *UserModel) GetUserFollowers(ctx context.Context, userId uint, listOptions orm.ListOptions) ([]*User, error) {
+func (m *UserModel) GetUserFollowers(ctx context.Context, userId int64, listOptions orm.ListOptions) ([]*User, error) {
 	sess := m.db.WithContext(ctx).
 		Select("`user`.*").
 		Joins("join follow on`user`.id=`follow`.user_id").
@@ -107,7 +107,7 @@ func (m *UserModel) GetUserFollowers(ctx context.Context, userId uint, listOptio
 }
 
 // GetUserFollowing returns range of user's following.
-func (m *UserModel) GetUserFollowing(ctx context.Context, userId uint, listOptions orm.ListOptions) ([]*User, error) {
+func (m *UserModel) GetUserFollowing(ctx context.Context, userId int64, listOptions orm.ListOptions) ([]*User, error) {
 	sess := m.db.WithContext(ctx).
 		Select("`user`.*").
 		Joins("join follow on `user`.id=`follow`.followed_user_id").

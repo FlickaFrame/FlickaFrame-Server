@@ -24,10 +24,10 @@ type Video struct {
 	FavoriteCount int `gorm:"default:0"` // 收藏数量
 	CommentCount  int `gorm:"default:0"` // 评论数量
 
-	AuthorID uint       `gorm:"index"` // 作者ID
+	AuthorID int64      `gorm:"index"` // 作者ID
 	Author   *user.User `gorm:"-"`     // 作者
 
-	CategoryID uint      `gorm:"index"` // 分类ID
+	CategoryID int64     `gorm:"index"` // 分类ID
 	Category   *Category `gorm:"-"`     // 分类 `gorm:"-"`
 
 	Tags []*Tag `gorm:"-"`
@@ -112,11 +112,11 @@ func (m *VideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
 
 // ListOption 查找选项
 type ListOption struct {
-	AuthorID   uint      // 作者ID
+	AuthorID   int64     // 作者ID
 	LatestTime time.Time // 最新时间(分页)
 	Limit      int       // 限制数量(分页)
 	QueryAll   bool      // 是否查询所有(分页)
-	CategoryID uint      // 分类ID
+	CategoryID int64     // 分类ID
 }
 
 func (m *VideoModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB {

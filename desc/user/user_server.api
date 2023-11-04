@@ -94,7 +94,7 @@ service main {
 
 type (
 	UserBasicInfo {
-		ID        uint   `json:"userId"`    // 用户ID
+		ID        string `json:"userId"`    // 用户ID
 		NickName  string `json:"nickName"`  // 用户名
 		AvatarUrl string `json:"avatarUrl"` // 头像
 		Slogan    string `json:"slogan"`    // 个性签名
@@ -153,7 +153,7 @@ type (
 		UserInteractionInfo
 	}
 	UserDetailInfoReq {
-		ContextUserId uint `path:"userId"`
+		ContextUserId int64 `path:"userId"`
 	}
 	UserDetailInfoResp {
 		UserBasicInfo
@@ -192,12 +192,12 @@ type (
 
 type (
 	FollowReq {
-		ContextUserId uint `path:"user_id"`
+		ContextUserId int64 `path:"user_id"`
 	}
 	FollowResp {
 	}
 	UnFollowReq {
-		ContextUserId uint `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
+		ContextUserId int64 `json:"userId" path:"user_id" desc:"关注用户id" validate:"required"`
 	}
 	UnFollowResp {
 	}
@@ -215,7 +215,7 @@ type (
 		FollowUser []*FollowUser `json:"users" desc:"用户id"`
 	}
 	ListFollowingReq {
-		ContextUserId uint `path:"user_id"`
+		ContextUserId int64 `path:"user_id"`
 		ListUserOption
 	}
 	ListFollowingResp {
@@ -229,7 +229,7 @@ type (
 		FollowUser []*FollowUser `json:"users" desc:"用户id"`
 	}
 	ListFollowersReq {
-		ContextUserId uint `path:"user_id"`
+		ContextUserId int64 `path:"user_id"`
 		ListUserOption
 	}
 	ListFollowersResp {

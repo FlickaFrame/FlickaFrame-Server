@@ -100,9 +100,9 @@ type (
 	FeedReq {
 		Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
 		Limit      int    `form:"limit,default=10"`    // 请求数量
-		AuthorID   uint   `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
+		AuthorID   int64  `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
 		Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
-		CategoryID uint   `form:"categoryId,optional"` // 分类(是否根据分类过滤)
+		CategoryID int64  `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 	}
 	FeedVideoItem {
 		VideoBasicInfo
@@ -144,7 +144,7 @@ type (
 		PlayUrl     string   `json:"playUrl"`              // 视频播放地址
 		ThumbUrl    string   `json:"thumbUrl"`             // 视频封面地址
 		Description string   `json:"description"`          // 视频描述
-		Category    uint     `json:"category"`             // 视频分类
+		Category    int64    `json:"category"`             // 视频分类
 		Tags        []string `json:"tags"`                 // 视频标签
 		PublishTime int64    `json:"publishTime,optional"` // 视频发布时间(毫秒时间戳)
 		VideoKey    string   `json:"videoKey,optional"`    // 视频上传key

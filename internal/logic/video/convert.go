@@ -10,14 +10,14 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type convert struct {
+type Convert struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func newConvert(ctx context.Context, svcCtx *svc.ServiceContext) *convert {
-	return &convert{
+func NewConvert(ctx context.Context, svcCtx *svc.ServiceContext) *Convert {
+	return &Convert{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
@@ -25,7 +25,7 @@ func newConvert(ctx context.Context, svcCtx *svc.ServiceContext) *convert {
 }
 
 // BuildVideoBasicInfo 用于构建视频基本信息
-func (c *convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Video) (*types.VideoBasicInfo, error) {
+func (c *Convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Video) (*types.VideoBasicInfo, error) {
 	videoBasicInfo := &types.VideoBasicInfo{}
 	err := copier.Copy(videoBasicInfo, video)
 	// 链接转换
@@ -42,6 +42,7 @@ func (c *convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 	// 加载视频作者
 	videoBasicInfo.VideoUserInfo = &types.VideoUserInfo{}
 	err = copier.Copy(&videoBasicInfo.VideoUserInfo, video.Author)
+	videoBasicInfo.VideoUserInfo.ID = strconv.FormatInt(video.AuthorID, 10)
 	videoBasicInfo.VideoUserInfo.AvatarUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, videoBasicInfo.VideoUserInfo.AvatarUrl)
 	if err != nil {
 		logx.Info("loading video user fail: ", err)
@@ -50,6 +51,7 @@ func (c *convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 	// 加载视频分类
 	videoBasicInfo.Category = &types.Category{}
 	err = copier.Copy(&videoBasicInfo.Category, video.Category)
+	videoBasicInfo.Category.ID = strconv.FormatInt(video.CategoryID, 10)
 	if err != nil {
 		logx.Info("loading video category fail: ", err)
 		return nil, err
@@ -65,7 +67,7 @@ func (c *convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 }
 
 // BuildVideoBasicInfoList 用于构建视频基本信息列表
-func (c *convert) BuildVideoBasicInfoList(ctx context.Context, videoList []*video_model.Video) ([]*types.VideoBasicInfo, error) {
+func (c *Convert) BuildVideoBasicInfoList(ctx context.Context, videoList []*video_model.Video) ([]*types.VideoBasicInfo, error) {
 	var videoInfoList []*types.VideoBasicInfo
 	for _, video := range videoList {
 		videoInfo, err := c.BuildVideoBasicInfo(ctx, video)
