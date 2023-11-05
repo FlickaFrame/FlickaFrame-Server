@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
 	"time"
 )
@@ -30,10 +31,10 @@ type Favorite struct {
 }
 
 type FavoriteModel struct {
-	db *gorm.DB
+	db *orm.DB
 }
 
-func NewFavoriteModel(db *gorm.DB) *FavoriteModel {
+func NewFavoriteModel(db *orm.DB) *FavoriteModel {
 	return &FavoriteModel{db}
 }
 

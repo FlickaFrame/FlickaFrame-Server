@@ -60,11 +60,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		}),
 		DB:            db,
 		BizRedis:      rds,
-		VideoModel:    video.NewVideoModel(db.DB),
-		UserModel:     user.NewUserModel(db.DB),
-		FollowModel:   user.NewFollowModel(db.DB),
-		FavoriteModel: favorite.NewFavoriteModel(db.DB),
-		CommentModel:  comment.NewCommentModel(db.DB),
+		VideoModel:    video.NewVideoModel(db),
+		UserModel:     user.NewUserModel(db),
+		FollowModel:   user.NewFollowModel(db),
+		FavoriteModel: favorite.NewFavoriteModel(db),
+		CommentModel:  comment.NewCommentModel(db),
 		Indexer:       indexer,
 	}
 }

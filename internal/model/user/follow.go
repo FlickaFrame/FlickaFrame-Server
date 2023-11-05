@@ -26,10 +26,10 @@ func (m *Follow) TableName() string {
 }
 
 type FollowModel struct {
-	db *gorm.DB
+	db *orm.DB
 }
 
-func NewFollowModel(db *gorm.DB) *FollowModel {
+func NewFollowModel(db *orm.DB) *FollowModel {
 	return &FollowModel{
 		db: db,
 	}

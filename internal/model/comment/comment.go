@@ -4,6 +4,7 @@ import (
 	"context"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
 	"time"
 )
@@ -31,10 +32,10 @@ func (c *Comment) TableName() string {
 }
 
 type CommentModel struct {
-	db *gorm.DB
+	db *orm.DB
 }
 
-func NewCommentModel(db *gorm.DB) *CommentModel {
+func NewCommentModel(db *orm.DB) *CommentModel {
 	return &CommentModel{db}
 }
 

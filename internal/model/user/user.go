@@ -5,7 +5,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
-	"gorm.io/gorm"
 	"time"
 )
 
@@ -63,10 +62,10 @@ func (u *User) IsPasswordSet() bool {
 }
 
 type UserModel struct {
-	db *gorm.DB
+	db *orm.DB
 }
 
-func NewUserModel(db *gorm.DB) *UserModel {
+func NewUserModel(db *orm.DB) *UserModel {
 	return &UserModel{
 		db: db,
 	}

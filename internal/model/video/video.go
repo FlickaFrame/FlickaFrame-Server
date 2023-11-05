@@ -88,10 +88,10 @@ func (v *Video) LoadAttributes(ctx context.Context, db *orm.DB) error {
 }
 
 type VideoModel struct {
-	db *gorm.DB
+	db *orm.DB
 }
 
-func NewVideoModel(db *gorm.DB) *VideoModel {
+func NewVideoModel(db *orm.DB) *VideoModel {
 	return &VideoModel{
 		db: db,
 	}
