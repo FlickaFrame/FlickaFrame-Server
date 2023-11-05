@@ -48,6 +48,8 @@ func (c *Convert) BuildTargetComment(ctx context.Context, id int64) *types.Targe
 // BuildChildComment 用于构建二级评论
 func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *comment.ChildComment) (resp *types.ChildComment, err error) {
 	resp = &types.ChildComment{}
+	err = copier.Copy(&resp.CommentBasicInfo, comment)
+	resp.ID = strconv.FormatInt(comment.ID, 10)
 	// 1.构造用户信息
 	if comment.User == nil {
 		comment.User, err = c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
@@ -71,10 +73,20 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	// 1.构造评论基本信息
 	err = copier.Copy(&resp.CommentBasicInfo, comment)
 	resp.ID = strconv.FormatInt(comment.ID, 10)
+	resp.CreatedAt = comment.CreatedAt.UnixMilli()
 	if err != nil {
 		return nil, err
 	}
-	// 2.构造二级评论信息
+	// 2. 构造一级评论的用户信息
+	if comment.User == nil {
+		comment.User, err = c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
+		if err != nil {
+			logx.Info("find user fail: ", err)
+			return nil, err
+		}
+	}
+	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
+	// 3.构造二级评论信息
 	err = comment.LoadChildComments(ctx, c.svcCtx.DB, comment_model.Option{})
 	if err != nil {
 		return nil, err

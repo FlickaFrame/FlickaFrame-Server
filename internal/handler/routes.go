@@ -178,29 +178,29 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodPut,
-				Path:    "/video/:video_id/comments",
+				Method:  http.MethodPost,
+				Path:    "/comment/video",
 				Handler: comment.CreateVideoCommentHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPut,
-				Path:    "/video/:video_id/comments/:comment_id",
+				Method:  http.MethodPost,
+				Path:    "/comment/parent",
 				Handler: comment.CreateChildCommentHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPut,
+				Path:    "/comment/child",
+				Handler: comment.CreateReplyCommentHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodDelete,
-				Path:    "/comments/:comment_id",
+				Path:    "/comment/:comment_id",
 				Handler: comment.DeleteVideoCommentHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/comments/:comment_id",
+				Path:    "/comment/:comment_id",
 				Handler: comment.EditVideoCommentHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPut,
-				Path:    "/video/:video_id/reply",
-				Handler: comment.CreateReplyCommentHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

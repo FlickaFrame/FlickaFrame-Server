@@ -27,6 +27,14 @@ var ( // 关注相关错误
 	HadNotFollowed      = xcode.Add(HadNotFollowedCode, "you have not followed this user")
 )
 
+const ( //40100-40099
+	VideoNotExistCode = 40100 + iota
+)
+
+var (
+	VideoNotExistError = xcode.Add(VideoNotExistCode, "video not exist")
+)
+
 var (
 	UserIdEmpty                 = xcode.Add(40011, "用户id为空")
 	ErrUserAlreadyRegisterError = xcode.Add(40012, "user has been registered")

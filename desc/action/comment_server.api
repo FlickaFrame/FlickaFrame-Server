@@ -31,23 +31,23 @@ service main {
 service main {
 	@doc "Create a comment for an Video"
 	@handler CreateVideoComment
-	put /video/:video_id/comments (CreateVideoCommentReq) returns (CreateVideoCommentResp)
+	post /comment/video (CreateVideoCommentReq) returns (CreateVideoCommentResp)
 
 	@doc "Create a child comment for comment"
 	@handler CreateChildComment
-	put /video/:video_id/comments/:comment_id (CreateChildCommentReq) returns (CreateChildCommentResp)
+	post /comment/parent (CreateChildCommentReq) returns (CreateChildCommentResp)
+
+	@doc "Create a reply for an child Comment"
+	@handler CreateReplyComment
+	put /comment/child (CreateReplyCommentReq) returns (CreateReplyCommentResp)
 
 	@doc "Delete a comment of an Video"
 	@handler DeleteVideoComment
-	delete /comments/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
+	delete /comment/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
 
 	@doc "Edit comments of an Video"
 	@handler EditVideoComment
-	post /comments/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
-
-	@doc "Create a reply for an Comment"
-	@handler CreateReplyComment
-	put /video/:video_id/reply (CreateReplyCommentReq) returns (CreateReplyCommentResp)
+	post /comment/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
 }
 
 type (
@@ -60,11 +60,6 @@ type (
 		ID   int64  `json:"id"`
 		Name string `json:"name"`
 	}
-	//	CommentUserInfo { // 评论展示的用户信息
-	//		ID        string `json:"userId"`    // 用户ID
-	//		NickName  string `json:"nickName"`  // 用户名
-	//		AvatarUrl string `json:"avatarUrl"` // 头像
-	//	}
 	TargetComment { // 显示效果: 回复@用户: 回复的目标评论内容
 		ID       string         `json:"id"`       // 回复的目标评论ID
 		UserInfo *UserBasicInfo `json:"userInfo"` // 回复的目标评论用户信息
@@ -77,7 +72,7 @@ type (
 		ShowTags   []*CommonTag     `json:"showTags"`   // 标签列表(暂未实现)
 		LikedCount int64            `json:"likedCount"` // 点赞数
 		Liked      bool             `json:"liked"`      // 当前用户是否已点赞
-		CreateTime int64            `json:"createTime"` // 创建时间
+		CreatedAt  int64            `json:"createTime"` // 创建时间(毫秒时间戳)
 		Status     int              `json:"status"`
 	}
 	ParentComment { // 一级评论
@@ -93,16 +88,34 @@ type (
 	}
 )
 
-type (
+type ( // 创建评论
 	CreateVideoCommentReq {
-		VideoId int64  `path:"video_id"`
-		Content string `json:"content"`
+		VideoId   int64   `json:"videoId"`
+		Content   string  `json:"content"`
+		AtUsersId []int64 `json:"atUsersId,optional"`
 	}
 	CreateVideoCommentResp {
+		Comment *ParentComment `json:"comment"`
 	}
 	CreateChildCommentReq {
+		VideoId         int64   `json:"videoId"`
+		Content         string  `json:"content"`
+		AtUsersId       []int64 `json:"atUsersId,optional"`
+		ParentCommentId int64   `json:"parentCommentId"`
+		TargetCommentId int64   `json:"targetCommentId,optional"`
 	}
 	CreateChildCommentResp {
+		Comment *ChildComment `json:"comment"`
+	}
+	CreateReplyCommentReq {
+		VideoId         int64   `json:"videoId"`
+		Content         string  `json:"content"`
+		AtUsersId       []int64 `json:"atUsersId,optional"`
+		ParentCommentId int64   `json:"parentCommentId,optional"`
+		TargetCommentId int64   `json:"targetCommentId,optional"`
+	}
+	CreateReplyCommentResp {
+		Comment *ChildComment `json:"comment"`
 	}
 )
 
@@ -143,21 +156,6 @@ type (
 	}
 
 	ListVideoCommentsResp {
-		CreatedAt string           `json:"createdAt"`
-		UserID    string           `json:"userId"`
-		Comments  []*ParentComment `json:"comments"`
-	}
-)
-
-type (
-	CreateReplyCommentReq {
-		Content  string `json:"content"`
-		VideoId  int64  `json:"videoId" path:"video_id"`
-		ParentId int64  `json:"parentId"`
-		TargetId int64  `json:"targetId"`
-	}
-
-	CreateReplyCommentResp {
-		Commnent *ParentComment `json:"comment"`
+		Comments []*ParentComment `json:"comments"`
 	}
 )

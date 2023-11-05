@@ -280,7 +280,7 @@ type CommentBasicInfo struct {
 	ShowTags   []*CommonTag     `json:"showTags"`   // 标签列表(暂未实现)
 	LikedCount int64            `json:"likedCount"` // 点赞数
 	Liked      bool             `json:"liked"`      // 当前用户是否已点赞
-	CreateTime int64            `json:"createTime"` // 创建时间
+	CreatedAt  int64            `json:"createTime"` // 创建时间(毫秒时间戳)
 	Status     int              `json:"status"`
 }
 
@@ -298,17 +298,37 @@ type ChildComment struct {
 }
 
 type CreateVideoCommentReq struct {
-	VideoId int64  `path:"video_id"`
-	Content string `json:"content"`
+	VideoId   int64   `json:"videoId"`
+	Content   string  `json:"content"`
+	AtUsersId []int64 `json:"atUsersId,optional"`
 }
 
 type CreateVideoCommentResp struct {
+	Comment *ParentComment `json:"comment"`
 }
 
 type CreateChildCommentReq struct {
+	VideoId         int64   `json:"videoId"`
+	Content         string  `json:"content"`
+	AtUsersId       []int64 `json:"atUsersId,optional"`
+	ParentCommentId int64   `json:"parentCommentId"`
+	TargetCommentId int64   `json:"targetCommentId,optional"`
 }
 
 type CreateChildCommentResp struct {
+	Comment *ChildComment `json:"comment"`
+}
+
+type CreateReplyCommentReq struct {
+	VideoId         int64   `json:"videoId"`
+	Content         string  `json:"content"`
+	AtUsersId       []int64 `json:"atUsersId,optional"`
+	ParentCommentId int64   `json:"parentCommentId,optional"`
+	TargetCommentId int64   `json:"targetCommentId,optional"`
+}
+
+type CreateReplyCommentResp struct {
+	Comment *ChildComment `json:"comment"`
 }
 
 type GetVideoCommentReq struct {
@@ -341,20 +361,7 @@ type ListVideoCommentsReq struct {
 }
 
 type ListVideoCommentsResp struct {
-	CreatedAt string           `json:"createdAt"`
-	UserID    string           `json:"userId"`
-	Comments  []*ParentComment `json:"comments"`
-}
-
-type CreateReplyCommentReq struct {
-	Content  string `json:"content"`
-	VideoId  int64  `json:"videoId" path:"video_id"`
-	ParentId int64  `json:"parentId"`
-	TargetId int64  `json:"targetId"`
-}
-
-type CreateReplyCommentResp struct {
-	Commnent *ParentComment `json:"comment"`
+	Comments []*ParentComment `json:"comments"`
 }
 
 type FavoriteVideoReq struct {

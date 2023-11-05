@@ -36,7 +36,7 @@ func (m *CommentModel) ListParentComment(ctx context.Context, videoId int64, opt
 }
 
 // CreateParentComment 创建视频的一级评论
-func (m *CommentModel) CreateParentComment(ctx context.Context, doer, videoId int64, content string) error {
+func (m *CommentModel) CreateParentComment(ctx context.Context, doer, videoId int64, content string) (*ParentComment, error) {
 	comment := ParentComment{
 		BasicComment: BasicComment{
 			ID:        snowflake.CommentIDNode.Generate().Int64(),
@@ -47,6 +47,6 @@ func (m *CommentModel) CreateParentComment(ctx context.Context, doer, videoId in
 			UpdatedAt: time.Now(),
 		},
 	}
-	return m.db.WithContext(ctx).
+	return &comment, m.db.WithContext(ctx).
 		Create(&comment).Error
 }
