@@ -12,7 +12,7 @@ import (
 const DefaultLimit = 10
 
 type Video struct {
-	ID        int64 `gorm:"primarykey"`
+	ID        int64 `gorm:"primaryKey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 

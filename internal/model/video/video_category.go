@@ -2,11 +2,14 @@ package video
 
 import (
 	"context"
-	"gorm.io/gorm"
+	"time"
 )
 
 type Category struct {
-	gorm.Model
+	ID        int64 `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
 	Name   string   `gorm:"unique"`
 	Videos []*Video `gorm:"-"`
 }

@@ -217,8 +217,8 @@ type CreateVideoReq struct {
 	Title       string   `json:"title"`                // 视频标题
 	PlayUrl     string   `json:"playUrl"`              // 视频播放地址
 	ThumbUrl    string   `json:"thumbUrl"`             // 视频封面地址
-	Description string   `json:"description"`          // 视频描述
-	Category    int64    `json:"category"`             // 视频分类
+	Description string   `json:"description,optional"` // 视频描述
+	CategoryID  string   `json:"category"`             // 视频分类
 	Tags        []string `json:"tags"`                 // 视频标签
 	PublishTime int64    `json:"publishTime,optional"` // 视频发布时间(毫秒时间戳)
 	VideoKey    string   `json:"videoKey,optional"`    // 视频上传key

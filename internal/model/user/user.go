@@ -20,7 +20,7 @@ const (
 )
 
 type User struct {
-	ID        int64 `gorm:"primarykey"`
+	ID        int64 `gorm:"primaryKey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
