@@ -23,7 +23,7 @@ type ServiceContext struct {
 	VideoModel    *video.VideoModel
 	UserModel     *user.UserModel
 	FollowModel   *user.FollowModel
-	FavoriteModel *favorite.FavoriteModel
+	FavoriteModel *favorite.Model
 	CommentModel  *comment.CommentModel
 	Indexer       *meilisearch.Client
 }

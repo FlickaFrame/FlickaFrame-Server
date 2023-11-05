@@ -211,33 +211,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/favorite/video/:videoId",
-				Handler: favorite.FavoriteVideoHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/favorite/video/:videoId/status",
-				Handler: favorite.CheckVideoFavoriteHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/favorite/videos",
-				Handler: favorite.ListVideoFavoriteHandler(serverCtx),
+				Path:    "/favorite",
+				Handler: favorite.FavoriteHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/favorite/comment/:commentId",
-				Handler: favorite.FavoriteCommentHandler(serverCtx),
+				Path:    "/unfavorite",
+				Handler: favorite.UnFavoriteHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/favorite/comment/:commentId/status",
-				Handler: favorite.CheckCommentFavoriteHandler(serverCtx),
+				Path:    "/favorite",
+				Handler: favorite.CheckFavoriteHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/favorite/comments",
-				Handler: favorite.ListCommentFavoriteHandler(serverCtx),
+				Path:    "/favorite/list",
+				Handler: favorite.ListFavoriteHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

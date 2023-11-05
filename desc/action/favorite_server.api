@@ -13,75 +13,44 @@ info(
 	jwt: JwtAuth
 )
 service main {
-	@doc "Favorite a Video for Authenticated User"
-	@handler FavoriteVideo
-	post /favorite/video/:videoId (FavoriteVideoReq) returns (FavoriteVideoResp)
+	@doc "Favorite a item"
+	@handler Favorite
+	post /favorite(FavoriteReq) returns (FavoriteResp)
 
-	@doc "Check Favorite Status of a Video for Authenticated User"
-	@handler CheckVideoFavorite
-	get /favorite/video/:videoId/status (CheckVideoFavoriteReq) returns (CheckVideoFavoriteResp)
+	@doc "UnFavorite a item"
+	@handler UnFavorite
+	post /unfavorite(UnFavoriteReq) returns (UnFavoriteResp)
 
-	@doc "List Favorite Videos for Authenticated User"
-	@handler ListVideoFavorite
-	get /favorite/videos (ListVideoFavoriteReq) returns (ListVideoFavoriteResp)
+	@doc "Check Favorite Status"
+	@handler CheckFavorite
+	get /favorite(CheckFavoriteReq)returns(CheckFavoriteResp)
 
-	@doc "Favorite a Comment for Authenticated User"
-	@handler FavoriteComment
-	post /favorite/comment/:commentId (FavoriteCommentReq) returns (FavoriteCommentResp)
-
-	@doc "Check Favorite Status of a Comment for Authenticated User"
-	@handler CheckCommentFavorite
-	get /favorite/comment/:commentId/status (CheckCommentFavoriteReq) returns (CheckCommentFavoriteResp)
-
-	@doc "List Favorite Comments for Authenticated User"
-	@handler ListCommentFavorite
-	get /favorite/comments (ListCommentFavoriteReq) returns (ListCommentFavoriteResp)
+	@doc "List Favorite Item"
+	@handler ListFavorite
+	get /favorite/list (ListFavoriteReq) returns (ListFavoriteResp)
 }
 
 type (
-	FavoriteVideoReq {
-		VideoId    int64 `path:"videoId"`
-		IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
+	FavoriteReq {
+		TargetId int64 `json:"targetId"`
 	}
-	FavoriteVideoResp {
-		IsFavorite bool `json:"favorite"`
+	FavoriteResp  struct{}
+	UnFavoriteReq {
+		TargetId int64 `json:"targetId"`
 	}
+	UnFavoriteResp struct{}
 )
 
 type (
-	FavoriteCommentReq {
-		VideoId    int64 `json:"videoId"`
-		IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
+	CheckFavoriteReq {
+		TargetId int64 `path:"targetId"`
 	}
-	FavoriteCommentResp {
-		IsFavorite bool `json:"favorite"`
-	}
-)
-
-type (
-	CheckVideoFavoriteReq {
-		VideoId int64 `json:"videoId"`
-	}
-	CheckVideoFavoriteResp {
+	CheckFavoriteResp {
 		IsFavorite bool `json:"isFavorite"`
 	}
 )
 
 type (
-	CheckCommentFavoriteReq {
-		VideoId int64 `json:"videoId"`
-	}
-	CheckCommentFavoriteResp {
-		IsFavorite bool `json:"isFavorite"`
-	}
-)
-
-type (
-	ListVideoFavoriteReq  struct{}
-	ListVideoFavoriteResp struct{}
-)
-
-type (
-	ListCommentFavoriteReq  struct{}
-	ListCommentFavoriteResp struct{}
+	ListFavoriteReq {}
+	ListFavoriteResp {}
 )

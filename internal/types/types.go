@@ -364,50 +364,32 @@ type ListVideoCommentsResp struct {
 	Comments []*ParentComment `json:"comments"`
 }
 
-type FavoriteVideoReq struct {
-	VideoId    int64 `path:"videoId"`
-	IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
+type FavoriteReq struct {
+	TargetId int64 `json:"targetId"`
 }
 
-type FavoriteVideoResp struct {
-	IsFavorite bool `json:"favorite"`
+type FavoriteResp struct {
 }
 
-type FavoriteCommentReq struct {
-	VideoId    int64 `json:"videoId"`
-	IsFavorite bool  `json:"isFavorite"` //true: favorite, false: unfavorite
+type UnFavoriteReq struct {
+	TargetId int64 `json:"targetId"`
 }
 
-type FavoriteCommentResp struct {
-	IsFavorite bool `json:"favorite"`
+type UnFavoriteResp struct {
 }
 
-type CheckVideoFavoriteReq struct {
-	VideoId int64 `json:"videoId"`
+type CheckFavoriteReq struct {
+	TargetId int64 `path:"targetId"`
 }
 
-type CheckVideoFavoriteResp struct {
+type CheckFavoriteResp struct {
 	IsFavorite bool `json:"isFavorite"`
 }
 
-type CheckCommentFavoriteReq struct {
-	VideoId int64 `json:"videoId"`
+type ListFavoriteReq struct {
 }
 
-type CheckCommentFavoriteResp struct {
-	IsFavorite bool `json:"isFavorite"`
-}
-
-type ListVideoFavoriteReq struct {
-}
-
-type ListVideoFavoriteResp struct {
-}
-
-type ListCommentFavoriteReq struct {
-}
-
-type ListCommentFavoriteResp struct {
+type ListFavoriteResp struct {
 }
 
 type OssEndpointResponse struct {
