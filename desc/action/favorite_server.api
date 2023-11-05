@@ -51,6 +51,6 @@ type (
 )
 
 type (
-	ListFavoriteReq {}
-	ListFavoriteResp {}
+	ListFavoriteReq  struct{}
+	ListFavoriteResp struct{}
 )

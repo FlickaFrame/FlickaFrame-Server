@@ -34,7 +34,6 @@ func (l *UpdateInfoLogic) UpdateInfo(req *types.UpdateInfoReq) (resp *types.User
 		NickName:  req.NickName,
 		Age:       req.Age,
 		Gender:    req.Gender,
-		Password:  req.Password,
 		Slogan:    req.Slogan,
 	}
 	err = l.svcCtx.UserModel.Update(l.ctx, doer)

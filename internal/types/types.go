@@ -91,7 +91,6 @@ type UpdateInfoReq struct {
 	Slogan   string `json:"slogan,optional"`   // 个性签名
 	Gender   int    `json:"gender,optional"`   // 性别
 	Age      int    `json:"age,optional"`
-	Password string `json:"password,optional"`
 }
 
 type UpdatePasswordReq struct {

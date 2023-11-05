@@ -6,7 +6,7 @@ var (
 	OK                 = add(0, "OK")
 	NoLogin            = add(101, "NOT_LOGIN")
 	RequestErr         = add(400, "INVALID_ARGUMENT")
-	Unauthorized       = add(401, "UNAUTHENTICATED")
+	Unauthorized       = add(401, "未登录!")
 	AccessDenied       = add(403, "PERMISSION_DENIED")
 	NotFound           = add(404, "NOT_FOUND")
 	MethodNotAllowed   = add(405, "METHOD_NOT_ALLOWED")
