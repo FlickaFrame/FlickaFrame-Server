@@ -3,6 +3,7 @@ package video
 import (
 	"context"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/jinzhu/copier"
@@ -26,7 +27,7 @@ func NewFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FeedLogic {
 }
 
 func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
-	//doerId := jwt.GetUidFromCtx(l.ctx) // 从context中获取当前用户id
+	doerId := jwt.GetUidFromCtx(l.ctx) // 从context中获取当前用户id
 	LatestTime := time.Now()
 	if req.Cursor != 0 {
 		LatestTime = time.UnixMilli(req.Cursor)
@@ -57,5 +58,10 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		Next: strconv.FormatInt(nextTime, 10),
 	}
 	err = copier.Copy(&resp.List, &list)
+	// 判断关注状态
+	for i := range list {
+		authorId, _ := strconv.ParseInt(list[i].VideoUserInfo.ID, 10, 64)
+		resp.List[i].VideoUserInfo.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, authorId)
+	}
 	return
 }

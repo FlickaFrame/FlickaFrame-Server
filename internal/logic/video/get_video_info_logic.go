@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -33,5 +34,8 @@ func (l *GetVideoInfoLogic) GetVideoInfo(req *types.GetVideoInfoReq) (resp *type
 	resp = &types.GetVideoInfoResp{
 		Video: videoBasicInfo,
 	}
+	// 互动信息(与当前登录用户的关注关系)
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	resp.Video.VideoUserInfo.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, video.AuthorID)
 	return
 }
