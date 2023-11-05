@@ -3,7 +3,6 @@ package comment
 import (
 	"context"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
 	"time"
@@ -11,24 +10,14 @@ import (
 
 const DefaultLimit = 10
 
-type Comment struct {
-	ID        int64 `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-
-	Content     string          `gorm:"not null"`                    // 评论内容
-	VideoID     int64           `gorm:"index:idx_videoid;not null"`  // 视频ID
-	ParentID    int64           `gorm:"index:idx_parentid;"`         // 父评论ID
-	TargetID    int64           `gorm:"index:idx_targetid;"`         // 回复对应评论ID
-	OwnerUID    int64           `gorm:"index:idx_owneruid;not null"` // 评论者ID
-	User        user_model.User `gorm:"-"`                           // 评论者信息
-	ToUser      user_model.User `gorm:"-"`                           // 被回复者信息
-	ReplayCount int             `gorm:"default:0"`                   // 回复数
-	LikeCount   int             `gorm:"default:0"`                   // 点赞数
-}
-
-func (c *Comment) TableName() string {
-	return "comment"
+type BasicComment struct {
+	ID        int64            `gorm:"primary_key"`
+	VideoID   int64            `gorm:"column:video_id;not null;comment:视频id"`
+	Content   string           `gorm:"column:content;type:varchar(1000);not null;comment:内容"`
+	UserID    int64            `gorm:"column:user_id;not null;comment:评论人id"`
+	User      *user_model.User `gorm:"-"` // 评论人信息
+	CreatedAt time.Time        `gorm:"column:created_at;default:null;comment:创建时间"`
+	UpdatedAt time.Time        `gorm:"column:updated_time;default:null;comment:更新时间"`
 }
 
 type CommentModel struct {
@@ -67,58 +56,24 @@ func (m *CommentModel) applyOption(ctx context.Context, opts Option) *gorm.DB {
 	return session
 }
 
-func (m *CommentModel) List(ctx context.Context, opts Option) ([]*Comment, error) {
-	var result []*Comment
-	err := m.applyOption(ctx, opts).Find(&result).Error
-	return result, err
+// ListParentComments 获取视频的一级评论
+func (m *CommentModel) ListParentComments(ctx context.Context, videoId int64) []*ParentComment {
+	return nil
 }
 
-// CreateVideoComment 创建视频的一级评论
-func (m *CommentModel) CreateVideoComment(ctx context.Context, doer, videoId int64, content string) error {
-	comment := Comment{
-		ID:       snowflake.CommentIDNode.Generate().Int64(),
-		Content:  content,
-		VideoID:  videoId,
-		OwnerUID: doer,
-	}
-	return m.db.WithContext(ctx).
-		Create(&comment).Error
+// ListChildComments 获取视频的二级评论
+func (m *CommentModel) ListChildComments(ctx context.Context, commentId int64) []*ChildComment {
+	return nil
 }
 
-// CreateReplyComment 创建视频的二级评论（评论的回复）
-func (m *CommentModel) CreateReplyComment(ctx context.Context, doer int64, videoId int64, content string, parentId int64, targetId int64) error {
-	comment := Comment{
-		ID:       snowflake.CommentIDNode.Generate().Int64(),
-		Content:  content,
-		VideoID:  videoId,
-		OwnerUID: doer,
-		ParentID: parentId,
-		TargetID: targetId,
-	}
-	return m.db.WithContext(ctx).
-		Create(&comment).Error
+func (m *CommentModel) FindParentComment(ctx context.Context, id int64) (*ParentComment, error) {
+	var comment ParentComment
+	err := m.db.WithContext(ctx).First(&comment, id).Error
+	return &comment, err
 }
 
-func (m *CommentModel) Insert(ctx context.Context, comment Comment) error {
-	return m.db.WithContext(ctx).
-		Create(&comment).Error
-}
-
-func (m *CommentModel) Delete(ctx context.Context, id int64) error {
-	// TODO删除评论时,需要删除对应的回复
-	return m.db.WithContext(ctx).
-		Delete(&Comment{}, id).Error
-}
-
-func (m *CommentModel) Update(ctx context.Context, id int64, content string) error {
-	return m.db.WithContext(ctx).
-		Model(&Comment{}).
-		Where("id = ?", id).
-		Update("content", content).Error
-}
-
-func (m *CommentModel) FindOne(ctx context.Context, id int64) (*Comment, error) {
-	var comment Comment
+func (m *CommentModel) FindChildComment(ctx context.Context, id int64) (*ChildComment, error) {
+	var comment ChildComment
 	err := m.db.WithContext(ctx).First(&comment, id).Error
 	return &comment, err
 }

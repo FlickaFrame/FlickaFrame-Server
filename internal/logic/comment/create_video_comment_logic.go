@@ -26,6 +26,6 @@ func NewCreateVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 
 func (l *CreateVideoCommentLogic) CreateVideoComment(req *types.CreateVideoCommentReq) (resp *types.CreateVideoCommentResp, err error) {
 	doer := jwt.GetUidFromCtx(l.ctx)
-	err = l.svcCtx.CommentModel.CreateVideoComment(l.ctx, doer, req.VideoId, req.Content)
+	err = l.svcCtx.CommentModel.CreateParentComment(l.ctx, doer, req.VideoId, req.Content)
 	return
 }

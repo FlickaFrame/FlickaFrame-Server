@@ -7,12 +7,14 @@ info(
 	email: "caicandong@shu.edu.cn"
 )
 
+import "../user/user_server.api"
+
 @server(
 	prefix: api/v1
 	group: comment
 )
 service main {
-	@doc "Get a specific comment of an Video"
+	@doc "Get a specific comment of an Video" // 获取视频的评论(包括子评论)
 	@handler GetVideoComment
 	get /video/:video_id/comments/:comment_id (GetVideoCommentReq) returns (GetVideoCommentResp)
 
@@ -31,6 +33,10 @@ service main {
 	@handler CreateVideoComment
 	put /video/:video_id/comments (CreateVideoCommentReq) returns (CreateVideoCommentResp)
 
+	@doc "Create a child comment for comment"
+	@handler CreateChildComment
+	put /video/:video_id/comments/:comment_id (CreateChildCommentReq) returns (CreateChildCommentResp)
+
 	@doc "Delete a comment of an Video"
 	@handler DeleteVideoComment
 	delete /comments/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
@@ -44,75 +50,69 @@ service main {
 	put /video/:video_id/reply (CreateReplyCommentReq) returns (CreateReplyCommentResp)
 }
 
-type CommentUserInfo {
-	UserID   string `json:"userId"`
-	Nickname string `json:"nickname"`
-	Image    string `json:"image"`
-}
-
-type SubComments {
-	ID         string `json:"id"`
-	VideoID    string `json:"videoId"`
-	Content    string `json:"content"`
-	CreateTime int64  `json:"createTime"`
-	Status     int    `json:"status"`
-
-	AtUsers             []*CommentUserInfo   `json:"atUsers"`
-	UserInfo            *CommentUserInfo     `json:"userInfo"`
-	CommentInteractInfo *CommentInteractInfo `json:"commentInteractInfo"`
-	ShowTags            []string             `json:"showTags"`
-}
-
-type TargetCommnet { // 回复的目标评论
-	ID       string           `json:"id"`
-	UserInfo *CommentUserInfo `json:"userInfo"`
-}
-
-type CommentInteractInfo {
-	Liked      bool   `json:"liked"`      // 当前用户是否已点赞
-	LikedCount string `json:"likedCount"` // 点赞数
-}
-
-type Commnent {
-	ID         string `json:"id"`
-	VideoID    string `json:"videoId"`
-	Status     int    `json:"status"`
-	Content    string `json:"content"`
-	CreateTime int64  `json:"createTime"`
-
-	UserInfo            *CommentUserInfo     `json:"userInfo"`
-	CommentInteractInfo *CommentInteractInfo `json:"commentInteractInfo"`
-
-	SubComments       []*SubComments `json:"subComments"`
-	SubCommentCount   string         `json:"subCommentCount"`
-	SubCommentHasMore bool           `json:"subCommentHasMore"`
-	SubCommentCursor  string         `json:"subCommentCursor"`
-
-	AtUsers  []*CommentUserInfo `json:"atUsers"`
-	ShowTags []string           `json:"showTags"`
-
-	IPAddress string `json:"ipAddress"`
-}
+type (
+	ListCommentOption {
+		PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
+		Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
+		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
+	}
+	CommonTag { // 置顶、热门、精华等
+		ID   int64  `json:"id"`
+		Name string `json:"name"`
+	}
+	//	CommentUserInfo { // 评论展示的用户信息
+	//		ID        string `json:"userId"`    // 用户ID
+	//		NickName  string `json:"nickName"`  // 用户名
+	//		AvatarUrl string `json:"avatarUrl"` // 头像
+	//	}
+	TargetComment { // 显示效果: 回复@用户: 回复的目标评论内容
+		ID       string         `json:"id"`       // 回复的目标评论ID
+		UserInfo *UserBasicInfo `json:"userInfo"` // 回复的目标评论用户信息
+	}
+	CommentBasicInfo {
+		ID         string           `json:"id"`         // 评论ID
+		Content    string           `json:"content"`    // 评论内容
+		AtUsers    []*UserBasicInfo `json:"atUsers"`    // @用户列表(暂未实现)
+		UserInfo   *UserBasicInfo   `json:"userInfo"`   // 发布评论的用户信息
+		ShowTags   []*CommonTag     `json:"showTags"`   // 标签列表(暂未实现)
+		LikedCount int64            `json:"likedCount"` // 点赞数
+		Liked      bool             `json:"liked"`      // 当前用户是否已点赞
+		CreateTime int64            `json:"createTime"` // 创建时间
+		Status     int              `json:"status"`
+	}
+	ParentComment { // 一级评论
+		CommentBasicInfo                 // 评论基本信息
+		VideoID          string          `json:"videoId"`       // 视频ID
+		ChildComments    []*ChildComment `json:"childComments"` // 二级评论列表
+		ChildCount       string          `json:"childCount"`    // 二级评论数
+		ChildHasMore     bool            `json:"childHasMore"`  // 是否还有更多二级评论
+	}
+	ChildComment { // 二级评论
+		CommentBasicInfo                // 评论基本信息
+		TargetComment    *TargetComment `json:"targetComment"` // 回复的目标评论
+	}
+)
 
 type (
 	CreateVideoCommentReq {
+		VideoId int64  `path:"video_id"`
 		Content string `json:"content"`
-		VideoId int64  `json:"videoId" path:"video_id"`
 	}
-
 	CreateVideoCommentResp {
-		Commnent *Commnent `json:"comment"`
+	}
+	CreateChildCommentReq {
+	}
+	CreateChildCommentResp {
 	}
 )
 
 type (
 	GetVideoCommentReq {
-		VideoId   int64 `json:"videoId" path:"video_id"`
 		CommentId int64 `json:"commentId" path:"comment_id"`
 	}
 
 	GetVideoCommentResp {
-		Commnent *Commnent `json:"comment"`
+		Commnent *ParentComment `json:"comment"`
 	}
 )
 
@@ -139,13 +139,13 @@ type (
 
 type (
 	ListVideoCommentsReq {
-		VideoId int64 `json:"videoId" path:"video_id"`
+		VideoId int64 `path:"video_id,optional"`
 	}
 
 	ListVideoCommentsResp {
-		CreatedAt string      `json:"createdAt"`
-		UserID    string      `json:"userId"`
-		Comments  []*Commnent `json:"comments"`
+		CreatedAt string           `json:"createdAt"`
+		UserID    string           `json:"userId"`
+		Comments  []*ParentComment `json:"comments"`
 	}
 )
 
@@ -158,6 +158,6 @@ type (
 	}
 
 	CreateReplyCommentResp {
-		Commnent *Commnent `json:"comment"`
+		Commnent *ParentComment `json:"comment"`
 	}
 )

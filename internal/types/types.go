@@ -256,67 +256,67 @@ type GetVideoInfoResp struct {
 	Video *VideoBasicInfo `json:"video"`
 }
 
-type CommentUserInfo struct {
-	UserID   string `json:"userId"`
-	Nickname string `json:"nickname"`
-	Image    string `json:"image"`
+type ListCommentOption struct {
+	PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
+	Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
+	ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 }
 
-type SubComments struct {
-	ID                  string               `json:"id"`
-	VideoID             string               `json:"videoId"`
-	Content             string               `json:"content"`
-	CreateTime          int64                `json:"createTime"`
-	Status              int                  `json:"status"`
-	AtUsers             []*CommentUserInfo   `json:"atUsers"`
-	UserInfo            *CommentUserInfo     `json:"userInfo"`
-	CommentInteractInfo *CommentInteractInfo `json:"commentInteractInfo"`
-	ShowTags            []string             `json:"showTags"`
+type CommonTag struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
 }
 
-type TargetCommnet struct {
-	ID       string           `json:"id"`
-	UserInfo *CommentUserInfo `json:"userInfo"`
+type TargetComment struct {
+	ID       string         `json:"id"`       // 回复的目标评论ID
+	UserInfo *UserBasicInfo `json:"userInfo"` // 回复的目标评论用户信息
 }
 
-type CommentInteractInfo struct {
-	Liked      bool   `json:"liked"`      // 当前用户是否已点赞
-	LikedCount string `json:"likedCount"` // 点赞数
+type CommentBasicInfo struct {
+	ID         string           `json:"id"`         // 评论ID
+	Content    string           `json:"content"`    // 评论内容
+	AtUsers    []*UserBasicInfo `json:"atUsers"`    // @用户列表(暂未实现)
+	UserInfo   *UserBasicInfo   `json:"userInfo"`   // 发布评论的用户信息
+	ShowTags   []*CommonTag     `json:"showTags"`   // 标签列表(暂未实现)
+	LikedCount int64            `json:"likedCount"` // 点赞数
+	Liked      bool             `json:"liked"`      // 当前用户是否已点赞
+	CreateTime int64            `json:"createTime"` // 创建时间
+	Status     int              `json:"status"`
 }
 
-type Commnent struct {
-	ID                  string               `json:"id"`
-	VideoID             string               `json:"videoId"`
-	Status              int                  `json:"status"`
-	Content             string               `json:"content"`
-	CreateTime          int64                `json:"createTime"`
-	UserInfo            *CommentUserInfo     `json:"userInfo"`
-	CommentInteractInfo *CommentInteractInfo `json:"commentInteractInfo"`
-	SubComments         []*SubComments       `json:"subComments"`
-	SubCommentCount     string               `json:"subCommentCount"`
-	SubCommentHasMore   bool                 `json:"subCommentHasMore"`
-	SubCommentCursor    string               `json:"subCommentCursor"`
-	AtUsers             []*CommentUserInfo   `json:"atUsers"`
-	ShowTags            []string             `json:"showTags"`
-	IPAddress           string               `json:"ipAddress"`
+type ParentComment struct {
+	CommentBasicInfo
+	VideoID       string          `json:"videoId"`       // 视频ID
+	ChildComments []*ChildComment `json:"childComments"` // 二级评论列表
+	ChildCount    string          `json:"childCount"`    // 二级评论数
+	ChildHasMore  bool            `json:"childHasMore"`  // 是否还有更多二级评论
+}
+
+type ChildComment struct {
+	CommentBasicInfo
+	TargetComment *TargetComment `json:"targetComment"` // 回复的目标评论
 }
 
 type CreateVideoCommentReq struct {
+	VideoId int64  `path:"video_id"`
 	Content string `json:"content"`
-	VideoId int64  `json:"videoId" path:"video_id"`
 }
 
 type CreateVideoCommentResp struct {
-	Commnent *Commnent `json:"comment"`
+}
+
+type CreateChildCommentReq struct {
+}
+
+type CreateChildCommentResp struct {
 }
 
 type GetVideoCommentReq struct {
-	VideoId   int64 `json:"videoId" path:"video_id"`
 	CommentId int64 `json:"commentId" path:"comment_id"`
 }
 
 type GetVideoCommentResp struct {
-	Commnent *Commnent `json:"comment"`
+	Commnent *ParentComment `json:"comment"`
 }
 
 type DeleteVideoCommentReq struct {
@@ -337,13 +337,13 @@ type EditVideoCommentResp struct {
 }
 
 type ListVideoCommentsReq struct {
-	VideoId int64 `json:"videoId" path:"video_id"`
+	VideoId int64 `path:"video_id,optional"`
 }
 
 type ListVideoCommentsResp struct {
-	CreatedAt string      `json:"createdAt"`
-	UserID    string      `json:"userId"`
-	Comments  []*Commnent `json:"comments"`
+	CreatedAt string           `json:"createdAt"`
+	UserID    string           `json:"userId"`
+	Comments  []*ParentComment `json:"comments"`
 }
 
 type CreateReplyCommentReq struct {
@@ -354,7 +354,7 @@ type CreateReplyCommentReq struct {
 }
 
 type CreateReplyCommentResp struct {
-	Commnent *Commnent `json:"comment"`
+	Commnent *ParentComment `json:"comment"`
 }
 
 type FavoriteVideoReq struct {
