@@ -21,10 +21,7 @@ func (m *CurrentUserMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			//has jwt Authorization
 			authHandler := handler.Authorize(m.secret)
 			authHandler(next).ServeHTTP(w, r)
-			return
-		} else {
-			//no jwt Authorization
-			next(w, r)
 		}
+		next(w, r)
 	}
 }
