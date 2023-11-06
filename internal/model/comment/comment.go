@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"fmt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
@@ -74,4 +75,28 @@ func (m *CommentModel) FindChildComment(ctx context.Context, id int64) (*ChildCo
 	var comment ChildComment
 	err := m.db.WithContext(ctx).First(&comment, id).Error
 	return &comment, err
+}
+
+func (m *CommentModel) DeleteParentComment(ctx context.Context, id, doerId int64) error {
+	comment := &ParentComment{}
+	comment.ID = id
+	rowsAffected := m.db.WithContext(ctx).
+		Where("user_id = ? and id = ?", doerId, id).
+		Delete(comment).RowsAffected
+	if rowsAffected == 0 {
+		return fmt.Errorf("delete parent comment fail")
+	}
+	return nil
+}
+
+func (m *CommentModel) DeleteChildComment(ctx context.Context, id, doerId int64) error {
+	comment := &ChildComment{}
+	comment.ID = id
+	rowsAffected := m.db.WithContext(ctx).
+		Where("user_id = ? and id = ?", doerId, id).
+		Delete(comment).RowsAffected
+	if rowsAffected == 0 {
+		return fmt.Errorf("delete child comment fail")
+	}
+	return nil
 }

@@ -339,8 +339,8 @@ type GetVideoCommentResp struct {
 }
 
 type DeleteVideoCommentReq struct {
-	VideoId   int64 `json:"videoId" path:"video_id"`
-	CommentId int64 `json:"commentId" path:"comment_id"`
+	CommentId int64  `path:"comment_id"`
+	Type      string `form:"type"`
 }
 
 type DeleteVideoCommentResp struct {
