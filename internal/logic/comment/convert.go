@@ -65,7 +65,17 @@ func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *
 	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
 	//2. 构造回复评论信息
 	if comment.ReplyID != 0 {
-		resp.TargetComment = c.BuildTargetComment(ctx, comment.ReplyID)
+		resp.TargetComment = &types.TargetComment{}
+		targetComment, err := c.svcCtx.CommentModel.FindChildComment(ctx, comment.ReplyID)
+		userInfo, err := c.svcCtx.UserModel.FindOne(ctx, targetComment.UserID)
+		if err != nil {
+			return nil, err
+		}
+		resp.TargetComment.ID = strconv.FormatInt(comment.ReplyID, 10)
+		resp.TargetComment.UserInfo, err = user.NewConvert(c.ctx, c.svcCtx).BuildUserBasicInfo(ctx, userInfo)
+		if err != nil {
+			return nil, err
+		}
 	}
 	// TODO: 构造点赞信息
 	return

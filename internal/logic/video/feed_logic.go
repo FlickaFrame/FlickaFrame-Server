@@ -64,5 +64,6 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		authorId, _ := strconv.ParseInt(list[i].VideoUserInfo.ID, 10, 64)
 		resp.List[i].VideoUserInfo.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, authorId)
 	}
+	resp.IsEnd = len(resp.List) < req.Limit
 	return
 }

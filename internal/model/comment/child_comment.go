@@ -35,6 +35,7 @@ func (m *CommentModel) CreateChildComment(ctx context.Context, doer, videoId int
 			UserID:  doer,
 		},
 		ParentID: parentCommentId,
+		ReplyID:  targetCommentId,
 	}
 	return &comment, m.db.WithContext(ctx).
 		Create(&comment).Error
