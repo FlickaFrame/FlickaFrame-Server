@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
@@ -33,11 +34,11 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		LatestTime = time.UnixMilli(req.Cursor)
 	}
 	videos, err := l.svcCtx.VideoModel.List(l.ctx, video_model.ListOption{
-		AuthorID:   req.AuthorID,
+		AuthorID:   util.MustString2Int64(req.AuthorID),
 		LatestTime: LatestTime,
 		Limit:      req.Limit,
 		QueryAll:   false,
-		CategoryID: req.CategoryID,
+		CategoryID: util.MustString2Int64(req.CategoryID),
 	})
 	if err != nil {
 		logx.WithContext(l.ctx).Errorf("find videos by latest time error: %v", err)

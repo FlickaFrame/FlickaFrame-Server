@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,9 +31,9 @@ func (l *DeleteVideoCommentLogic) DeleteVideoComment(req *types.DeleteVideoComme
 		return nil, code.NoSupportCommentTypeErr
 	}
 	if req.Type == "parent" {
-		err = l.svcCtx.CommentModel.DeleteParentComment(l.ctx, req.CommentId, doerId)
+		err = l.svcCtx.CommentModel.DeleteParentComment(l.ctx, util.MustString2Int64(req.CommentId), doerId)
 	} else {
-		err = l.svcCtx.CommentModel.DeleteChildComment(l.ctx, req.CommentId, doerId)
+		err = l.svcCtx.CommentModel.DeleteChildComment(l.ctx, util.MustString2Int64(req.CommentId), doerId)
 	}
 	return nil, err
 }

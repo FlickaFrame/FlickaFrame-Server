@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,12 +28,12 @@ func NewCreateVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 func (l *CreateVideoCommentLogic) CreateVideoComment(req *types.CreateVideoCommentReq) (resp *types.CreateVideoCommentResp, err error) {
 	resp = &types.CreateVideoCommentResp{}
 	doer := jwt.GetUidFromCtx(l.ctx)
-	_, err = l.svcCtx.VideoModel.FindOne(l.ctx, req.VideoId)
+	_, err = l.svcCtx.VideoModel.FindOne(l.ctx, util.MustString2Int64(req.VideoId))
 	if err != nil {
 		logx.Info(err)
 		return nil, code.VideoNotExistError
 	}
-	comment, err := l.svcCtx.CommentModel.CreateParentComment(l.ctx, doer, req.VideoId, req.Content)
+	comment, err := l.svcCtx.CommentModel.CreateParentComment(l.ctx, doer, util.MustString2Int64(req.VideoId), req.Content)
 	if err != nil {
 		return
 	}

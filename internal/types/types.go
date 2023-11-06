@@ -177,9 +177,9 @@ type VideoInteractInfo struct {
 type FeedReq struct {
 	Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
 	Limit      int    `form:"limit,default=10"`    // 请求数量
-	AuthorID   int64  `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
+	AuthorID   string `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
 	Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
-	CategoryID int64  `form:"categoryId,optional"` // 分类(是否根据分类过滤)
+	CategoryID string `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 }
 
 type FeedVideoItem struct {
@@ -298,9 +298,9 @@ type ChildComment struct {
 }
 
 type CreateVideoCommentReq struct {
-	VideoId   int64   `json:"videoId"`
-	Content   string  `json:"content"`
-	AtUsersId []int64 `json:"atUsersId,optional"`
+	VideoId   string   `json:"videoId"`
+	Content   string   `json:"content"`
+	AtUsersId []string `json:"atUsersId,optional"`
 }
 
 type CreateVideoCommentResp struct {
@@ -308,11 +308,11 @@ type CreateVideoCommentResp struct {
 }
 
 type CreateChildCommentReq struct {
-	VideoId         int64   `json:"videoId"`
-	Content         string  `json:"content"`
-	AtUsersId       []int64 `json:"atUsersId,optional"`
-	ParentCommentId string  `json:"parentCommentId"`
-	TargetCommentId string  `json:"targetCommentId,optional"`
+	VideoId         string   `json:"videoId"`
+	Content         string   `json:"content"`
+	AtUsersId       []string `json:"atUsersId,optional"`
+	ParentCommentId string   `json:"parentCommentId"`
+	TargetCommentId string   `json:"targetCommentId,optional"`
 }
 
 type CreateChildCommentResp struct {
@@ -320,11 +320,11 @@ type CreateChildCommentResp struct {
 }
 
 type CreateReplyCommentReq struct {
-	VideoId         int64   `json:"videoId"`
-	Content         string  `json:"content"`
-	AtUsersId       []int64 `json:"atUsersId,optional"`
-	ParentCommentId int64   `json:"parentCommentId,optional"`
-	TargetCommentId int64   `json:"targetCommentId,optional"`
+	VideoId         string   `json:"videoId"`
+	Content         string   `json:"content"`
+	AtUsersId       []string `json:"atUsersId,optional"`
+	ParentCommentId string   `json:"parentCommentId,optional"`
+	TargetCommentId string   `json:"targetCommentId,optional"`
 }
 
 type CreateReplyCommentResp struct {
@@ -332,7 +332,7 @@ type CreateReplyCommentResp struct {
 }
 
 type GetVideoCommentReq struct {
-	CommentId int64 `json:"commentId" path:"comment_id"`
+	CommentId string `json:"commentId" path:"comment_id"`
 }
 
 type GetVideoCommentResp struct {
@@ -340,7 +340,7 @@ type GetVideoCommentResp struct {
 }
 
 type DeleteVideoCommentReq struct {
-	CommentId int64  `path:"comment_id"`
+	CommentId string `path:"comment_id"`
 	Type      string `form:"type"`
 }
 
@@ -348,8 +348,8 @@ type DeleteVideoCommentResp struct {
 }
 
 type EditVideoCommentReq struct {
-	VideoId   int64  `json:"videoId" path:"video_id"`
-	CommentId int64  `json:"commentId" path:"comment_id"`
+	VideoId   string `json:"videoId" path:"video_id"`
+	CommentId string `json:"commentId" path:"comment_id"`
 	Content   string `json:"content"`
 }
 
@@ -357,7 +357,7 @@ type EditVideoCommentResp struct {
 }
 
 type ListVideoCommentsReq struct {
-	VideoId int64 `path:"video_id,optional"`
+	VideoId string `path:"video_id,optional"`
 }
 
 type ListVideoCommentsResp struct {

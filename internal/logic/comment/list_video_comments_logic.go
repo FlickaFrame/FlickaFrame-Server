@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,7 +28,7 @@ func NewListVideoCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 func (l *ListVideoCommentsLogic) ListVideoComments(req *types.ListVideoCommentsReq) (resp *types.ListVideoCommentsResp, err error) {
 	resp = &types.ListVideoCommentsResp{}
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	comments, err := l.svcCtx.CommentModel.ListParentComment(l.ctx, req.VideoId, comment_model.Option{})
+	comments, err := l.svcCtx.CommentModel.ListParentComment(l.ctx, util.MustString2Int64(req.VideoId), comment_model.Option{})
 	resp.Comments, err = NewConvert(l.ctx, l.svcCtx).BuildParentCommentList(l.ctx, doerId, comments)
 	return
 }

@@ -100,9 +100,9 @@ type (
 	FeedReq {
 		Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
 		Limit      int    `form:"limit,default=10"`    // 请求数量
-		AuthorID   int64  `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
+		AuthorID   string `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
 		Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
-		CategoryID int64  `form:"categoryId,optional"` // 分类(是否根据分类过滤)
+		CategoryID string `form:"categoryId,optional"` // 分类(是否根据分类过滤)
 	}
 	FeedVideoItem {
 		VideoBasicInfo

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"strconv"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
@@ -30,7 +31,7 @@ func (l *CreateChildCommentLogic) CreateChildComment(req *types.CreateChildComme
 	resp = &types.CreateChildCommentResp{}
 	doer := jwt.GetUidFromCtx(l.ctx)
 	// 检测视频是否存在
-	_, err = l.svcCtx.VideoModel.FindOne(l.ctx, req.VideoId)
+	_, err = l.svcCtx.VideoModel.FindOne(l.ctx, util.MustString2Int64(req.VideoId))
 	if err != nil {
 		logx.Info(err)
 		return nil, code.VideoNotExistError
@@ -39,7 +40,7 @@ func (l *CreateChildCommentLogic) CreateChildComment(req *types.CreateChildComme
 	TargetCommentId, _ := strconv.ParseInt(req.TargetCommentId, 10, 64)
 
 	comment, err := l.svcCtx.CommentModel.CreateChildComment(l.ctx, doer,
-		req.VideoId, req.Content, ParentCommentId, TargetCommentId)
+		util.MustString2Int64(req.VideoId), req.Content, ParentCommentId, TargetCommentId)
 	if err != nil {
 		return
 	}

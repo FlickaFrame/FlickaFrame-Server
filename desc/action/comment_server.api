@@ -90,29 +90,29 @@ type (
 
 type ( // 创建评论
 	CreateVideoCommentReq {
-		VideoId   int64   `json:"videoId"`
-		Content   string  `json:"content"`
-		AtUsersId []int64 `json:"atUsersId,optional"`
+		VideoId   string   `json:"videoId"`
+		Content   string   `json:"content"`
+		AtUsersId []string `json:"atUsersId,optional"`
 	}
 	CreateVideoCommentResp {
 		Comment *ParentComment `json:"comment"`
 	}
 	CreateChildCommentReq {
-		VideoId         int64   `json:"videoId"`
-		Content         string  `json:"content"`
-		AtUsersId       []int64 `json:"atUsersId,optional"`
-		ParentCommentId string  `json:"parentCommentId"`
-		TargetCommentId string  `json:"targetCommentId,optional"`
+		VideoId         string   `json:"videoId"`
+		Content         string   `json:"content"`
+		AtUsersId       []string `json:"atUsersId,optional"`
+		ParentCommentId string   `json:"parentCommentId"`
+		TargetCommentId string   `json:"targetCommentId,optional"`
 	}
 	CreateChildCommentResp {
 		Comment *ChildComment `json:"comment"`
 	}
 	CreateReplyCommentReq {
-		VideoId         int64   `json:"videoId"`
-		Content         string  `json:"content"`
-		AtUsersId       []int64 `json:"atUsersId,optional"`
-		ParentCommentId int64   `json:"parentCommentId,optional"`
-		TargetCommentId int64   `json:"targetCommentId,optional"`
+		VideoId         string   `json:"videoId"`
+		Content         string   `json:"content"`
+		AtUsersId       []string `json:"atUsersId,optional"`
+		ParentCommentId string   `json:"parentCommentId,optional"`
+		TargetCommentId string   `json:"targetCommentId,optional"`
 	}
 	CreateReplyCommentResp {
 		Comment *ChildComment `json:"comment"`
@@ -121,7 +121,7 @@ type ( // 创建评论
 
 type (
 	GetVideoCommentReq {
-		CommentId int64 `json:"commentId" path:"comment_id"`
+		CommentId string `json:"commentId" path:"comment_id"`
 	}
 
 	GetVideoCommentResp {
@@ -131,7 +131,7 @@ type (
 
 type (
 	DeleteVideoCommentReq {
-		CommentId int64  `path:"comment_id"`
+		CommentId string `path:"comment_id"`
 		Type      string `form:"type"`
 	}
 
@@ -141,8 +141,8 @@ type (
 
 type (
 	EditVideoCommentReq {
-		VideoId   int64  `json:"videoId" path:"video_id"`
-		CommentId int64  `json:"commentId" path:"comment_id"`
+		VideoId   string `json:"videoId" path:"video_id"`
+		CommentId string `json:"commentId" path:"comment_id"`
 		Content   string `json:"content"`
 	}
 
@@ -152,7 +152,7 @@ type (
 
 type (
 	ListVideoCommentsReq {
-		VideoId int64 `path:"video_id,optional"`
+		VideoId string `path:"video_id,optional"`
 	}
 
 	ListVideoCommentsResp {
