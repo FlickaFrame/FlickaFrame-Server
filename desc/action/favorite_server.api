@@ -36,7 +36,7 @@ type (
 	}
 	FavoriteResp  struct{}
 	UnFavoriteReq {
-		TargetId int64 `json:"targetId",copier:"IDString"`
+		TargetId int64 `json:"targetId" copier:"IDString"`
 	}
 	UnFavoriteResp struct{}
 )

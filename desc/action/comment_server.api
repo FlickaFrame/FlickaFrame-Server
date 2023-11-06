@@ -57,15 +57,15 @@ type (
 		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 	}
 	CommonTag { // 置顶、热门、精华等
-		ID   string `json:"id",copier:"IDString"`
+		ID   string `json:"id" copier:"IDString"`
 		Name string `json:"name"`
 	}
 	TargetComment { // 显示效果: 回复@用户: 回复的目标评论内容
-		ID       string         `json:"id",copier:"IDString"` // 回复的目标评论ID
+		ID       string         `json:"id" copier:"IDString"` // 回复的目标评论ID
 		UserInfo *UserBasicInfo `json:"userInfo"`             // 回复的目标评论用户信息
 	}
 	CommentBasicInfo {
-		ID         string           `json:"id",copier:"IDString"` // 评论ID
+		ID         string           `json:"id" copier:"IDString"` // 评论ID
 		Content    string           `json:"content"`              // 评论内容
 		AtUsers    []*UserBasicInfo `json:"atUsers"`              // @用户列表(暂未实现)
 		UserInfo   *UserBasicInfo   `json:"userInfo"`             // 发布评论的用户信息
@@ -77,7 +77,7 @@ type (
 	}
 	ParentComment { // 一级评论
 		CommentBasicInfo                 // 评论基本信息
-		VideoID          string          `json:"videoId",copier:"IDString"` // 视频ID
+		VideoID          string          `json:"videoId" copier:"IDString"` // 视频ID
 		ChildComments    []*ChildComment `json:"childComments"`             // 二级评论列表
 		ChildCount       string          `json:"childCount"`                // 二级评论数
 		ChildHasMore     bool            `json:"childHasMore"`              // 是否还有更多二级评论

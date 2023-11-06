@@ -94,7 +94,7 @@ service main {
 
 type (
 	UserBasicInfo {
-		ID        string `json:"userId",copier:"IDString"` // 用户ID
+		ID        string `json:"userId" copier:"IDString"` // 用户ID
 		NickName  string `json:"nickName"`                 // 用户名
 		AvatarUrl string `json:"avatarUrl"`                // 头像
 		Slogan    string `json:"slogan"`                   // 个性签名
