@@ -116,8 +116,13 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 			return nil, err
 		}
 	}
+
 	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
 	// 3.构造二级评论信息
+	resp.ChildCount, err = c.svcCtx.CommentModel.CountChildComment(ctx, comment.ID)
+	if err != nil {
+		return nil, err
+	}
 	comment.ChildComments, err = c.svcCtx.CommentModel.ListChildComment(ctx,
 		comment.ID,
 		comment_model.Option{})

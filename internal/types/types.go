@@ -283,7 +283,7 @@ type ParentComment struct {
 	CommentBasicInfo
 	VideoID       string          `json:"videoId"`       // 视频ID
 	ChildComments []*ChildComment `json:"childComments"` // 二级评论列表
-	ChildCount    int             `json:"childCount"`    // 二级评论数
+	ChildCount    int64           `json:"childCount"`    // 二级评论数
 	ChildHasMore  bool            `json:"childHasMore"`  // 是否还有更多二级评论
 }
 

@@ -104,6 +104,15 @@ func (m *CommentModel) DeleteChildComment(ctx context.Context, id, doerId int64)
 	return nil
 }
 
+func (m *CommentModel) CountChildComment(ctx context.Context, parentCommentId int64) (int64, error) {
+	var cnt int64
+	return cnt, m.db.WithContext(ctx).
+		Model(&ChildComment{}).
+		Select("id").
+		Where("parent_id = ?", parentCommentId).Count(&cnt).Error
+
+}
+
 //func (m *CommentModel) ListCommentTag(ctx context.Context, id int64) {
 //
 //}
