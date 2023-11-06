@@ -133,8 +133,8 @@ type Category struct {
 }
 
 type Tag struct {
-	Id   string `json:"id"`   // 标签id
-	Name string `json:"name"` // 标签名称
+	Id   string `json:"id" copier:"IDString"` // 标签id
+	Name string `json:"name"`                 // 标签名称
 }
 
 type VideoUserInfo struct {

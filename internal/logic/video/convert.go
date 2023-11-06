@@ -38,7 +38,7 @@ func (c *Convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 	videoBasicInfo.CreatedAt = video.CreatedAt.UnixMilli() // 时间转换
 	video.Author = c.svcCtx.UserModel.MustFindOne(ctx, video.AuthorID)
 	video.Category = c.svcCtx.VideoModel.MustFindOneCategory(ctx, video.CategoryID)
-	err = video.LoadAttributes(ctx, c.svcCtx.DB)
+	video.Tags = c.svcCtx.VideoModel.MustFindTagsByVideoId(ctx, video.ID)
 	if err != nil {
 		logx.Info("loading video attributes from db fail: ", err)
 		return nil, err

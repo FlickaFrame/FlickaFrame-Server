@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"time"
 )
@@ -40,15 +41,6 @@ func (v *Video) TableName() string {
 	return "video"
 }
 
-func (v *Video) LoadAuthor(ctx context.Context, db *orm.DB) error {
-	var author user.User
-	err := db.WithContext(ctx).
-		Where("id = ?", v.AuthorID).
-		First(&author).Error
-	v.Author = &author
-	return err
-}
-
 func (v *Video) LoadCategory(ctx context.Context, db *orm.DB) error {
 	var category Category
 	err := db.WithContext(ctx).
@@ -70,10 +62,6 @@ func (v *Video) LoadTags(ctx context.Context, db *orm.DB) error {
 }
 
 func (v *Video) LoadAttributes(ctx context.Context, db *orm.DB) error {
-	//err := v.LoadAuthor(ctx, db)
-	//if err != nil {
-	//	return err
-	//}
 	err := v.LoadCategory(ctx, db)
 	if err != nil {
 		return err
@@ -190,4 +178,25 @@ func (m *VideoModel) FollowingUserVideo(ctx context.Context, userId uint, option
 	//sess = orm.SetSessionPagination(sess, &options)
 	videos := make([]*Video, 0, options.PageSize)
 	return videos, sess.Find(&videos).Error
+}
+
+func (m *VideoModel) FindTagsByVideoId(ctx context.Context, videoId int64) ([]*Tag, error) {
+	var tags []*Tag
+	sess := m.db.WithContext(ctx)
+	sess = sess.
+		Select("`tags`.*").
+		Joins("Join video_tags on `tags`.id = `video_tags`.tag_id").
+		Where("`video_tags`.video_id = ?", videoId)
+	return tags, sess.Find(&tags).Error
+}
+
+func (m *VideoModel) MustFindTagsByVideoId(ctx context.Context, videoId int64) []*Tag {
+	tags, err := m.FindTagsByVideoId(ctx, videoId)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	if err != nil {
+		panic(err)
+	}
+	return tags
 }
