@@ -12,6 +12,7 @@ import (
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/zeromicro/go-queue/kq"
 )
 
 type ServiceContext struct {
@@ -26,6 +27,7 @@ type ServiceContext struct {
 	FavoriteModel *favorite.Model
 	CommentModel  *comment.CommentModel
 	Indexer       *meilisearch.Client
+	KqPusherClient *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -66,5 +68,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FavoriteModel: favorite.NewFavoriteModel(db),
 		CommentModel:  comment.NewCommentModel(db),
 		Indexer:       indexer,
+		KqPusherClient: kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
 	}
 }

@@ -3,15 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
+	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/handler"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/middleware"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/mqs"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/open_api"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"github.com/zeromicro/go-zero/core/service"
 )
 
 var configFile = flag.String("f", "etc/main.yaml", "the config file")
@@ -40,5 +43,15 @@ func main() {
 	httpx.SetOkHandler(xcode.OkHandler)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
-	server.Start()
+	// defer server.Start()
+
+	// 启动消费者
+	ctxbg := context.Background()
+	serviceGroup := service.NewServiceGroup()
+	defer serviceGroup.Stop()
+	serviceGroup.Add(server)
+	for _, mq := range mqs.Consumers(c, ctxbg, ctx) {
+		serviceGroup.Add(mq)
+	}
+	serviceGroup.Start()
 }
