@@ -4,6 +4,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-queue/kq"
 )
 
 type Config struct {
@@ -27,4 +28,9 @@ type Config struct {
 	}
 	Mysql    orm.Config
 	BizRedis redis.RedisConf
+	KqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
+	KqConsumerConf kq.KqConf
 }

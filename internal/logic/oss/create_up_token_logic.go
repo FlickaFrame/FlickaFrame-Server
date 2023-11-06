@@ -42,7 +42,7 @@ func (l *CreateUpTokenLogic) CreateUpToken(req *types.CreateUpTokenReq) (resp *t
 	putPolicy := storage.PutPolicy{
 		Scope:           fmt.Sprintf("%s:%s/", bucket, req.UploadType),
 		IsPrefixalScope: 1,
-		ReturnBody: `{"key":"$(key)","hash":"$(etag)","videoDuration":"$(avinfo.video.duration)"}`,
+		ReturnBody: `{"key":"$(key)","hash":"$(etag)","videoHeight":"$(avinfo.video.height)","videoWidth":"$(avinfo.video.width)","videoDuration":"$(avinfo.video.duration)"}`,
 	}
 	mac := auth.New(accessKey, secretKey)
 	putPolicy.Expires = 3600 //1小时有效期

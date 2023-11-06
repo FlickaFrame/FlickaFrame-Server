@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
@@ -26,5 +27,10 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
 	doerUserId := jwt.GetUidFromCtx(l.ctx)
-	return nil, l.svcCtx.UserModel.FollowUser(l.ctx, doerUserId, req.ContextUserId)
+	res := l.svcCtx.UserModel.FollowUser(l.ctx, doerUserId, req.ContextUserId)
+	data := fmt.Sprintf("Follow User ID: %d Success", req.ContextUserId)
+	if errMq := l.svcCtx.KqPusherClient.Push(data); errMq != nil {
+		logx.Errorf("FollowUser error: %v", errMq)
+	}
+	return nil, res
 }
