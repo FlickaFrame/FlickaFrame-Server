@@ -147,15 +147,15 @@ type VideoUserInfo struct {
 }
 
 type VideoBasicInfo struct {
-	ID            string         `json:"id"`          // 视频ID
-	Title         string         `json:"title"`       // 视频标题
-	Description   string         `json:"description"` // 视频描述
-	PlayUrl       string         `json:"playUrl"`     // 视频播放地址
-	ThumbUrl      string         `json:"thumbUrl"`    // 视频封面地址
-	CreatedAt     int64          `json:"createdAt"`   // 视频创建时间(毫秒时间戳)
-	Category      *Category      `json:"category"`    // 视频分类
-	Tags          []*Tag         `json:"tags"`        // 视频标签
-	VideoUserInfo *VideoUserInfo `json:"author"`      // 视频作者信息
+	ID            string         `json:"id" copier:"IDString"` // 视频ID
+	Title         string         `json:"title"`                // 视频标题
+	Description   string         `json:"description"`          // 视频描述
+	PlayUrl       string         `json:"playUrl"`              // 视频播放地址
+	ThumbUrl      string         `json:"thumbUrl"`             // 视频封面地址
+	CreatedAt     int64          `json:"createdAt"`            // 视频创建时间(毫秒时间戳)
+	Category      *Category      `json:"category"`             // 视频分类
+	Tags          []*Tag         `json:"tags"`                 // 视频标签
+	VideoUserInfo *VideoUserInfo `json:"author"`               // 视频作者信息
 }
 
 type VideoManageInfo struct {
@@ -272,23 +272,23 @@ type TargetComment struct {
 }
 
 type CommentBasicInfo struct {
-	ID         string           `json:"id" copier:"IDString"` // 评论ID
-	Content    string           `json:"content"`              // 评论内容
-	AtUsers    []*UserBasicInfo `json:"atUsers"`              // @用户列表(暂未实现)
-	UserInfo   *UserBasicInfo   `json:"userInfo"`             // 发布评论的用户信息
-	ShowTags   []*CommonTag     `json:"showTags"`             // 标签列表(暂未实现)
-	LikedCount int64            `json:"likedCount"`           // 点赞数
-	Liked      bool             `json:"liked"`                // 当前用户是否已点赞
-	CreatedAt  int64            `json:"createTime"`           // 创建时间(毫秒时间戳)
+	ID         string           `json:"id" copier:"IDString"`                   // 评论ID
+	Content    string           `json:"content"`                                // 评论内容
+	AtUsers    []*UserBasicInfo `json:"atUsers"`                                // @用户列表(暂未实现)
+	UserInfo   *UserBasicInfo   `json:"userInfo"`                               // 发布评论的用户信息
+	ShowTags   []*CommonTag     `json:"showTags"`                               // 标签列表(暂未实现)
+	LikedCount int64            `json:"likedCount"`                             // 点赞数
+	Liked      bool             `json:"liked"`                                  // 当前用户是否已点赞
+	CreatedAt  int64            `json:"createTime" copier:"CreatedAtUnixMilli"` // 创建时间(毫秒时间戳)
 	Status     int              `json:"status"`
 }
 
 type ParentComment struct {
 	CommentBasicInfo
-	VideoID       string          `json:"videoId" copier:"IDString"` // 视频ID
-	ChildComments []*ChildComment `json:"childComments"`             // 二级评论列表
-	ChildCount    string          `json:"childCount"`                // 二级评论数
-	ChildHasMore  bool            `json:"childHasMore"`              // 是否还有更多二级评论
+	VideoID       string          `json:"videoId"`       // 视频ID
+	ChildComments []*ChildComment `json:"childComments"` // 二级评论列表
+	ChildCount    int             `json:"childCount"`    // 二级评论数
+	ChildHasMore  bool            `json:"childHasMore"`  // 是否还有更多二级评论
 }
 
 type ChildComment struct {
@@ -310,8 +310,8 @@ type CreateChildCommentReq struct {
 	VideoId         int64   `json:"videoId"`
 	Content         string  `json:"content"`
 	AtUsersId       []int64 `json:"atUsersId,optional"`
-	ParentCommentId int64   `json:"parentCommentId"`
-	TargetCommentId int64   `json:"targetCommentId,optional"`
+	ParentCommentId string  `json:"parentCommentId"`
+	TargetCommentId string  `json:"targetCommentId,optional"`
 }
 
 type CreateChildCommentResp struct {

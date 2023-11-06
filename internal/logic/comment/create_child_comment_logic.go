@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
+	"strconv"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -34,8 +35,11 @@ func (l *CreateChildCommentLogic) CreateChildComment(req *types.CreateChildComme
 		logx.Info(err)
 		return nil, code.VideoNotExistError
 	}
+	ParentCommentId, _ := strconv.ParseInt(req.ParentCommentId, 10, 64)
+	TargetCommentId, _ := strconv.ParseInt(req.TargetCommentId, 10, 64)
+
 	comment, err := l.svcCtx.CommentModel.CreateChildComment(l.ctx, doer,
-		req.VideoId, req.Content, req.ParentCommentId, req.TargetCommentId)
+		req.VideoId, req.Content, ParentCommentId, TargetCommentId)
 	if err != nil {
 		return
 	}

@@ -65,22 +65,22 @@ type (
 		UserInfo *UserBasicInfo `json:"userInfo"`             // 回复的目标评论用户信息
 	}
 	CommentBasicInfo {
-		ID         string           `json:"id" copier:"IDString"` // 评论ID
-		Content    string           `json:"content"`              // 评论内容
-		AtUsers    []*UserBasicInfo `json:"atUsers"`              // @用户列表(暂未实现)
-		UserInfo   *UserBasicInfo   `json:"userInfo"`             // 发布评论的用户信息
-		ShowTags   []*CommonTag     `json:"showTags"`             // 标签列表(暂未实现)
-		LikedCount int64            `json:"likedCount"`           // 点赞数
-		Liked      bool             `json:"liked"`                // 当前用户是否已点赞
-		CreatedAt  int64            `json:"createTime"`           // 创建时间(毫秒时间戳)
+		ID         string           `json:"id" copier:"IDString"`                   // 评论ID
+		Content    string           `json:"content"`                                // 评论内容
+		AtUsers    []*UserBasicInfo `json:"atUsers"`                                // @用户列表(暂未实现)
+		UserInfo   *UserBasicInfo   `json:"userInfo"`                               // 发布评论的用户信息
+		ShowTags   []*CommonTag     `json:"showTags"`                               // 标签列表(暂未实现)
+		LikedCount int64            `json:"likedCount"`                             // 点赞数
+		Liked      bool             `json:"liked"`                                  // 当前用户是否已点赞
+		CreatedAt  int64            `json:"createTime" copier:"CreatedAtUnixMilli"` // 创建时间(毫秒时间戳)
 		Status     int              `json:"status"`
 	}
 	ParentComment { // 一级评论
 		CommentBasicInfo                 // 评论基本信息
-		VideoID          string          `json:"videoId" copier:"IDString"` // 视频ID
-		ChildComments    []*ChildComment `json:"childComments"`             // 二级评论列表
-		ChildCount       string          `json:"childCount"`                // 二级评论数
-		ChildHasMore     bool            `json:"childHasMore"`              // 是否还有更多二级评论
+		VideoID          string          `json:"videoId"`       // 视频ID
+		ChildComments    []*ChildComment `json:"childComments"` // 二级评论列表
+		ChildCount       int             `json:"childCount"`    // 二级评论数
+		ChildHasMore     bool            `json:"childHasMore"`  // 是否还有更多二级评论
 	}
 	ChildComment { // 二级评论
 		CommentBasicInfo                // 评论基本信息
@@ -101,8 +101,8 @@ type ( // 创建评论
 		VideoId         int64   `json:"videoId"`
 		Content         string  `json:"content"`
 		AtUsersId       []int64 `json:"atUsersId,optional"`
-		ParentCommentId int64   `json:"parentCommentId"`
-		TargetCommentId int64   `json:"targetCommentId,optional"`
+		ParentCommentId string  `json:"parentCommentId"`
+		TargetCommentId string  `json:"targetCommentId,optional"`
 	}
 	CreateChildCommentResp {
 		Comment *ChildComment `json:"comment"`

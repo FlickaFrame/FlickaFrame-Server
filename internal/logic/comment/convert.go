@@ -72,11 +72,10 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	resp = &types.ParentComment{}
 	// 1.构造评论基本信息
 	err = copier.Copy(&resp.CommentBasicInfo, comment)
-	resp.ID = strconv.FormatInt(comment.ID, 10)
-	resp.CreatedAt = comment.CreatedAt.UnixMilli()
 	if err != nil {
 		return nil, err
 	}
+	resp.VideoID = strconv.FormatInt(comment.VideoID, 10)
 	// 2. 构造一级评论的用户信息
 	if comment.User == nil {
 		comment.User, err = c.svcCtx.UserModel.FindOne(ctx, comment.UserID)

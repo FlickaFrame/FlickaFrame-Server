@@ -33,10 +33,8 @@ func (c *Convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 		logx.Info("copy video to videoBasicInfo fail: ", err)
 		return nil, err
 	}
-	videoBasicInfo.ID = strconv.FormatInt(video.ID, 10)                                           // id转换
 	videoBasicInfo.PlayUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.PlayUrl) // 链接转换
 	videoBasicInfo.ThumbUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.ThumbUrl)
-	videoBasicInfo.CreatedAt = video.CreatedAt.UnixMilli() // 时间转换
 	err = video.LoadAttributes(ctx, c.svcCtx.DB)
 	if err != nil {
 		logx.Info("loading video attributes from db fail: ", err)
