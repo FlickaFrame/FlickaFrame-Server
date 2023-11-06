@@ -35,6 +35,9 @@ func (c *Convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 	}
 	videoBasicInfo.PlayUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.PlayUrl) // 链接转换
 	videoBasicInfo.ThumbUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.ThumbUrl)
+	videoBasicInfo.CreatedAt = video.CreatedAt.UnixMilli() // 时间转换
+	video.Author = c.svcCtx.UserModel.MustFindOne(ctx, video.AuthorID)
+	video.Category = c.svcCtx.VideoModel.MustFindOneCategory(ctx, video.CategoryID)
 	err = video.LoadAttributes(ctx, c.svcCtx.DB)
 	if err != nil {
 		logx.Info("loading video attributes from db fail: ", err)

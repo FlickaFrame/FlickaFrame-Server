@@ -33,7 +33,7 @@ type Video struct {
 	PublishTime   time.Time // 发布时间
 	PublishStatus int       `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
 	Visibility    int       `gorm:"default:0"` // 可见性 0:公开 1:私有
-	VideoDuration float32	 // 视频时长
+	VideoDuration float32   // 视频时长
 }
 
 func (v *Video) TableName() string {
@@ -70,11 +70,11 @@ func (v *Video) LoadTags(ctx context.Context, db *orm.DB) error {
 }
 
 func (v *Video) LoadAttributes(ctx context.Context, db *orm.DB) error {
-	err := v.LoadAuthor(ctx, db)
-	if err != nil {
-		return err
-	}
-	err = v.LoadCategory(ctx, db)
+	//err := v.LoadAuthor(ctx, db)
+	//if err != nil {
+	//	return err
+	//}
+	err := v.LoadCategory(ctx, db)
 	if err != nil {
 		return err
 	}
@@ -115,6 +115,22 @@ type ListOption struct {
 	Limit      int       // 限制数量(分页)
 	QueryAll   bool      // 是否查询所有(分页)
 	CategoryID int64     // 分类ID
+}
+
+func (m *VideoModel) FindOneCategory(ctx context.Context, categoryID int64) (*Category, error) {
+	var category Category
+	err := m.db.WithContext(ctx).
+		Where("id = ?", categoryID).
+		First(&category).Error
+	return &category, err
+}
+
+func (m *VideoModel) MustFindOneCategory(ctx context.Context, categoryID int64) *Category {
+	ret, err := m.FindOneCategory(ctx, categoryID)
+	if err != nil {
+		panic(err)
+	}
+	return ret
 }
 
 func (m *VideoModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB {

@@ -61,7 +61,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		DB:            db,
 		BizRedis:      rds,
 		VideoModel:    video.NewVideoModel(db),
-		UserModel:     user.NewUserModel(db),
+		UserModel:     user.NewUserModel(db, rds),
 		FollowModel:   user.NewFollowModel(db),
 		FavoriteModel: favorite.NewFavoriteModel(db),
 		CommentModel:  comment.NewCommentModel(db),
