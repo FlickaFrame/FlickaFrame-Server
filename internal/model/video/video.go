@@ -33,6 +33,7 @@ type Video struct {
 	PublishTime   time.Time // 发布时间
 	PublishStatus int       `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
 	Visibility    int       `gorm:"default:0"` // 可见性 0:公开 1:私有
+	VideoDuration float32	 // 视频时长
 }
 
 func (v *Video) TableName() string {
