@@ -90,6 +90,7 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	if err != nil {
 		return nil, err
 	}
+	resp.ChildComments = make([]*types.ChildComment, 0, len(comment.ChildComments))
 	for _, childComment := range comment.ChildComments {
 		childCommentInfo, err := c.BuildChildComment(ctx, doerId, childComment)
 		if err != nil {
@@ -101,6 +102,7 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 }
 
 func (c *Convert) BuildParentCommentList(ctx context.Context, doerId int64, comments []*comment.ParentComment) (resp []*types.ParentComment, err error) {
+	resp = make([]*types.ParentComment, 0, len(comments))
 	for _, parentComment := range comments {
 		commentInfo, err := c.BuildParentComment(ctx, doerId, parentComment)
 		if err != nil {
