@@ -200,3 +200,11 @@ func (m *VideoModel) MustFindTagsByVideoId(ctx context.Context, videoId int64) [
 	}
 	return tags
 }
+
+func (m *VideoModel) IsAuthor(ctx context.Context, doerId int64, videoId int64) (bool, error) {
+	var cnt int64
+	err := m.db.WithContext(ctx).Model(&Video{}).
+		Where("author_id = ? and id = ?", doerId, videoId).
+		Count(&cnt).Error
+	return cnt > 0, err
+}

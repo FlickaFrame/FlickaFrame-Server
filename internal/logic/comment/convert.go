@@ -58,6 +58,10 @@ func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *
 			return nil, err
 		}
 	}
+	resp.ShowTags = []string{}
+	if ok, _ := c.svcCtx.VideoModel.IsAuthor(ctx, doerId, comment.VideoID); ok {
+		resp.ShowTags = append(resp.ShowTags, comment_model.IsAuthor)
+	}
 	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
 	//2. 构造回复评论信息
 	if comment.ReplyID != 0 {
@@ -67,7 +71,21 @@ func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *
 	return
 }
 
-// BuildParentComment 用于构建视频评论
+// BuildChildCommentList 用于构建二级评论列表
+func (c *Convert) BuildChildCommentList(ctx context.Context, doerId int64, comments []*comment.ChildComment) (resp []*types.ChildComment, err error) {
+	resp = make([]*types.ChildComment, 0, len(comments))
+	for i := range comments {
+		var item *types.ChildComment
+		item, err = c.BuildChildComment(ctx, doerId, comments[i])
+		if err != nil {
+			return
+		}
+		resp = append(resp, item)
+	}
+	return
+}
+
+// BuildParentComment 用于构建一级评论
 func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment *comment.ParentComment) (resp *types.ParentComment, err error) {
 	resp = &types.ParentComment{}
 	// 1.构造评论基本信息
@@ -76,6 +94,10 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 		return nil, err
 	}
 	resp.VideoID = strconv.FormatInt(comment.VideoID, 10)
+	resp.ShowTags = []string{}
+	if ok, _ := c.svcCtx.VideoModel.IsAuthor(ctx, doerId, comment.VideoID); ok {
+		resp.ShowTags = append(resp.ShowTags, comment_model.IsAuthor)
+	}
 	// 2. 构造一级评论的用户信息
 	if comment.User == nil {
 		comment.User, err = c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
@@ -86,17 +108,15 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	}
 	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
 	// 3.构造二级评论信息
-	err = comment.LoadChildComments(ctx, c.svcCtx.DB, comment_model.Option{})
+	comment.ChildComments, err = c.svcCtx.CommentModel.ListChildComment(ctx,
+		comment.ID,
+		comment_model.Option{})
 	if err != nil {
 		return nil, err
 	}
-	resp.ChildComments = make([]*types.ChildComment, 0, len(comment.ChildComments))
-	for _, childComment := range comment.ChildComments {
-		childCommentInfo, err := c.BuildChildComment(ctx, doerId, childComment)
-		if err != nil {
-			return nil, err
-		}
-		resp.ChildComments = append(resp.ChildComments, childCommentInfo)
+	resp.ChildComments, err = c.BuildChildCommentList(ctx, doerId, comment.ChildComments)
+	if err != nil {
+		return nil, err
 	}
 	return
 }

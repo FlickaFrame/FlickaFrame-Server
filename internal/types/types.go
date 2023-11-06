@@ -262,11 +262,6 @@ type ListCommentOption struct {
 	ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 }
 
-type CommonTag struct {
-	ID   string `json:"id" copier:"IDString"`
-	Name string `json:"name"`
-}
-
 type TargetComment struct {
 	ID       string         `json:"id" copier:"IDString"` // 回复的目标评论ID
 	UserInfo *UserBasicInfo `json:"userInfo"`             // 回复的目标评论用户信息
@@ -277,7 +272,7 @@ type CommentBasicInfo struct {
 	Content    string           `json:"content"`                                // 评论内容
 	AtUsers    []*UserBasicInfo `json:"atUsers"`                                // @用户列表(暂未实现)
 	UserInfo   *UserBasicInfo   `json:"userInfo"`                               // 发布评论的用户信息
-	ShowTags   []*CommonTag     `json:"showTags"`                               // 标签列表(暂未实现)
+	ShowTags   []string         `json:"showTags"`                               // 标签列表(暂未实现)
 	LikedCount int64            `json:"likedCount"`                             // 点赞数
 	Liked      bool             `json:"liked"`                                  // 当前用户是否已点赞
 	CreatedAt  int64            `json:"createTime" copier:"CreatedAtUnixMilli"` // 创建时间(毫秒时间戳)

@@ -10,6 +10,9 @@ import (
 )
 
 const DefaultLimit = 10
+const (
+	IsAuthor = "isAuthor"
+)
 
 type BasicComment struct {
 	base.Model
@@ -100,3 +103,7 @@ func (m *CommentModel) DeleteChildComment(ctx context.Context, id, doerId int64)
 	}
 	return nil
 }
+
+//func (m *CommentModel) ListCommentTag(ctx context.Context, id int64) {
+//
+//}
