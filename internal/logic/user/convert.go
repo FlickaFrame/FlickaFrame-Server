@@ -8,7 +8,6 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strconv"
 )
 
 type Convert struct {
@@ -31,7 +30,7 @@ func (c *Convert) BuildUserBasicInfo(ctx context.Context, user *user_model.User)
 	if err != nil {
 		logx.Info("copy user to userInfo fail: ", err)
 	}
-	userInfo.ID = strconv.FormatInt(user.ID, 10)
+	//userInfo.ID = strconv.FormatInt(user.ID, 10)
 	userInfo.AvatarUrl = c.getAccessUrl(ctx, user.AvatarUrl)
 	return &userInfo, nil
 }

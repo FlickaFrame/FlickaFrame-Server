@@ -2,7 +2,7 @@ package notice
 
 import (
 	"fmt"
-	"time"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 )
 
 const (
@@ -17,9 +17,7 @@ const (
 )
 
 type Notice struct {
-	ID        int64 `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	base.Model
 
 	Checked    bool   `json:"checked"`     // 是否已读
 	Content    string `json:"content"`     // 内容(标题)

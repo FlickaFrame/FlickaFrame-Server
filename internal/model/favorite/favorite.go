@@ -2,18 +2,15 @@ package favorite
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
-	"time"
 )
 
 // Favorite 点赞
 type Favorite struct {
-	ID        int64 `gorm:"primary_key"`
-	TargetID  int64 `gorm:"index:idx_target_user;not null"`
-	UserID    int64 `gorm:"index:idx_target_user;not null"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	base.Model
+	TargetID int64 `gorm:"index:idx_target_user;not null"`
+	UserID   int64 `gorm:"index:idx_target_user;not null"`
 }
 
 type Model struct {
@@ -38,7 +35,7 @@ func (m *Model) Delete(ctx context.Context, userId, targetId int64) error {
 
 func (m *Model) Create(ctx context.Context, userId, targetId int64) error {
 	result := Favorite{
-		ID:       snowflake.FavoriteIDNode.Generate().Int64(),
+		Model:    base.NewModel(),
 		TargetID: targetId,
 		UserID:   userId,
 	}

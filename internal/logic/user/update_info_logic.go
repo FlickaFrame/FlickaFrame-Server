@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"time"
@@ -29,12 +30,14 @@ func NewUpdateInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 func (l *UpdateInfoLogic) UpdateInfo(req *types.UpdateInfoReq) (resp *types.UserDetailInfoResp, err error) {
 	doerUserId := jwt.GetUidFromCtx(l.ctx)
 	doer := &user_model.User{
-		ID:        doerUserId,
-		UpdatedAt: time.Now(),
-		NickName:  req.NickName,
-		Age:       req.Age,
-		Gender:    req.Gender,
-		Slogan:    req.Slogan,
+		Model: base.Model{
+			ID:        doerUserId,
+			UpdatedAt: time.Now(),
+		},
+		NickName: req.NickName,
+		Age:      req.Age,
+		Gender:   req.Gender,
+		Slogan:   req.Slogan,
 	}
 	err = l.svcCtx.UserModel.Update(l.ctx, doer)
 	if err != nil {

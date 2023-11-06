@@ -2,10 +2,9 @@ package user
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
-	"time"
 )
 
 const (
@@ -20,9 +19,7 @@ const (
 )
 
 type User struct {
-	ID        int64 `gorm:"primaryKey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	base.Model
 
 	NickName  string `gorm:"type:varchar(32)"` // 昵称
 	AvatarUrl string // 头像地址
@@ -72,7 +69,7 @@ func NewUserModel(db *orm.DB) *UserModel {
 }
 
 func (m *UserModel) Insert(ctx context.Context, data *User) error {
-	data.ID = snowflake.UserIDNode.Generate().Int64()
+	data.Model = base.NewModel()
 	return m.db.WithContext(ctx).Create(data).Error
 }
 

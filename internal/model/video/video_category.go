@@ -2,13 +2,11 @@ package video
 
 import (
 	"context"
-	"time"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 )
 
 type Category struct {
-	ID        int64 `gorm:"primaryKey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	base.Model
 
 	Name   string   `gorm:"unique"`
 	Videos []*Video `gorm:"-"`

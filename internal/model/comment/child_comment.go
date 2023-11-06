@@ -2,8 +2,7 @@ package comment
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
-	"time"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 )
 
 // ChildComment 二级评论表(评论一级评论)
@@ -27,15 +26,13 @@ func (m *CommentModel) ListChildComment(ctx context.Context, parentId int64, opt
 }
 
 // CreateChildComment 创建视频的二级评论
-func (m *CommentModel) CreateChildComment(ctx context.Context, doer int64, videoId int64, content string, parentCommentId, targetCommentId int64) (*ChildComment, error) {
+func (m *CommentModel) CreateChildComment(ctx context.Context, doer, videoId int64, content string, parentCommentId, targetCommentId int64) (*ChildComment, error) {
 	comment := ChildComment{
 		BasicComment: BasicComment{
-			ID:        snowflake.CommentIDNode.Generate().Int64(),
-			Content:   content,
-			VideoID:   videoId,
-			UserID:    doer,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			Model:   base.NewModel(),
+			Content: content,
+			VideoID: videoId,
+			UserID:  doer,
 		},
 		ParentID: parentCommentId,
 	}

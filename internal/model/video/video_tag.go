@@ -1,13 +1,11 @@
 package video
 
 import (
-	"time"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 )
 
 type Tag struct {
-	ID        int64 `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	base.Model
 
 	Name string `gorm:"unique"`
 }
@@ -17,9 +15,7 @@ func (t *Tag) TableName() string {
 }
 
 type VideoTag struct {
-	ID        int64 `gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	base.Model
 
 	VideoID int64  `gorm:"index"`
 	Video   *Video `gorm:"-"`

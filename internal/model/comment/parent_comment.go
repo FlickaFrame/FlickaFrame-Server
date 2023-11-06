@@ -2,9 +2,8 @@ package comment
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
-	"time"
 )
 
 // ParentComment 一级评论表(直接评论视频)
@@ -39,12 +38,10 @@ func (m *CommentModel) ListParentComment(ctx context.Context, videoId int64, opt
 func (m *CommentModel) CreateParentComment(ctx context.Context, doer, videoId int64, content string) (*ParentComment, error) {
 	comment := ParentComment{
 		BasicComment: BasicComment{
-			ID:        snowflake.CommentIDNode.Generate().Int64(),
-			Content:   content,
-			VideoID:   videoId,
-			UserID:    doer,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			Model:   base.NewModel(),
+			Content: content,
+			VideoID: videoId,
+			UserID:  doer,
 		},
 	}
 	return &comment, m.db.WithContext(ctx).

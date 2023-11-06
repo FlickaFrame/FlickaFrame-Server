@@ -2,22 +2,20 @@ package comment
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
-	"time"
 )
 
 const DefaultLimit = 10
 
 type BasicComment struct {
-	ID        int64            `gorm:"primary_key"`
-	VideoID   int64            `gorm:"column:video_id;not null;comment:视频id"`
-	Content   string           `gorm:"column:content;type:varchar(1000);not null;comment:内容"`
-	UserID    int64            `gorm:"column:user_id;not null;comment:评论人id"`
-	User      *user_model.User `gorm:"-"` // 评论人信息
-	CreatedAt time.Time        `gorm:"column:created_at;default:null;comment:创建时间"`
-	UpdatedAt time.Time        `gorm:"column:updated_time;default:null;comment:更新时间"`
+	base.Model
+	VideoID int64            `gorm:"column:video_id;not null;comment:视频id"`
+	Content string           `gorm:"column:content;type:varchar(1000);not null;comment:内容"`
+	UserID  int64            `gorm:"column:user_id;not null;comment:评论人id"`
+	User    *user_model.User `gorm:"-"` // 评论人信息
 }
 
 type CommentModel struct {
@@ -30,7 +28,7 @@ func NewCommentModel(db *orm.DB) *CommentModel {
 
 type Option struct {
 	VideoID     int64 // 视频ID
-	ParentId    int   // 父评论ID
+	ParentId    int64 // 父评论ID
 	Limit       int   // 单次查询个数
 	LimitOffset int   // 查询偏移量
 	OrderBy     int   // 排序方式(0:按时间倒序,1:按热度倒序)

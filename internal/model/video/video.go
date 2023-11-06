@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
@@ -12,12 +13,8 @@ import (
 const DefaultLimit = 10
 
 type Video struct {
-	ID        int64 `gorm:"primaryKey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-
+	base.Model
 	Title    string // 视频标题
-	ETag     string
 	PlayUrl  string // 播放地址
 	ThumbUrl string // 封面地址
 
