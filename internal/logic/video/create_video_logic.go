@@ -42,6 +42,7 @@ func (l *CreateVideoLogic) CreateVideo(req *types.CreateVideoReq) (resp *types.C
 		PublishTime:   time.Unix(req.PublishTime/1000, req.PublishTime%1000), // TODO
 		PublishStatus: publishStatus,
 		Visibility:    req.Visibility,
+		VideoDuration: req.VideoDuration,
 	}
 	video.CategoryID, _ = strconv.ParseInt(req.CategoryID, 10, 64)
 	// 创建视频Tags
