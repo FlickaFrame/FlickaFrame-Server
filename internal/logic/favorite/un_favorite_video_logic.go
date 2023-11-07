@@ -27,8 +27,8 @@ func NewUnFavoriteVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 
 func (l *UnFavoriteVideoLogic) UnFavoriteVideo(req *types.FavoriteReq) (resp *types.FavoriteResp, err error) {
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	err = l.svcCtx.FavoriteModel.Delete(l.ctx,
-		util.MustString2Int64(req.TargetId),
-		doerId)
+	err = l.svcCtx.FavoriteModel.DeleteVideoFavorite(l.ctx,
+		doerId,
+		util.MustString2Int64(req.TargetId))
 	return
 }

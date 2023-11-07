@@ -2,12 +2,11 @@ package favorite
 
 import (
 	"context"
-	favorite_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
-
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,9 +26,20 @@ func NewFavoriteVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Fav
 }
 
 func (l *FavoriteVideoLogic) FavoriteVideo(req *types.FavoriteReq) (resp *types.FavoriteResp, err error) {
+	resp = &types.FavoriteResp{IsFavorite: true}
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	err = l.svcCtx.FavoriteModel.Create(l.ctx,
-		util.MustString2Int64(req.TargetId),
-		doerId, favorite_model.VideoFavoriteType)
+	// 检查视频是否存在
+	_, err = l.svcCtx.VideoModel.FindOne(l.ctx, util.MustString2Int64(req.TargetId))
+	if err != nil {
+		logx.Info(err)
+		return nil, code.VideoNotExistError
+	}
+	err = l.svcCtx.FavoriteModel.CreateVideoFavorite(l.ctx,
+		doerId,
+		util.MustString2Int64(req.TargetId))
+	if err != nil {
+		logx.Info(err)
+		return nil, code.DuplicateFavoriteErr
+	}
 	return
 }

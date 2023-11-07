@@ -19,7 +19,7 @@ service main {
 
 	@doc "UnFavorite a Video"
 	@handler UnFavoriteComment
-	delete /unfavorite(FavoriteReq) returns (FavoriteResp)
+	delete /favorite/video/:targetId(FavoriteReq) returns (FavoriteResp)
 
 	@doc "Check Video Favorite Status"
 	@handler CheckVideoFavorite
@@ -29,9 +29,9 @@ service main {
 	@handler FavoriteComment
 	put /favorite/comment/:targetId (FavoriteReq) returns (FavoriteResp)
 
-	@doc "UnFavorite a Video"
+	@doc "UnFavorite a Comment"
 	@handler UnFavoriteVideo
-	delete /unfavorite/comment/:targetId(FavoriteReq) returns (FavoriteResp)
+	delete /favorite/comment/:targetId(FavoriteReq) returns (FavoriteResp)
 
 	@doc "Check comment Favorite Status"
 	@handler CheckCommentFavorite
@@ -43,5 +43,6 @@ type (
 		TargetId string `path:"targetId" copier:"IDString"`
 	}
 	FavoriteResp {
+		IsFavorite bool `json:"isFavorite"`
 	}
 )
