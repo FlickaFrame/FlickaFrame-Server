@@ -66,11 +66,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.CurrentUserInfoHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
-				Path:    "/user/avatar",
-				Handler: user.UpdateAvatarHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodPut,
 				Path:    "/user/info",
 				Handler: user.UpdateInfoHandler(serverCtx),

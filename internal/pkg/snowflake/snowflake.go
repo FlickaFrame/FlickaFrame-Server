@@ -3,7 +3,8 @@ package snowflake
 import "github.com/bwmarrin/snowflake"
 
 const (
-	userIDBits = iota
+	centerIDBits = iota
+	userIDBits   = iota
 	videoIDBits
 	commentIDBits
 	tagIDBits
@@ -15,6 +16,7 @@ type IdGenerator interface {
 }
 
 var (
+	CenterIDNode, _   = snowflake.NewNode(centerIDBits)
 	UserIDNode, _     = snowflake.NewNode(userIDBits)
 	VideoIDNode, _    = snowflake.NewNode(videoIDBits)
 	CommentIDNode, _  = snowflake.NewNode(commentIDBits)

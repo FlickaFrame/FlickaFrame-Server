@@ -123,12 +123,6 @@ func (m *UserModel) FindOneByDB(ctx context.Context, id int64) (*User, error) {
 	return &result, err
 }
 
-//func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
-//	var result User
-//	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
-//	return &result, err
-//}
-
 func (m *UserModel) MustFindOne(ctx context.Context, id int64) *User {
 	user, _ := m.FindOne(ctx, id)
 	return user
@@ -140,8 +134,11 @@ func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, er
 	return &result, err
 }
 
-func (m *UserModel) Update(ctx context.Context, user *User) error {
-	return m.db.WithContext(ctx).Model(user).Updates(user).Error
+func (m *UserModel) Update(ctx context.Context, user *User, doerId int64) error {
+	return m.db.WithContext(ctx).
+		Where("id = ?", doerId).
+		Model(user).
+		Updates(user).Error
 }
 
 type ListOptions struct {

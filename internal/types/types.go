@@ -43,13 +43,6 @@ type UserDetailInfoResp struct {
 	UserInteractionInfo
 }
 
-type UpdateAvatarReq struct {
-	Image string `json:"image" binding:"Required"`
-}
-
-type UpdateAvatarResp struct {
-}
-
 type RankingReq struct {
 	ListUserOption
 }
@@ -59,11 +52,12 @@ type RankingResp struct {
 }
 
 type UpdateInfoReq struct {
-	NickName      string `json:"nickName,optional"`      // 用户名
-	Slogan        string `json:"slogan,optional"`        // 个性签名
-	Gender        int    `json:"gender,optional"`        // 性别
-	Age           int    `json:"age,optional"`           // 年龄
-	BackgroundUrl string `json:"backgroundUrl,optional"` // 用户主页背景图
+	NickName      string `json:"nickName"`      // 用户名
+	Slogan        string `json:"slogan"`        // 个性签名
+	Gender        int    `json:"gender"`        // 性别
+	Age           int    `json:"age"`           // 年龄
+	AvatarUrl     string `json:"avatarUrl"`     // 头像
+	BackgroundUrl string `json:"backgroundUrl"` // 用户主页背景图
 }
 
 type UpdatePasswordReq struct {

@@ -34,7 +34,7 @@ func (c Model) UpdatedAtUnixMilli() int64 {
 
 func NewModel() Model {
 	return Model{
-		ID:        snowflake.CommentIDNode.Generate().Int64(),
+		ID:        snowflake.CenterIDNode.Generate().Int64(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}

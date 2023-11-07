@@ -2,13 +2,11 @@ package user
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
-	"time"
-
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,18 +26,13 @@ func NewUpdateInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 }
 
 func (l *UpdateInfoLogic) UpdateInfo(req *types.UpdateInfoReq) (resp *types.UserDetailInfoResp, err error) {
-	doerUserId := jwt.GetUidFromCtx(l.ctx)
-	doer := &user_model.User{
-		Model: base.Model{
-			ID:        doerUserId,
-			UpdatedAt: time.Now(),
-		},
-		NickName: req.NickName,
-		Age:      req.Age,
-		Gender:   req.Gender,
-		Slogan:   req.Slogan,
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	doer := &user_model.User{}
+	err = copier.Copy(&doer, req)
+	if err != nil {
+		return nil, err
 	}
-	err = l.svcCtx.UserModel.Update(l.ctx, doer)
+	err = l.svcCtx.UserModel.Update(l.ctx, doer, doerId)
 	if err != nil {
 		return nil, err
 	}
