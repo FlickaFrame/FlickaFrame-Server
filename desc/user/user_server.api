@@ -6,6 +6,8 @@ info(
 	version: "v1"
 )
 
+import "user_dto.api"
+
 //need login
 @server(
 	prefix: api/v1
@@ -91,34 +93,6 @@ service main {
 	@handler Ranking
 	get /user/ranking (RankingReq) returns (RankingResp)
 }
-
-type (
-	UserBasicInfo {
-		ID        string `json:"userId" copier:"IDString"` // 用户ID
-		NickName  string `json:"nickName"`                 // 用户名
-		AvatarUrl string `json:"avatarUrl"`                // 头像
-		Slogan    string `json:"slogan"`                   // 个性签名
-		Gender    int64  `json:"gender"`                   // 性别
-		Age       int    `json:"age"`
-	}
-	UserStatisticalInfo { //用户统计信息
-		FollowingCount int `json:"followingCount"` // 关注数
-		FollowerCount  int `json:"followerCount"`  // 粉丝数
-		LikeCount      int `json:"likeCount"`      // 获赞数量
-
-		PublishedVideoCount   int `json:"publishVideoCount"`     // 发布作品数量
-		LikeVideoCount        int `json:"likeVideoCount"`        // 点赞作品数量
-		CollectionsVideoCount int `json:"collectionsVideoCount"` // 收藏作品数量
-	}
-	UserInteractionInfo {
-		IsFollow bool `json:"isFollow"` // 是否关注
-	}
-	ListUserOption {
-		PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
-		Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
-		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
-	}
-)
 
 type (
 	RegisterReq {

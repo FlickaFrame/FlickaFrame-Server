@@ -23,7 +23,7 @@ service main {
 
 	@doc "Check Favorite Status"
 	@handler CheckFavorite
-	get /favorite(CheckFavoriteReq)returns(CheckFavoriteResp)
+	get /favorite/:targetId (CheckFavoriteReq)returns(CheckFavoriteResp)
 
 	@doc "List Favorite Item"
 	@handler ListFavorite
