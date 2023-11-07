@@ -155,7 +155,6 @@ type VideoSearchReq struct {
 
 type VideoSearchResp struct {
 	Videos             []*FeedVideoItem `json:"list"`               // 视频列表
-	Hits               interface{}      `json:"hits"`               // 搜索结果
 	Query              string           `json:"query"`              // 搜索关键字
 	ProcessingTimeMs   int64            `json:"processingTimeMs"`   // 搜索耗时(毫秒)
 	Offset             int64            `json:"offset"`             // 偏移量

@@ -84,13 +84,13 @@ type (
 		Limit   int64  `json:"limit,optional"`  // 请求数量
 	}
 	VideoSearchResp {
-		Videos             []*FeedVideoItem `json:"list"`               // 视频列表
-		Hits               interface{}      `json:"hits"`               // 搜索结果
-		Query              string           `json:"query"`              // 搜索关键字
-		ProcessingTimeMs   int64            `json:"processingTimeMs"`   // 搜索耗时(毫秒)
-		Offset             int64            `json:"offset"`             // 偏移量
-		Limit              int64            `json:"limit"`              // 请求数量
-		EstimatedTotalHits int64            `json:"estimatedTotalHits"` // 搜索结果总数
+		Videos []*FeedVideoItem `json:"list"` // 视频列表
+		// Hits               interface{}      `json:"hits"`               // 搜索结果
+		Query              string `json:"query"`              // 搜索关键字
+		ProcessingTimeMs   int64  `json:"processingTimeMs"`   // 搜索耗时(毫秒)
+		Offset             int64  `json:"offset"`             // 偏移量
+		Limit              int64  `json:"limit"`              // 请求数量
+		EstimatedTotalHits int64  `json:"estimatedTotalHits"` // 搜索结果总数
 	}
 )
 
