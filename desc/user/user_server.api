@@ -64,7 +64,7 @@ service main{
 
 	@doc "Update User Info"
 	@handler UpdateInfo
-	post /user/info (UpdateInfoReq) returns (UpdateInfoReq)
+	put /user/info (UpdateInfoReq) returns (UpdateInfoReq)
 
 	@doc "Update User Password" // 修改用户密码
 	@handler UpdatePassword
@@ -157,10 +157,11 @@ type (
 
 type (
 	UpdateInfoReq {
-		NickName string `json:"nickName,optional"` // 用户名
-		Slogan   string `json:"slogan,optional"`   // 个性签名
-		Gender   int    `json:"gender,optional"`   // 性别
-		Age      int    `json:"age,optional"`
+		NickName      string `json:"nickName,optional"`      // 用户名
+		Slogan        string `json:"slogan,optional"`        // 个性签名
+		Gender        int    `json:"gender,optional"`        // 性别
+		Age           int    `json:"age,optional"`           // 年龄
+		BackgroundUrl string `json:"backgroundUrl,optional"` // 用户主页背景图
 	}
 	// UserDetailInfoResp
 )

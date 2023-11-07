@@ -31,6 +31,7 @@ func (c *Convert) BuildUserBasicInfo(ctx context.Context, user *user_model.User)
 		logx.Info("copy user to userInfo fail: ", err)
 	}
 	userInfo.AvatarUrl = c.getAccessUrl(ctx, user.AvatarUrl)
+	userInfo.BackgroundUrl = c.getAccessUrl(ctx, userInfo.BackgroundUrl)
 	return &userInfo, nil
 }
 

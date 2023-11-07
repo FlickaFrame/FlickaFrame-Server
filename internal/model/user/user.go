@@ -29,14 +29,15 @@ var (
 type User struct {
 	base.Model
 
-	NickName  string `gorm:"type:varchar(32)"` // 昵称
-	AvatarUrl string // 头像地址
-	Age       int    // 年龄
-	Gender    int    // 性别
-	Password  string // 密码
-	Phone     string `gorm:"type:varchar(100);index:idx_phone,unique"` // 手机号
-	Slogan    string // 个人简介
-	TikTokID  string `gorm:"type:varchar(100);index:idx_tiktok"` // 抖音ID
+	NickName      string `gorm:"type:varchar(32)"` // 昵称
+	AvatarUrl     string // 头像地址
+	Age           int    // 年龄
+	Gender        int    // 性别
+	Password      string // 密码
+	Phone         string `gorm:"type:varchar(100);index:idx_phone,unique"` // 手机号
+	BackgroundUrl string // 背景图
+	Slogan        string // 个人简介
+	TikTokID      string `gorm:"type:varchar(100);index:idx_tiktok"` // 抖音ID
 
 	FollowingCount int
 	FollowerCount  int

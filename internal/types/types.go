@@ -59,10 +59,11 @@ type RankingResp struct {
 }
 
 type UpdateInfoReq struct {
-	NickName string `json:"nickName,optional"` // 用户名
-	Slogan   string `json:"slogan,optional"`   // 个性签名
-	Gender   int    `json:"gender,optional"`   // 性别
-	Age      int    `json:"age,optional"`
+	NickName      string `json:"nickName,optional"`      // 用户名
+	Slogan        string `json:"slogan,optional"`        // 个性签名
+	Gender        int    `json:"gender,optional"`        // 性别
+	Age           int    `json:"age,optional"`           // 年龄
+	BackgroundUrl string `json:"backgroundUrl,optional"` // 用户主页背景图
 }
 
 type UpdatePasswordReq struct {
@@ -100,12 +101,13 @@ type ListFollowUserResp struct {
 }
 
 type UserBasicInfo struct {
-	ID        string `json:"userId" copier:"IDString"` // 用户ID
-	NickName  string `json:"nickName"`                 // 用户名
-	AvatarUrl string `json:"avatarUrl"`                // 头像
-	Slogan    string `json:"slogan"`                   // 个性签名
-	Gender    int64  `json:"gender"`                   // 性别
-	Age       int    `json:"age"`
+	ID            string `json:"userId" copier:"IDString"` // 用户ID
+	NickName      string `json:"nickName"`                 // 用户名
+	AvatarUrl     string `json:"avatarUrl"`                // 头像
+	Slogan        string `json:"slogan"`                   // 个性签名
+	Gender        int64  `json:"gender"`                   // 性别
+	Age           int    `json:"age"`
+	BackgroundUrl string `json:"backgroundUrl,optional"` //用户主页背景图
 }
 
 type UserStatisticalInfo struct {

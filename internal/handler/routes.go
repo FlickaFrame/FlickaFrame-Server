@@ -71,7 +71,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.UpdateAvatarHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
+				Method:  http.MethodPut,
 				Path:    "/user/info",
 				Handler: user.UpdateInfoHandler(serverCtx),
 			},
@@ -221,7 +221,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/favorite",
+				Path:    "/favorite/:targetId",
 				Handler: favorite.CheckFavoriteHandler(serverCtx),
 			},
 			{
