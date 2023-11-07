@@ -6,4 +6,5 @@ import (
 	"comment/comment_server.api"
 	"favorite/favorite_server.api"
 	"oss/oss_server.api"
+	"notice/notice_server.api"
 )
