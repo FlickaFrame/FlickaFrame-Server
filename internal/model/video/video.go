@@ -13,28 +13,27 @@ import (
 
 const DefaultLimit = 10
 
+var cacheFlickaFrameVideoIdPrefix = "cache:flickaFrame:video:id:"
+
 type Video struct {
 	base.Model
-	Title    string // 视频标题
-	PlayUrl  string // 播放地址
-	ThumbUrl string // 封面地址
-
-	FavoriteCount int `gorm:"default:0"` // 收藏数量
-	CommentCount  int `gorm:"default:0"` // 评论数量
-
-	AuthorID int64      `gorm:"index"` // 作者ID
-	Author   *user.User `gorm:"-"`     // 作者
-
-	CategoryID int64     `gorm:"index"` // 分类ID
-	Category   *Category `gorm:"-"`     // 分类 `gorm:"-"`
-
-	Tags []*Tag `gorm:"-"`
-
-	Description   string    // 视频描述
-	PublishTime   time.Time // 发布时间
-	PublishStatus int       `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
-	Visibility    int       `gorm:"default:0"` // 可见性 0:公开 1:私有
-	VideoDuration float32   // 视频时长
+	Title         string     `gorm:"column:title;comment:视频标题"`
+	PlayUrl       string     `gorm:"column:play_url;comment:播放地址"`
+	ThumbUrl      string     `gorm:"column:thumb_url"`
+	FavoriteCount int        `gorm:"default:0"` // 收藏数量
+	CommentCount  int        `gorm:"default:0"` // 评论数量
+	AuthorID      int64      `gorm:"index"`     // 作者ID
+	Author        *user.User `gorm:"-"`         // 作者
+	CategoryID    int64      `gorm:"index"`     // 分类ID
+	Category      *Category  `gorm:"-"`         // 分类 `gorm:"-"`
+	Tags          []*Tag     `gorm:"-"`
+	Description   string     // 视频描述
+	PublishTime   time.Time  // 发布时间
+	PublishStatus int        `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
+	Visibility    int        `gorm:"default:0"` // 可见性 0:公开 1:私有
+	VideoDuration float32    // 视频时长
+	VideoHeight   float32    // 视频高度
+	VideoWidth    float32    // 视频宽度
 }
 
 func (v *Video) TableName() string {

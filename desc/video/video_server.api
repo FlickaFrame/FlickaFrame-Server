@@ -80,6 +80,8 @@ type (
 		Category      *Category      `json:"category"`             // 视频分类
 		Tags          []*Tag         `json:"tags"`                 // 视频标签
 		VideoUserInfo *VideoUserInfo `json:"author"`               // 视频作者信息
+		VideoHeight   float32        `json:"videoHeight"`          // 视频高度
+		VideoWidth    float32        `json:"videoWidth"`           //视频宽度
 	}
 	VideoManageInfo {
 		PublishTime   string `json:"publishTime"`   // 视频发布时间
@@ -150,6 +152,8 @@ type (
 		VideoKey      string   `json:"videoKey,optional"`    // 视频上传key
 		Visibility    int      `json:"visibility"`           // 视频可见性(1:公开,2:私密)
 		VideoDuration float32  `json:"videoDuration"`        // 视频时长(秒)
+		VideoHeight   float32  `json:"videoDuration"`        // 视频高度(像素)
+		VideoWidth    float32  `json:"videoDuration"`        // 视频宽度(像素)
 	}
 	CreateVideoResp {
 	}
@@ -162,9 +166,9 @@ type (
 
 type (
 	FollowingReq {
-		PageSize int  `form:"pageSize"` // 分页大小,默认为 10
-		Page     int  `form:"page"`     // 当前页码,默认为 1
-		ListAll  bool `form:"listAll"`  // 是否列出所有,默认为 false
+		PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
+		Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
+		ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 	}
 	FollowingResp {
 		VideoList   []*VideoBasicInfo `json:"videoList"`

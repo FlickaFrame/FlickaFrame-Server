@@ -2,7 +2,7 @@ package video
 
 import (
 	"context"
-	"strconv"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"time"
 
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
@@ -43,8 +43,11 @@ func (l *CreateVideoLogic) CreateVideo(req *types.CreateVideoReq) (resp *types.C
 		PublishStatus: publishStatus,
 		Visibility:    req.Visibility,
 		VideoDuration: req.VideoDuration,
+		VideoHeight:   req.VideoHeight,
+		VideoWidth:    req.VideoWidth,
+		CategoryID:    util.MustString2Int64(req.CategoryID),
 	}
-	video.CategoryID, _ = strconv.ParseInt(req.CategoryID, 10, 64)
+
 	// 创建视频Tags
 	for _, tag := range req.Tags {
 		video.Tags = append(video.Tags, &video_model.Tag{
