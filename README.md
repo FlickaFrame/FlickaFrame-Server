@@ -52,18 +52,6 @@
 - 项目管理: makefile
 - 前后端协同: goctl-swagger + apifox
 
-### MYSQL
-
-```bash
-    docker run -itd \
-    --restart=always \ 
-    --name mysql-qiniuyun \
-    -v $(pwd)/data/mysql:/var/lib/mysql \
-    -p 3306:3306 \
-    -e MYSQL_ROOT_PASSWORD=$(mysql_root_password) \
-    mysql
-```
-
 ## API Doc
 
 ```shell

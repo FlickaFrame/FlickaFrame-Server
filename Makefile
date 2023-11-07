@@ -4,6 +4,7 @@ GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/cmd/golangci-lint@v1.
 .PHONY: install
 install: ## install
 	GOPROXY=https://goproxy.cn/,direct ${GO} install github.com/zeromicro/go-zero/tools/goctl@latest
+	GOPROXY=https://goproxy.cn/,direct ${GO} install .
 
 .PHONY: tidy
 tidy: ## go mod tidy
