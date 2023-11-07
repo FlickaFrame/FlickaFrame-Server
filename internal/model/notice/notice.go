@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
+	"gorm.io/gorm"
 )
 
 const (
@@ -18,6 +19,8 @@ const (
 	NoticeTypeAt                 // @消息
 	NoticeTypeSystem             // 系统消息
 )
+
+const DefaultLimit = 10
 
 type Notice struct {
 	base.Model
@@ -47,6 +50,39 @@ func NewNoticeModel(db *orm.DB) *NoticeModel {
 func (m *NoticeModel) Insert(ctx context.Context, data *Notice) error {
 	data.Model = base.NewModel()
 	return m.db.WithContext(ctx).Create(data).Error
+}
+
+// ListOption 查找选项
+type ListOption struct {
+	AuthorID   int64     // 作者ID
+	LatestTime time.Time // 最新时间(分页)
+	Limit      int       // 限制数量(分页)
+	QueryAll   bool      // 是否查询所有(分页)
+	NoticeType int     	 // 通知类型
+}
+
+func (m *NoticeModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB {
+	session := m.db.WithContext(ctx)
+	session = session.Where("to_user_id = ?", opts.AuthorID)
+	// 根据通知类型
+	if opts.NoticeType != 0 {
+		session = session.Where("notice_type = ?", opts.NoticeType)
+	}
+	// 分页
+	if opts.Limit == 0 {
+		opts.Limit = DefaultLimit
+	}
+	if !opts.QueryAll {
+		session = session.Where("notice_time <= ?", opts.LatestTime)
+		session = session.Limit(opts.Limit)
+	}
+	return session.Order("notice_time desc")
+}
+
+// List 通过时间点来获取比该时间点早的十个通知
+func (m *NoticeModel) List(ctx context.Context, opts ListOption) ([]*Notice, error) {
+	var result []*Notice
+	return result, m.applyOption(ctx, opts).Find(&result).Error
 }
 
 type FollowNotice struct { // 关注消息
