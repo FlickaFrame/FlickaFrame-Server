@@ -58,14 +58,14 @@ type ListOption struct {
 	LatestTime time.Time // 最新时间(分页)
 	Limit      int       // 限制数量(分页)
 	QueryAll   bool      // 是否查询所有(分页)
-	NoticeType int64     	 // 通知类型
+	NoticeType string    // 通知类型
 }
 
 func (m *NoticeModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB {
 	session := m.db.WithContext(ctx)
 	session = session.Where("to_user_id = ?", opts.AuthorID)
 	// 根据通知类型
-	if opts.NoticeType != 0 {
+	if opts.NoticeType != "" {
 		session = session.Where("notice_type = ?", opts.NoticeType)
 	}
 	// 分页
