@@ -24,6 +24,7 @@ const (
 var (
 	cacheUserIdPrefix    = "user:"       // 用户缓存主键前缀
 	cacheUserPhonePrefix = "user:phone:" // 用户缓存电话前缀
+	UserFavoritePrefix   = "user:favorite:"
 )
 
 type User struct {
@@ -109,7 +110,7 @@ func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = m.CacheRedis.SetexCtx(ctx, key, string(raw), 60*30)
+		err = m.CacheRedis.SetexCtx(ctx, key, string(raw), 60)
 		if err != nil {
 			return nil, err
 		}
@@ -135,10 +136,15 @@ func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, er
 }
 
 func (m *UserModel) Update(ctx context.Context, user *User, doerId int64) error {
-	return m.db.WithContext(ctx).
+	err := m.db.WithContext(ctx).
 		Where("id = ?", doerId).
 		Model(user).
 		Updates(user).Error
+	if err == nil {
+		key := fmt.Sprintf("%s%d", cacheUserIdPrefix, doerId)
+		_, err = m.CacheRedis.DelCtx(ctx, key)
+	}
+	return err
 }
 
 type ListOptions struct {
