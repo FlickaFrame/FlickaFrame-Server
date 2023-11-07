@@ -26,6 +26,6 @@ func NewDeleteVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 
 func (l *DeleteVideoCommentLogic) DeleteVideoComment(req *types.DeleteVideoCommentReq) (resp *types.DeleteVideoCommentResp, err error) {
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	err = l.svcCtx.CommentModel.DeleteChildCommentByDoer(l.ctx, util.MustString2Int64(req.CommentId), doerId)
+	err = l.svcCtx.CommentModel.DeleteCommentByDoer(l.ctx, util.MustString2Int64(req.CommentId), doerId)
 	return nil, err
 }

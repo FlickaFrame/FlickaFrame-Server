@@ -118,9 +118,12 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	if err != nil {
 		return nil, err
 	}
+	opts := &comment_model.CommentOption{}
+	opts.Limit = 3 // TODO : 默认显示3条子评论
 	comment.ChildComments, err = c.svcCtx.CommentModel.FindChildCommentByCommentId(ctx,
 		comment.ID,
-		comment_model.Option{})
+		opts,
+	)
 	if err != nil {
 		return nil, err
 	}

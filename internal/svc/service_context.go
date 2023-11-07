@@ -11,22 +11,22 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/qiniu/go-sdk/v7/storage"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-queue/kq"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
 type ServiceContext struct {
-	Config        config.Config
-	Validate      *validator.Validate    // 入参校验器
-	UploadManager *storage.UploadManager // 七牛云上传管理器
-	DB            *orm.DB                // 数据库连接
-	BizRedis      *redis.Redis           // 业务redis连接
-	VideoModel    *video.VideoModel
-	UserModel     *user.UserModel
-	FollowModel   *user.FollowModel
-	FavoriteModel *favorite.Model
-	CommentModel  *comment.CommentModel
-	Indexer       *meilisearch.Client
+	Config         config.Config
+	Validate       *validator.Validate    // 入参校验器
+	UploadManager  *storage.UploadManager // 七牛云上传管理器
+	DB             *orm.DB                // 数据库连接
+	BizRedis       *redis.Redis           // 业务redis连接
+	VideoModel     *video.VideoModel
+	UserModel      *user.UserModel
+	FollowModel    *user.FollowModel
+	FavoriteModel  *favorite.Model
+	CommentModel   *comment.Model
+	Indexer        *meilisearch.Client
 	KqPusherClient *kq.Pusher
 }
 
@@ -60,14 +60,14 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			UseHTTPS:      true,
 			UseCdnDomains: false,
 		}),
-		DB:            db,
-		BizRedis:      rds,
-		VideoModel:    video.NewVideoModel(db),
-		UserModel:     user.NewUserModel(db, rds),
-		FollowModel:   user.NewFollowModel(db),
-		FavoriteModel: favorite.NewFavoriteModel(db),
-		CommentModel:  comment.NewCommentModel(db),
-		Indexer:       indexer,
+		DB:             db,
+		BizRedis:       rds,
+		VideoModel:     video.NewVideoModel(db),
+		UserModel:      user.NewUserModel(db, rds),
+		FollowModel:    user.NewFollowModel(db),
+		FavoriteModel:  favorite.NewFavoriteModel(db),
+		CommentModel:   comment.NewCommentModel(db),
+		Indexer:        indexer,
 		KqPusherClient: kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
 	}
 }
