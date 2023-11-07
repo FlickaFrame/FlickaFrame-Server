@@ -6,6 +6,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/jinzhu/copier"
 
@@ -29,7 +30,7 @@ func NewListVideoCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 func (l *ListVideoCommentsLogic) ListVideoComments(req *types.ListVideoCommentsReq) (resp *types.ListVideoCommentsResp, err error) {
 	resp = &types.ListVideoCommentsResp{}
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	opts := &comment_model.CommentOption{}
+	opts := &comment_model.CommentOption{Paginator: &orm.ListOptions{}}
 	err = copier.Copy(&opts, req)
 	if err != nil {
 		return nil, err

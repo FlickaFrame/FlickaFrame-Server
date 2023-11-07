@@ -7,6 +7,7 @@ import (
 	comment_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/comment"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
@@ -118,7 +119,7 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	if err != nil {
 		return nil, err
 	}
-	opts := &comment_model.CommentOption{}
+	opts := &comment_model.CommentOption{Paginator: &orm.ListOptions{}}
 	opts.Limit = 3 // TODO : 默认显示3条子评论
 	comment.ChildComments, err = c.svcCtx.CommentModel.FindChildCommentByCommentId(ctx,
 		comment.ID,
