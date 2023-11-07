@@ -378,3 +378,24 @@ type CreateUpTokenResp struct {
 	UpToken string `json:"upToken"` // 上传凭证
 	Expires int64  `json:"expires"` // 上传凭证过期时间(秒)
 }
+
+type NoticeItem struct {
+	NoticeId          int64  `json:"noticeId"`          // 通知ID
+	NoticeType        string `json:"noticeType"`        // 通知类型
+	NoticeTime        int64  `json:"noticeTime"`        // 通知时间
+	FromUserID        string `json:"fromUserId"`        // 用户ID
+	FromUserNickName  string `json:"fromUserNickName"`  // 用户名
+	FromUserAvatarUrl string `json:"fromUserAvatarUrl"` // 头像
+}
+
+type FollowNoticeReq struct {
+	Cursor     int64  `form:"cursor,default=0"` // 最新通知时间(毫秒时间戳)
+	Limit      int    `form:"limit,default=10"` // 请求数量
+	NoticeType string `form:"noticeType"`       // 通知类型
+}
+
+type FollowNoticeResp struct {
+	Next  string        `json:"next"`  // 请求游标
+	List  []*NoticeItem `json:"list"`  // 通知列表
+	IsEnd bool          `json:"isEnd"` // 是否已到最后一页
+}

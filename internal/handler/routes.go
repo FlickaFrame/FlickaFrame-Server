@@ -6,6 +6,7 @@ import (
 
 	comment "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/comment"
 	favorite "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/favorite"
+	notice "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/notice"
 	oss "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/oss"
 	user "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/user"
 	video "github.com/FlickaFrame/FlickaFrame-Server/internal/handler/video"
@@ -256,6 +257,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/oss/uptoken",
 				Handler: oss.CreateUpTokenHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/notice/type",
+				Handler: notice.GetNoticeHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
