@@ -7,6 +7,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	notice_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
+	"github.com/jinzhu/copier"
 	"strconv"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -50,6 +51,11 @@ func (l *GetNoticeLogic) GetNotice(req *types.FollowNoticeReq) (resp *types.Foll
 		List: make([]*types.NoticeItem, len(notices)),
 		Next: strconv.FormatInt(nextTime, 10),
 	}
-	
+	err = copier.Copy(&resp.List, &notices)
+	for i := 0; i < len(notices); i++ {
+		resp.List[i].NoticeTime = notices[i].NoticeTime.UnixMilli()
+		// TODO
+	}
+	resp.IsEnd = len(resp.List) < req.Limit
 	return
 }
