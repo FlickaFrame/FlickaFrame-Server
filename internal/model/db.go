@@ -17,8 +17,7 @@ func Migrate(db *gorm.DB) error {
 		&video_model.VideoTag{},
 		&video_model.Category{},
 		&user_model.Follow{},
-		&comment_model.ParentComment{},
-		&comment_model.ChildComment{},
+		&comment_model.Comment{},
 		&favorite_model.Favorite{},
 		&notice.Notice{},
 	)

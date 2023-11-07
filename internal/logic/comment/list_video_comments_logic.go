@@ -28,7 +28,7 @@ func NewListVideoCommentsLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 func (l *ListVideoCommentsLogic) ListVideoComments(req *types.ListVideoCommentsReq) (resp *types.ListVideoCommentsResp, err error) {
 	resp = &types.ListVideoCommentsResp{}
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	comments, err := l.svcCtx.CommentModel.ListParentComment(l.ctx, util.MustString2Int64(req.VideoId), comment_model.Option{})
+	comments, err := l.svcCtx.CommentModel.FindParentCommentByVideoId(l.ctx, util.MustString2Int64(req.VideoId), comment_model.Option{})
 	resp.Comments, err = NewConvert(l.ctx, l.svcCtx).BuildParentCommentList(l.ctx, doerId, comments)
 	return
 }

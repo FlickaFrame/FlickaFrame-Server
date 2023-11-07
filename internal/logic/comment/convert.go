@@ -30,7 +30,7 @@ func NewConvert(ctx context.Context, svcCtx *svc.ServiceContext) *Convert {
 // BuildTargetComment 回复评论时构造目标评论
 func (c *Convert) BuildTargetComment(ctx context.Context, id int64) *types.TargetComment {
 	resp := &types.TargetComment{}
-	targetComment, err := c.svcCtx.CommentModel.FindChildComment(ctx, id)
+	targetComment, err := c.svcCtx.CommentModel.FindOneComment(ctx, id)
 	if err != nil {
 		logx.Info("find comment fail: ", err)
 		return nil
@@ -46,27 +46,25 @@ func (c *Convert) BuildTargetComment(ctx context.Context, id int64) *types.Targe
 }
 
 // BuildChildComment 用于构建二级评论
-func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *comment.ChildComment) (resp *types.ChildComment, err error) {
+func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *comment.Comment) (resp *types.ChildComment, err error) {
 	resp = &types.ChildComment{}
 	err = copier.Copy(&resp.CommentBasicInfo, comment)
 	resp.ID = strconv.FormatInt(comment.ID, 10)
 	// 1.构造用户信息
-	if comment.User == nil {
-		comment.User, err = c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
-		if err != nil {
-			logx.Info("find user fail: ", err)
-			return nil, err
-		}
+	author, err := c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
+	if err != nil {
+		logx.Info("find user fail: ", err)
+		return nil, err
 	}
 	resp.ShowTags = []string{}
 	if ok, _ := c.svcCtx.VideoModel.IsAuthor(ctx, doerId, comment.VideoID); ok {
 		resp.ShowTags = append(resp.ShowTags, comment_model.IsAuthor)
 	}
-	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
+	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, author)
 	//2. 构造回复评论信息
 	if comment.ReplyID != 0 {
 		resp.TargetComment = &types.TargetComment{}
-		targetComment, err := c.svcCtx.CommentModel.FindChildComment(ctx, comment.ReplyID)
+		targetComment, err := c.svcCtx.CommentModel.FindOneComment(ctx, comment.ReplyID)
 		userInfo, err := c.svcCtx.UserModel.FindOne(ctx, targetComment.UserID)
 		if err != nil {
 			return nil, err
@@ -82,7 +80,7 @@ func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *
 }
 
 // BuildChildCommentList 用于构建二级评论列表
-func (c *Convert) BuildChildCommentList(ctx context.Context, doerId int64, comments []*comment.ChildComment) (resp []*types.ChildComment, err error) {
+func (c *Convert) BuildChildCommentList(ctx context.Context, doerId int64, comments []*comment.Comment) (resp []*types.ChildComment, err error) {
 	resp = make([]*types.ChildComment, 0, len(comments))
 	for i := range comments {
 		var item *types.ChildComment
@@ -96,7 +94,7 @@ func (c *Convert) BuildChildCommentList(ctx context.Context, doerId int64, comme
 }
 
 // BuildParentComment 用于构建一级评论
-func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment *comment.ParentComment) (resp *types.ParentComment, err error) {
+func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment *comment.Comment) (resp *types.ParentComment, err error) {
 	resp = &types.ParentComment{}
 	// 1.构造评论基本信息
 	err = copier.Copy(&resp.CommentBasicInfo, comment)
@@ -109,21 +107,18 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 		resp.ShowTags = append(resp.ShowTags, comment_model.IsAuthor)
 	}
 	// 2. 构造一级评论的用户信息
-	if comment.User == nil {
-		comment.User, err = c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
-		if err != nil {
-			logx.Info("find user fail: ", err)
-			return nil, err
-		}
+	author, err := c.svcCtx.UserModel.FindOne(ctx, comment.UserID)
+	if err != nil {
+		logx.Info("find user fail: ", err)
+		return nil, err
 	}
-
-	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, comment.User)
+	resp.UserInfo, err = user.NewConvert(ctx, c.svcCtx).BuildUserBasicInfo(ctx, author)
 	// 3.构造二级评论信息
-	resp.ChildCount, err = c.svcCtx.CommentModel.CountChildComment(ctx, comment.ID)
+	resp.ChildCount, err = c.svcCtx.CommentModel.CountCommentByParentCommentId(ctx, comment.ID)
 	if err != nil {
 		return nil, err
 	}
-	comment.ChildComments, err = c.svcCtx.CommentModel.ListChildComment(ctx,
+	comment.ChildComments, err = c.svcCtx.CommentModel.FindChildCommentByCommentId(ctx,
 		comment.ID,
 		comment_model.Option{})
 	if err != nil {
@@ -136,7 +131,7 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	return
 }
 
-func (c *Convert) BuildParentCommentList(ctx context.Context, doerId int64, comments []*comment.ParentComment) (resp []*types.ParentComment, err error) {
+func (c *Convert) BuildParentCommentList(ctx context.Context, doerId int64, comments []*comment.Comment) (resp []*types.ParentComment, err error) {
 	resp = make([]*types.ParentComment, 0, len(comments))
 	for _, parentComment := range comments {
 		commentInfo, err := c.BuildParentComment(ctx, doerId, parentComment)
