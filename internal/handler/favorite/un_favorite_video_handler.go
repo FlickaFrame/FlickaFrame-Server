@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func ListFavoriteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func UnFavoriteVideoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ListFavoriteReq
+		var req types.FavoriteReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := favorite.NewListFavoriteLogic(r.Context(), svcCtx)
-		resp, err := l.ListFavorite(&req)
+		l := favorite.NewUnFavoriteVideoLogic(r.Context(), svcCtx)
+		resp, err := l.UnFavoriteVideo(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

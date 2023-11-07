@@ -4,7 +4,6 @@ import (
 	"user/user_server.api"
 	"video/video_server.api"
 	"comment/comment_server.api"
-	"action/favorite_server.api"
-	"action/collection_server.api"
+	"favorite/favorite_server.api"
 	"oss/oss_server.api"
 )

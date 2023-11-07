@@ -9,16 +9,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func CheckFavoriteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func FavoriteCommentHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CheckFavoriteReq
+		var req types.FavoriteReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := favorite.NewCheckFavoriteLogic(r.Context(), svcCtx)
-		resp, err := l.CheckFavorite(&req)
+		l := favorite.NewFavoriteCommentLogic(r.Context(), svcCtx)
+		resp, err := l.FavoriteComment(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

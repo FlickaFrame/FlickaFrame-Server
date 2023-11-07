@@ -11,6 +11,7 @@ type Favorite struct {
 	base.Model
 	TargetID int64 `gorm:"index:idx_target_user;not null"`
 	UserID   int64 `gorm:"index:idx_target_user;not null"`
+	Type     string
 }
 
 type Model struct {
@@ -33,11 +34,12 @@ func (m *Model) Delete(ctx context.Context, userId, targetId int64) error {
 		Delete(&Favorite{}).Error
 }
 
-func (m *Model) Create(ctx context.Context, userId, targetId int64) error {
+func (m *Model) Create(ctx context.Context, userId, targetId int64, typ string) error {
 	result := Favorite{
 		Model:    base.NewModel(),
 		TargetID: targetId,
 		UserID:   userId,
+		Type:     typ,
 	}
 	return m.db.WithContext(ctx).Create(&result).Error
 }

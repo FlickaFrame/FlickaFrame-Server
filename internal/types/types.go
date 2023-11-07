@@ -360,31 +360,10 @@ type ChildComment struct {
 }
 
 type FavoriteReq struct {
-	TargetId int64 `json:"targetId"`
+	TargetId string `path:"targetId" copier:"IDString"`
 }
 
 type FavoriteResp struct {
-}
-
-type UnFavoriteReq struct {
-	TargetId int64 `json:"targetId" copier:"IDString"`
-}
-
-type UnFavoriteResp struct {
-}
-
-type CheckFavoriteReq struct {
-	TargetId int64 `path:"targetId"`
-}
-
-type CheckFavoriteResp struct {
-	IsFavorite bool `json:"isFavorite"`
-}
-
-type ListFavoriteReq struct {
-}
-
-type ListFavoriteResp struct {
 }
 
 type OssEndpointResponse struct {
