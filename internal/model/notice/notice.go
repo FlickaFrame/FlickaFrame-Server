@@ -10,14 +10,14 @@ import (
 )
 
 const (
-	NoticeTypeFollow      = iota // 关注消息
-	NoticeTypeLikeVideo          // 点赞消息(视频)
-	NoticeTypeLikeComment        // 点赞消息(评论)
-	NoticeTypeComment            // 评论消息
-	NoticeCollect                // 收藏消息
-	NoticeTypeReply              // 回复消息
-	NoticeTypeAt                 // @消息
-	NoticeTypeSystem             // 系统消息
+	NoticeTypeFollow = "follow" 						// 关注消息
+	NoticeTypeLikeVideo = "like-video"      // 点赞消息(视频)
+	NoticeTypeLikeComment = "like-comment"  // 点赞消息(评论)
+	NoticeTypeComment = "comment-video"     // 评论消息
+	NoticeCollect = "collect"               // 收藏消息
+	NoticeTypeReply = "reply-comment"       // 回复消息
+	NoticeTypeAt = "@-comment"              // @消息
+	NoticeTypeSystem = "system-notice"      // 系统消息
 )
 
 const DefaultLimit = 10
@@ -25,12 +25,12 @@ const DefaultLimit = 10
 type Notice struct {
 	base.Model
 
-	Checked    bool    `gorm:"default:0"`    // 是否已读
-	Content    string                     	// 内容
-	NoticeType int    											// 消息类型
-	ToUserID   int64   `gorm:"index"`       // 接受用户id
-	FromUserID int64      								  // 发送用户id
-	NoticeTime time.Time 										// 通知时间
+	Checked    bool    `gorm:"default:0"`         // 是否已读
+	Content    string                     	      // 内容
+	NoticeType string  `gorm:"type:varchar(64)"`	// 消息类型
+	ToUserID   int64   `gorm:"index"`       			// 接受用户id
+	FromUserID int64      								   			// 发送用户id
+	NoticeTime time.Time 													// 通知时间
 }
 
 func (m *Notice) TableName() string {
