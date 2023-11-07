@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
+	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
 )
@@ -46,8 +47,18 @@ func (m *Model) CreateParentComment(ctx context.Context, doer, videoId int64, co
 		VideoID: videoId,
 		UserID:  doer,
 	}
-	return &comment, m.db.WithContext(ctx).
-		Create(&comment).Error
+	err := m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// 1. 创建评论
+		err := m.db.WithContext(ctx).Create(&comment).Error
+		if err != nil {
+			return err
+		}
+		// 2. 视频评论数据增加
+		err = m.db.WithContext(ctx).Model(&video_model.Video{}).Where("id = ?", videoId).
+			Update("comment_count", gorm.Expr("comment_count + ?", 1)).Error
+		return err
+	})
+	return &comment, err
 }
 
 // CreateChildComment 创建视频的二级评论/回复评论
@@ -62,8 +73,18 @@ func (m *Model) CreateChildComment(ctx context.Context, doer, videoId int64, con
 	if targetCommentId != 0 {
 		comm.ReplyID = targetCommentId
 	}
-	return &comm, m.db.WithContext(ctx).
-		Create(&comm).Error
+	err := m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// 1. 创建评论
+		err := m.db.WithContext(ctx).Create(&comm).Error
+		if err != nil {
+			return err
+		}
+		// 2. 视频评论数据增加
+		err = m.db.WithContext(ctx).Model(&video_model.Video{}).Where("id = ?", videoId).
+			Update("comment_count", gorm.Expr("comment_count + ?", 1)).Error
+		return err
+	})
+	return &comm, err
 }
 
 // FindOneComment 根据主键找评论

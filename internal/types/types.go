@@ -225,7 +225,9 @@ type VideoBasicInfo struct {
 	Tags          []*Tag         `json:"tags"`                 // 视频标签
 	VideoUserInfo *VideoUserInfo `json:"author"`               // 视频作者信息
 	VideoHeight   float32        `json:"videoHeight"`          // 视频高度
-	VideoWidth    float32        `json:"videoWidth"`           //视频宽度
+	VideoWidth    float32        `json:"videoWidth"`           // 视频宽度
+	FavoriteCount int64          `json:"favoriteCount"`        // 点赞数
+	CommentCount  int64          `json:"commentNum"`           // 评论数
 }
 
 type VideoManageInfo struct {
@@ -235,9 +237,7 @@ type VideoManageInfo struct {
 }
 
 type VideoStatisticalInfo struct {
-	FavoriteCount int64 `json:"favoriteCount"` // 点赞数
-	CommentCount  int64 `json:"commentNum"`    // 评论数
-	ShareCount    int64 `json:"shareNum"`      // 分享数
+	ShareCount int64 `json:"shareNum"` // 分享数
 }
 
 type VideoInteractInfo struct {

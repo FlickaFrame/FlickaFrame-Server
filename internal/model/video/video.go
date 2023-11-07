@@ -21,7 +21,7 @@ type Video struct {
 	Title         string     `gorm:"column:title;comment:视频标题"`
 	PlayUrl       string     `gorm:"column:play_url;comment:播放地址"`
 	ThumbUrl      string     `gorm:"column:thumb_url"`
-	FavoriteCount int        `gorm:"default:0"` // 收藏数量
+	FavoriteCount int        `gorm:"default:0"` // 点赞数量
 	CommentCount  int        `gorm:"default:0"` // 评论数量
 	AuthorID      int64      `gorm:"index"`     // 作者ID
 	Author        *user.User `gorm:"-"`         // 作者
