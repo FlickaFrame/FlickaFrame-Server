@@ -7,7 +7,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	notice_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"strconv"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -37,7 +36,7 @@ func (l *GetNoticeLogic) GetNotice(req *types.FollowNoticeReq) (resp *types.Foll
 		LatestTime: LatestTime,
 		Limit:      req.Limit,
 		QueryAll:   false,
-		NoticeType: util.MustString2Int64(req.NoticeType),
+		NoticeType: req.NoticeType,
 	})
 	if err != nil {
 		logx.WithContext(l.ctx).Errorf("find notices by latest time error: %v", err)
