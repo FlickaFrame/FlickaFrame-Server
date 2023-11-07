@@ -6,6 +6,13 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 )
 
+type FavoriteType = string
+
+const (
+	VideoFavoriteType   = "video"
+	CommentFavoriteType = "comment"
+)
+
 // Favorite 点赞
 type Favorite struct {
 	base.Model
