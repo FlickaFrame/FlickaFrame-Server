@@ -364,6 +364,7 @@ type FavoriteReq struct {
 }
 
 type FavoriteResp struct {
+	IsFavorite bool `json:"isFavorite"`
 }
 
 type OssEndpointResponse struct {

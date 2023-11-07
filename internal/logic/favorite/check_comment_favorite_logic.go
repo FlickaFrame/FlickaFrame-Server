@@ -26,7 +26,8 @@ func NewCheckCommentFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *CheckCommentFavoriteLogic) CheckCommentFavorite(req *types.FavoriteReq) (resp *types.FavoriteResp, err error) {
+	resp = &types.FavoriteResp{}
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	err = l.svcCtx.FavoriteModel.IsExist(l.ctx, util.MustString2Int64(req.TargetId), doerId)
+	resp.IsFavorite, err = l.svcCtx.FavoriteModel.IsExist(l.ctx, util.MustString2Int64(req.TargetId), doerId)
 	return
 }
