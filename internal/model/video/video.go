@@ -33,8 +33,8 @@ type Video struct {
 	PublishStatus int        `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
 	Visibility    int        `gorm:"default:0"` // 可见性 0:公开 1:私有
 	VideoDuration float32    // 视频时长
-	VideoHeight   float32    // 视频高度
-	VideoWidth    float32    // 视频宽度
+	VideoHeight   uint       // 视频高度
+	VideoWidth    uint       // 视频宽度
 }
 
 func (v *Video) TableName() string {

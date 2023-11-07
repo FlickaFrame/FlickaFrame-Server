@@ -33,6 +33,7 @@ type (
 		VideoWidth    float32        `json:"videoWidth"`           // 视频宽度
 		FavoriteCount int64          `json:"favoriteCount"`        // 点赞数
 		CommentCount  int64          `json:"commentNum"`           // 评论数
+		VideoDuration float32        `json:"videoDuration"`        // 视频时长         //视频宽度
 	}
 	VideoManageInfo {
 		PublishTime   string `json:"publishTime"`   // 视频发布时间
