@@ -2,14 +2,15 @@ package notice
 
 import (
 	"context"
-	"time"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/logic/user"
 	notice_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
 	"github.com/jinzhu/copier"
-	"strconv"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
+	"time"
 )
 
 type GetNoticeLogic struct {
@@ -54,7 +55,15 @@ func (l *GetNoticeLogic) GetNotice(req *types.FollowNoticeReq) (resp *types.Foll
 	err = copier.Copy(&resp.List, &notices)
 	for i := 0; i < len(notices); i++ {
 		resp.List[i].NoticeTime = notices[i].NoticeTime.UnixMilli()
-		// TODO
+		resp.List[i].FromUserID = strconv.FormatInt(notices[i].FromUserID, 10)
+		resp.List[i].NoticeId = strconv.FormatInt(notices[i].ID, 10)
+		u, e := l.svcCtx.UserModel.FindOne(l.ctx, notices[i].FromUserID)
+		if e != nil {
+			err = e
+			return
+		}
+		resp.List[i].FromUserNickName = u.NickName
+		resp.List[i].FromUserAvatarUrl = user.NewConvert(l.ctx, l.svcCtx).GetAccessUrl(l.ctx, u.AvatarUrl)
 	}
 	resp.IsEnd = len(resp.List) < req.Limit
 	return

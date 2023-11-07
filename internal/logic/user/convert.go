@@ -30,8 +30,8 @@ func (c *Convert) BuildUserBasicInfo(ctx context.Context, user *user_model.User)
 	if err != nil {
 		logx.Info("copy user to userInfo fail: ", err)
 	}
-	userInfo.AvatarUrl = c.getAccessUrl(ctx, user.AvatarUrl)
-	userInfo.BackgroundUrl = c.getAccessUrl(ctx, userInfo.BackgroundUrl)
+	userInfo.AvatarUrl = c.GetAccessUrl(ctx, user.AvatarUrl)
+	userInfo.BackgroundUrl = c.GetAccessUrl(ctx, userInfo.BackgroundUrl)
 	return &userInfo, nil
 }
 
@@ -80,6 +80,6 @@ func (c *Convert) buildUserBasicInfoList(ctx context.Context, userList []*user_m
 	return userInfoList, nil
 }
 
-func (c *Convert) getAccessUrl(ctx context.Context, key string) string {
+func (c *Convert) GetAccessUrl(ctx context.Context, key string) string {
 	return storage.MakePublicURL(c.svcCtx.Config.Oss.Endpoint, key)
 }
