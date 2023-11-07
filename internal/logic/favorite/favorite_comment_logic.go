@@ -3,7 +3,6 @@ package favorite
 import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
-	favorite_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -35,8 +34,13 @@ func (l *FavoriteCommentLogic) FavoriteComment(req *types.FavoriteReq) (resp *ty
 		logx.Info(err)
 		return nil, code.ErrCommentNoExistsError
 	}
-	err = l.svcCtx.FavoriteModel.Create(l.ctx,
+	err = l.svcCtx.FavoriteModel.CreateCommentFavorite(l.ctx,
+		doerId,
 		util.MustString2Int64(req.TargetId),
-		doerId, favorite_model.CommentFavoriteType)
+	)
+	if err != nil {
+		logx.Info(err)
+		return nil, code.DuplicateFavoriteErr
+	}
 	return
 }

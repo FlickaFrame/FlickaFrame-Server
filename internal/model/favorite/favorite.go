@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
+	comment_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/comment"
+	video_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
-	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -48,27 +48,81 @@ func (m *Model) IsExist(ctx context.Context, targetId, userId int64) (bool, erro
 	return true, nil
 }
 
-func (m *Model) Delete(ctx context.Context, userId, targetId int64) error {
-	rowsAffected := m.db.WithContext(ctx).
-		Where("target_id = ? AND user_id = ?", targetId, userId).
-		Delete(&Favorite{}).RowsAffected
-	if rowsAffected == 0 {
-		return fmt.Errorf("无法取消不存在的点赞")
-	}
-	return nil
+func (m *Model) DeleteVideoFavorite(ctx context.Context, userId, videoId int64) error {
+	return m.db.WithContext(ctx).Transaction(
+		func(tx *gorm.DB) error {
+			rowsAffected := m.db.WithContext(ctx).
+				Where("target_id = ? AND user_id = ?", videoId, userId).
+				Delete(&Favorite{}).RowsAffected
+			if rowsAffected == 0 {
+				return fmt.Errorf("无法取消不存在的点赞")
+			}
+			if err := tx.Model(&comment_model.Comment{}).
+				Where("id = ?", videoId).
+				Update("favorite_count",
+					gorm.Expr("favorite_count - ?", 1)).Error; err != nil {
+				return err
+			}
+			return nil
+		})
 }
 
-func (m *Model) Create(ctx context.Context, userId, targetId int64, typ int) error {
-	result := Favorite{
-		Model:    base.NewModel(),
-		TargetID: targetId,
-		UserID:   userId,
-		Type:     typ,
-	}
-	err := m.db.WithContext(ctx).Create(&result).Error
-	var mysqlErr *mysql.MySQLError
-	if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-		return code.DuplicateFavoriteErr
-	}
-	return err
+func (m *Model) DeleteCommentFavorite(ctx context.Context, userId, commentId int64) error {
+	return m.db.WithContext(ctx).Transaction(
+		func(tx *gorm.DB) error {
+			rowsAffected := m.db.WithContext(ctx).
+				Where("target_id = ? AND user_id = ?", commentId, userId).
+				Delete(&Favorite{}).RowsAffected
+			if rowsAffected == 0 {
+				return fmt.Errorf("无法取消不存在的点赞")
+			}
+			if err := tx.Model(&comment_model.Comment{}).
+				Where("id = ?", commentId).
+				Update("like_count",
+					gorm.Expr("like_count - ?", 1)).Error; err != nil {
+				return err
+			}
+			return nil
+		})
+}
+
+func (m *Model) CreateCommentFavorite(ctx context.Context, userid, commentId int64) error {
+	return m.db.WithContext(ctx).Transaction(
+		func(tx *gorm.DB) error {
+			if err := tx.Create(&Favorite{
+				Model:    base.NewModel(),
+				TargetID: commentId,
+				UserID:   userid,
+				Type:     CommentFavoriteType,
+			}).Error; err != nil {
+				return err
+			}
+			if err := tx.Model(&comment_model.Comment{}).
+				Where("id = ?", commentId).
+				Update("like_count",
+					gorm.Expr("like_count + ?", 1)).Error; err != nil {
+				return err
+			}
+			return nil
+		})
+}
+
+func (m *Model) CreateVideoFavorite(ctx context.Context, userid, videoId int64) error {
+	return m.db.WithContext(ctx).Transaction(
+		func(tx *gorm.DB) error {
+			if err := tx.Create(&Favorite{
+				Model:    base.NewModel(),
+				TargetID: videoId,
+				UserID:   userid,
+				Type:     VideoFavoriteType,
+			}).Error; err != nil {
+				return err
+			}
+			if err := tx.Model(&video_model.Video{}).
+				Where("id = ?", videoId).
+				Update("favorite_count", gorm.Expr("favorite_count + ?", 1)).Error; err != nil {
+				return err
+			}
+			return nil
+		})
 }

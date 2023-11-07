@@ -2,15 +2,11 @@ package favorite
 
 import (
 	"context"
-	"errors"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/code"
-	favorite_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/favorite"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
-	"gorm.io/gorm"
-
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -38,12 +34,12 @@ func (l *FavoriteVideoLogic) FavoriteVideo(req *types.FavoriteReq) (resp *types.
 		logx.Info(err)
 		return nil, code.VideoNotExistError
 	}
-	err = l.svcCtx.FavoriteModel.Create(l.ctx,
-		util.MustString2Int64(req.TargetId),
-		doerId, favorite_model.VideoFavoriteType)
-	if errors.Is(err, gorm.ErrDuplicatedKey) {
+	err = l.svcCtx.FavoriteModel.CreateVideoFavorite(l.ctx,
+		doerId,
+		util.MustString2Int64(req.TargetId))
+	if err != nil {
 		logx.Info(err)
-		err = code.DuplicateFavoriteErr
+		return nil, code.DuplicateFavoriteErr
 	}
 	return
 }
