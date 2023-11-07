@@ -1,0 +1,24 @@
+progress:
+  type: file
+meilisearch:
+  api_url: http://xx.xx.xx.xx:7700
+  api_key: 00afbc17f6750a9997387320bb3e0a5f79a5a5cdf4ae0c8b9049d7e7cb1a29c0
+  insert_size: 1000
+  insert_interval: 10
+
+source:
+  type: mysql
+  host: xx.xx.xx.xx # assuming your MySQL server is running on the same machine as `meilisync`
+  port: 3306
+  database: flicka_frame
+  user: root
+  password: qiniuyun-abc
+
+sync:
+  - table: video
+    index: video
+    full: true
+    fields:
+      id:
+      title:
+      description:

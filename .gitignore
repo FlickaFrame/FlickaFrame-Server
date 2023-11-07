@@ -7,6 +7,6 @@
 .idea
 .vscode
 
-etc
+etc/main.yaml
 go.sum
-docs
+template

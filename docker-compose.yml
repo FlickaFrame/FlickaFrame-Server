@@ -1,0 +1,114 @@
+version: "3"
+
+networks:
+  frame:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
+services:
+  server:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    networks:
+      frame:
+        ipv4_address: 192.168.2.2
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./etc/main.yml:etc/main.yaml
+    ports:
+      - "8080:8080"
+  mysql:
+    image: mysql:8.0
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=flicka_frame
+    volumes:
+      - ./data/mysql/conf:/etc/mysql/conf.d
+      - ./data/mysql/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+    networks:
+      frame:
+        ipv4_address: 192.168.2.3
+    ports:
+      - "3306:3306"
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - ./data/redis/conf/:/usr/local/etc/redis/
+      - ./data/redis/data:/data
+      - ./data/redis/logs/:/logs/
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+    networks:
+      frame:
+        ipv4_address: 192.168.2.4
+    ports:
+      - "6379:6379"
+
+  meilisearch:
+      image: getmeili/meilisearch:v1.4
+      restart: always
+      hostname: meilisearch
+      container_name: meilisearch
+      ports:
+        - 7700:7700
+      environment:
+        - MEILI_MASTER_KEY=6607nX16wg8qZFMJy1Jf5SNB5dFAdt79
+      volumes:
+        - ./data.ms:/data.ms
+      networks:
+        frame:
+          ipv4_address: 192.168.2.5
+  meilisync:
+    platform: linux/x86_64
+    image: long2ice/meilisync
+    volumes:
+      - ./etc/meilisync.yml:/meilisync/config.yml
+    networks:
+      frame:
+        ipv4_address: 192.168.2.6
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - 9092:9092
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+      - TZ=Asia/Shanghai
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      frame:
+        ipv4_address: 192.168.2.7
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    environment:
+      # 时区上海 - Time zone Shanghai (Change if needed)
+      TZ: Asia/Shanghai
+    restart: always
+    ports:
+      - 2181:2181
+    networks:
+      frame:
+        ipv4_address: 192.168.2.8
+

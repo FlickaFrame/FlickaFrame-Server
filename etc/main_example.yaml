@@ -1,0 +1,52 @@
+Name: FlickaFrame-Server
+Host: 0.0.0.0
+Port: 8080
+Mode: dev
+
+Log:
+  Encoding: plain
+  Level: debug
+
+JwtAuth:
+  AccessSecret: xxxxx-xxxxx-xxxxx-xxxxx-xxxxx
+  AccessExpire: 604800 # 7 days
+
+# 七牛云OSS存储配置
+Oss:
+  Endpoint: http://xxxxx.hn-bkt.clouddn.com
+  AccessKeyId: "xxxxx"
+  AccessKeySecret: "xxxxx"
+  BucketName: "xxxxx"
+
+Mysql:
+  DSN: "root:qiniuyun-abc@tcp(xxxxx.xxxxx.xxxxx.xxxxx:3306)/flicka_frame?parseTime=true&loc=Local"
+  MaxIdleConns: 10
+  MaxOpenConns: 100
+  ConnMaxLifetime: 10
+
+BizRedis:
+  Host: xx.xx.xx.xx:6379
+  Pass:
+  Type: node
+
+MeiliSearch:
+  Host: http://xx.xx.xx.xx:7700/
+  APIKey: 'xxxxxxxxxxxxxxxx'
+  Timeout: 3600
+
+KqPusherConf:
+  Brokers:
+    - xx.xx.xx.xx:9092
+  Topic: follow-success
+
+KqConsumerConf:
+  Name: kqConsumer
+  Brokers:
+    - xx.xx.xx.xx:9092
+  Group: kqConsumer
+  Topic: follow-success
+  Offset: first
+  Consumers: 8
+  Processors: 8
+
+Timeout: 6000

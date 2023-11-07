@@ -6,6 +6,7 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/deckarep/golang-set v1.8.0
 	github.com/go-playground/validator/v10 v10.8.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/meilisearch/meilisearch-go v0.25.1
@@ -34,7 +35,6 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
-	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0 // indirect
@@ -47,6 +47,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/openzipkin/zipkin-go v0.4.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.17 // indirect
