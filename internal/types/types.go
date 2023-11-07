@@ -147,19 +147,20 @@ type CategoryResp struct {
 	CategoryList []*Category `json:"categoryList"`
 }
 
-type SearchReq struct {
-	Keyword string `json:"keyword"` // 搜索关键字
-	Offset  int64  `json:"offset"`  // 偏移量
-	Limit   int64  `json:"limit"`   // 请求数量
+type VideoSearchReq struct {
+	Keyword string `json:"keyword"`         // 搜索关键字
+	Offset  int64  `json:"offset,optional"` // 偏移量
+	Limit   int64  `json:"limit,optional"`  // 请求数量
 }
 
-type SearchResp struct {
-	Hits               interface{} `json:"hits"`               // 搜索结果
-	Query              string      `json:"query"`              // 搜索关键字
-	ProcessingTimeMs   int64       `json:"processingTimeMs"`   // 搜索耗时(毫秒)
-	Offset             int64       `json:"offset"`             // 偏移量
-	Limit              int64       `json:"limit"`              // 请求数量
-	EstimatedTotalHits int64       `json:"estimatedTotalHits"` // 搜索结果总数
+type VideoSearchResp struct {
+	Videos             []*FeedVideoItem `json:"list"`               // 视频列表
+	Hits               interface{}      `json:"hits"`               // 搜索结果
+	Query              string           `json:"query"`              // 搜索关键字
+	ProcessingTimeMs   int64            `json:"processingTimeMs"`   // 搜索耗时(毫秒)
+	Offset             int64            `json:"offset"`             // 偏移量
+	Limit              int64            `json:"limit"`              // 请求数量
+	EstimatedTotalHits int64            `json:"estimatedTotalHits"` // 搜索结果总数
 }
 
 type CreateVideoReq struct {
