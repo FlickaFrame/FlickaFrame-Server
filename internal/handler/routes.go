@@ -115,8 +115,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: video.CreateVideoHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
-				Path:    "/video/delete",
+				Method:  http.MethodDelete,
+				Path:    "/video/:videoId",
 				Handler: video.DeleteVideoHandler(serverCtx),
 			},
 			{

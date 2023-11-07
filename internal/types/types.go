@@ -181,6 +181,7 @@ type CreateVideoResp struct {
 }
 
 type DeleteVideoReq struct {
+	VideoID int64 `path:"videoId"`
 }
 
 type DeleteVideoResp struct {

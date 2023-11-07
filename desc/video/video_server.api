@@ -20,7 +20,7 @@ service main{
 
 	@doc "Delete Video" // 删除视频
 	@handler DeleteVideo
-	post /video/delete (DeleteVideoReq) returns (DeleteVideoResp)
+	delete /video/:videoId (DeleteVideoReq) returns (DeleteVideoResp)
 
 	@doc "List video of following User" // 获取关注用户的视频列表
 	@handler Following
@@ -113,8 +113,11 @@ type (
 )
 
 type (
-	DeleteVideoReq  struct{}
-	DeleteVideoResp struct{}
+	DeleteVideoReq {
+		VideoID int64 `path:"videoId"`
+	}
+	DeleteVideoResp {
+	}
 )
 
 type (

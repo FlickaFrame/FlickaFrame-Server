@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
@@ -24,7 +25,7 @@ func NewDeleteVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delet
 }
 
 func (l *DeleteVideoLogic) DeleteVideo(req *types.DeleteVideoReq) (resp *types.DeleteVideoResp, err error) {
-	// todo: add your logic here and delete this line
-
+	doerId := jwt.GetUidFromCtx(l.ctx)
+	err = l.svcCtx.VideoModel.Delete(l.ctx, doerId, req.VideoID)
 	return
 }

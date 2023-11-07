@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	"fmt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/snowflake"
@@ -207,4 +208,18 @@ func (m *VideoModel) IsAuthor(ctx context.Context, doerId int64, videoId int64) 
 		Where("author_id = ? and id = ?", doerId, videoId).
 		Count(&cnt).Error
 	return cnt > 0, err
+}
+
+func (m *VideoModel) Delete(ctx context.Context, userId int64, videoId int64) error {
+	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		// 1.尝试删除视频
+		rowsAffected := m.db.WithContext(ctx).
+			Where("id = ? AND author_id = ?", videoId, userId).
+			Delete(&Video{}).RowsAffected
+		if rowsAffected == 0 {
+			return fmt.Errorf("视频删除失败,请检查权限或视频是否存在")
+		}
+		// TODO: 清空点赞/评论/收藏 ?
+		return nil
+	})
 }
