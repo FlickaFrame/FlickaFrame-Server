@@ -2,7 +2,10 @@ package notice
 
 import (
 	"fmt"
+	"time"
+	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/model/base"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 )
 
 const (
@@ -19,10 +22,31 @@ const (
 type Notice struct {
 	base.Model
 
-	Checked    bool   `json:"checked"`     // 是否已读
-	Content    string `json:"content"`     // 内容(标题)
-	NoticeType int    `json:"notice_type"` // 消息类型
-	UserId     uint   `json:"user_id"`     // 接受用户id
+	Checked    bool    `gorm:"default:0"`    // 是否已读
+	Content    string                     	// 内容
+	NoticeType int    											// 消息类型
+	ToUserID   int64   `gorm:"index"`       // 接受用户id
+	FromUserID int64      								  // 发送用户id
+	NoticeTime time.Time 										// 通知时间
+}
+
+func (m *Notice) TableName() string {
+	return "notices"
+}
+
+type NoticeModel struct {
+	db *orm.DB
+}
+
+func NewNoticeModel(db *orm.DB) *NoticeModel {
+	return &NoticeModel{
+		db: db,
+	}
+}
+
+func (m *NoticeModel) Insert(ctx context.Context, data *Notice) error {
+	data.Model = base.NewModel()
+	return m.db.WithContext(ctx).Create(data).Error
 }
 
 type FollowNotice struct { // 关注消息
