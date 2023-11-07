@@ -9,8 +9,8 @@ import (
 type FavoriteType = string
 
 const (
-	VideoFavoriteType   = "video"
-	CommentFavoriteType = "comment"
+	VideoFavoriteType = iota + 1
+	CommentFavoriteType
 )
 
 // Favorite 点赞
@@ -18,7 +18,7 @@ type Favorite struct {
 	base.Model
 	TargetID int64 `gorm:"index:idx_target_user;not null"`
 	UserID   int64 `gorm:"index:idx_target_user;not null"`
-	Type     string
+	Type     int
 }
 
 type Model struct {
@@ -41,7 +41,7 @@ func (m *Model) Delete(ctx context.Context, userId, targetId int64) error {
 		Delete(&Favorite{}).Error
 }
 
-func (m *Model) Create(ctx context.Context, userId, targetId int64, typ string) error {
+func (m *Model) Create(ctx context.Context, userId, targetId int64, typ int) error {
 	result := Favorite{
 		Model:    base.NewModel(),
 		TargetID: targetId,
