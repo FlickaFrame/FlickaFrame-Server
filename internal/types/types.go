@@ -173,8 +173,8 @@ type CreateVideoReq struct {
 	VideoKey      string   `json:"videoKey,optional"`    // 视频上传key
 	Visibility    int      `json:"visibility"`           // 视频可见性(1:公开,2:私密)
 	VideoDuration float32  `json:"videoDuration"`        // 视频时长(秒)
-	VideoHeight   float32  `json:"videoDuration"`        // 视频高度(像素)
-	VideoWidth    float32  `json:"videoDuration"`        // 视频宽度(像素)
+	VideoHeight   uint     `json:"videoHeight"`          // 视频高度(像素)
+	VideoWidth    uint     `json:"videoWidth"`           // 视频宽度(像素)
 }
 
 type CreateVideoResp struct {
@@ -228,6 +228,7 @@ type VideoBasicInfo struct {
 	VideoWidth    float32        `json:"videoWidth"`           // 视频宽度
 	FavoriteCount int64          `json:"favoriteCount"`        // 点赞数
 	CommentCount  int64          `json:"commentNum"`           // 评论数
+	VideoDuration float32        `json:"videoDuration"`        // 视频时长         //视频宽度
 }
 
 type VideoManageInfo struct {
