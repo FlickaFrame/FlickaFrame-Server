@@ -5,7 +5,7 @@ import (
 	"time"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
-	notice_model "github.com/FlickaFrame/FlickaFrame-Server/model/notice"
+	notice_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"strconv"

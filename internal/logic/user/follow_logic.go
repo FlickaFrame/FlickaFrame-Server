@@ -30,7 +30,10 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
 	doerUserId := jwt.GetUidFromCtx(l.ctx)
 	res := l.svcCtx.UserModel.FollowUser(l.ctx, doerUserId, req.ContextUserId)
-	// data := fmt.Sprintf("Follow User ID: %d Success", req.ContextUserId)
+	if err != nil {
+		return nil, res
+	}
+
 	notice := notice_model.Notice{
 		ToUserID:   req.ContextUserId,
 		FromUserID: doerUserId,

@@ -58,7 +58,7 @@ type ListOption struct {
 	LatestTime time.Time // 最新时间(分页)
 	Limit      int       // 限制数量(分页)
 	QueryAll   bool      // 是否查询所有(分页)
-	NoticeType int     	 // 通知类型
+	NoticeType int64     	 // 通知类型
 }
 
 func (m *NoticeModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB {
