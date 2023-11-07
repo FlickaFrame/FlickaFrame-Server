@@ -6,7 +6,10 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/internal/types"
+	notice_model "github.com/FlickaFrame/FlickaFrame-Server/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
+	"time"
+	"encoding/json"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,7 +32,7 @@ func (l *FavoriteVideoLogic) FavoriteVideo(req *types.FavoriteReq) (resp *types.
 	resp = &types.FavoriteResp{IsFavorite: true}
 	doerId := jwt.GetUidFromCtx(l.ctx)
 	// 检查视频是否存在
-	_, err = l.svcCtx.VideoModel.FindOne(l.ctx, util.MustString2Int64(req.TargetId))
+	video, err := l.svcCtx.VideoModel.FindOne(l.ctx, util.MustString2Int64(req.TargetId))
 	if err != nil {
 		logx.Info(err)
 		return nil, code.VideoNotExistError
@@ -40,6 +43,20 @@ func (l *FavoriteVideoLogic) FavoriteVideo(req *types.FavoriteReq) (resp *types.
 	if err != nil {
 		logx.Info(err)
 		return nil, code.DuplicateFavoriteErr
+	}
+
+	notice := notice_model.Notice{
+		ToUserID:   video.AuthorID,
+		FromUserID: doerId,
+		NoticeType: notice_model.NoticeTypeLikeVideo,
+		NoticeTime: time.Now(),
+	}
+	jsonBody, errJson := json.Marshal(notice)
+	if errJson != nil {
+		return nil, errJson
+	}
+	if errMq := l.svcCtx.KqPusherClient.Push(string(jsonBody)); errMq != nil {
+		return nil, errMq
 	}
 	return
 }
