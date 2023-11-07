@@ -186,19 +186,6 @@ type DeleteVideoReq struct {
 type DeleteVideoResp struct {
 }
 
-type FollowingReq struct {
-	PageSize int  `form:"pageSize,default=10"`   // 分页大小,默认为 10
-	Page     int  `form:"page,default=1"`        // 当前页码,默认为 1
-	ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
-}
-
-type FollowingResp struct {
-	VideoList   []*VideoBasicInfo `json:"videoList"`
-	NextTime    int64             `json:"nextTime"`    // 下次请求时间(毫秒时间戳)
-	CursorScore string            `json:"cursorScore"` // 下次请求时间(毫秒时间戳)
-	Length      int               `json:"length"`      // 视频列表长度
-}
-
 type GetVideoInfoReq struct {
 	VideoId int64 `path:"videoId"`
 }

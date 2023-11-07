@@ -11,12 +11,11 @@ import (
 
 func FollowingHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.FollowingReq
+		var req types.FeedReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
 		l := video.NewFollowingLogic(r.Context(), svcCtx)
 		resp, err := l.Following(&req)
 		if err != nil {

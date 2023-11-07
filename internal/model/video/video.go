@@ -168,15 +168,16 @@ func (m *VideoModel) ListVideoByCategoryId(ctx context.Context, categoryId uint)
 }
 
 // FollowingUserVideo 关注用户的视频
-func (m *VideoModel) FollowingUserVideo(ctx context.Context, userId uint, options orm.ListOptions) ([]*Video, error) {
-	sess := m.db.WithContext(ctx)
-	sess = sess.
+func (m *VideoModel) FollowingUserVideo(ctx context.Context, doerId int64, opts ListOption) ([]*Video, error) {
+	session := m.db.WithContext(ctx)
+	session = session.
 		Select("video.*").
 		Joins("LEFT JOIN follow ON video.author_id = follow.followed_user_id ").
-		Where("follow.user_id = ?", userId)
-	//sess = orm.SetSessionPagination(sess, &options)
-	videos := make([]*Video, 0, options.PageSize)
-	return videos, sess.Find(&videos).Error
+		Where("follow.user_id = ?", doerId)
+	session = session.Where("`video`.created_at <= ?", opts.LatestTime)
+	session = session.Limit(opts.Limit)
+	var videos []*Video
+	return videos, session.Find(&videos).Error
 }
 
 func (m *VideoModel) FindTagsByVideoId(ctx context.Context, videoId int64) ([]*Tag, error) {
