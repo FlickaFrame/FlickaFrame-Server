@@ -105,8 +105,8 @@ type (
 		VideoKey      string   `json:"videoKey,optional"`    // 视频上传key
 		Visibility    int      `json:"visibility"`           // 视频可见性(1:公开,2:私密)
 		VideoDuration float32  `json:"videoDuration"`        // 视频时长(秒)
-		VideoHeight   float32  `json:"videoDuration"`        // 视频高度(像素)
-		VideoWidth    float32  `json:"videoDuration"`        // 视频宽度(像素)
+		VideoHeight   float32  `json:"videoHeight"`        // 视频高度(像素)
+		VideoWidth    float32  `json:"videoWidth"`        // 视频宽度(像素)
 	}
 	CreateVideoResp {
 	}
