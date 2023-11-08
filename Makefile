@@ -31,9 +31,9 @@ gen-oss-rpc:
 	rm -rf ./app/oss/rpc/oss.proto
 	make tidy
 
-.PHONY: run-oss
-run-oss:
-	go run ./app/oss/rpc/oss.go -f ./app/oss/rpc/etc/oss.yaml
+.PHONY: run-oss-rpc
+run-oss-rpc:
+	go run app/oss/rpc/oss.go -f etc/oss_rpc.yml
 
 .PHONY: gen-api-go
 gen-api-go: ## generate api go

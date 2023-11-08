@@ -5,6 +5,7 @@ import (
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type Config struct {
@@ -13,14 +14,7 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	Oss struct { // 七牛云OSS配置
-		Endpoint         string
-		AccessKeyId      string
-		AccessKeySecret  string
-		BucketName       string
-		ConnectTimeout   int64 `json:",optional"`
-		ReadWriteTimeout int64 `json:",optional"`
-	}
+	OssRpcConf  zrpc.RpcClientConf
 	MeiliSearch struct {
 		Host    string
 		APIKey  string

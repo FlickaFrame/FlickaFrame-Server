@@ -2,7 +2,7 @@ package video
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/logic/common"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/logic/user"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
@@ -33,8 +33,8 @@ func (c *Convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 		logx.Info("copy video to videoBasicInfo fail: ", err)
 		return nil, err
 	}
-	videoBasicInfo.PlayUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.PlayUrl) // 链接转换
-	videoBasicInfo.ThumbUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.ThumbUrl)
+	videoBasicInfo.PlayUrl = user.NewConvert(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.PlayUrl) // 链接转换
+	videoBasicInfo.ThumbUrl = user.NewConvert(c.ctx, c.svcCtx).GetAccessUrl(ctx, video.ThumbUrl)
 	videoBasicInfo.CreatedAt = video.CreatedAt.UnixMilli() // 时间转换
 	video.Author = c.svcCtx.UserModel.MustFindOne(ctx, video.AuthorID)
 	video.Category = c.svcCtx.VideoModel.MustFindOneCategory(ctx, video.CategoryID)
@@ -47,7 +47,7 @@ func (c *Convert) BuildVideoBasicInfo(ctx context.Context, video *video_model.Vi
 	videoBasicInfo.VideoUserInfo = &types.VideoUserInfo{}
 	err = copier.Copy(&videoBasicInfo.VideoUserInfo, video.Author)
 	videoBasicInfo.VideoUserInfo.ID = strconv.FormatInt(video.AuthorID, 10)
-	videoBasicInfo.VideoUserInfo.AvatarUrl = common.NewURLLogic(c.ctx, c.svcCtx).GetAccessUrl(ctx, videoBasicInfo.VideoUserInfo.AvatarUrl)
+	videoBasicInfo.VideoUserInfo.AvatarUrl = user.NewConvert(c.ctx, c.svcCtx).GetAccessUrl(ctx, videoBasicInfo.VideoUserInfo.AvatarUrl)
 	if err != nil {
 		logx.Info("loading video user fail: ", err)
 		return nil, err

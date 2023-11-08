@@ -2,11 +2,11 @@ package user
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
 	"github.com/jinzhu/copier"
-	"github.com/qiniu/go-sdk/v7/storage"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -80,6 +80,13 @@ func (c *Convert) buildUserBasicInfoList(ctx context.Context, userList []*user_m
 	return userInfoList, nil
 }
 
-func (c *Convert) GetAccessUrl(ctx context.Context, key string) string {
-	return storage.MakePublicURL(c.svcCtx.Config.Oss.Endpoint, key)
+func (c *Convert) GetAccessUrl(ctx context.Context, url string) string {
+	rsp, err := c.svcCtx.OssRpc.GetFileAccessUrl(ctx, &oss.GetFileAccessUrlRequest{
+		Key: url,
+	})
+	if err != nil {
+		logx.Info("get access url fail: ", err)
+		return ""
+	}
+	return rsp.Url
 }

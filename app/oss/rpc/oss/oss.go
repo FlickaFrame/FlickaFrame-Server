@@ -13,11 +13,17 @@ import (
 )
 
 type (
-	CreateUpTokenRequest  = oss_service.CreateUpTokenRequest
-	CreateUpTokenResponse = oss_service.CreateUpTokenResponse
+	CreateUpTokenRequest     = oss_service.CreateUpTokenRequest
+	CreateUpTokenResponse    = oss_service.CreateUpTokenResponse
+	GetEndpointRequest       = oss_service.GetEndpointRequest
+	GetEndpointResponse      = oss_service.GetEndpointResponse
+	GetFileAccessUrlRequest  = oss_service.GetFileAccessUrlRequest
+	GetFileAccessUrlResponse = oss_service.GetFileAccessUrlResponse
 
 	Oss interface {
 		CreatUpToken(ctx context.Context, in *CreateUpTokenRequest, opts ...grpc.CallOption) (*CreateUpTokenResponse, error)
+		GetEndpoint(ctx context.Context, in *GetEndpointRequest, opts ...grpc.CallOption) (*GetEndpointResponse, error)
+		GetFileAccessUrl(ctx context.Context, in *GetFileAccessUrlRequest, opts ...grpc.CallOption) (*GetFileAccessUrlResponse, error)
 	}
 
 	defaultOss struct {
@@ -34,4 +40,14 @@ func NewOss(cli zrpc.Client) Oss {
 func (m *defaultOss) CreatUpToken(ctx context.Context, in *CreateUpTokenRequest, opts ...grpc.CallOption) (*CreateUpTokenResponse, error) {
 	client := oss_service.NewOssClient(m.cli.Conn())
 	return client.CreatUpToken(ctx, in, opts...)
+}
+
+func (m *defaultOss) GetEndpoint(ctx context.Context, in *GetEndpointRequest, opts ...grpc.CallOption) (*GetEndpointResponse, error) {
+	client := oss_service.NewOssClient(m.cli.Conn())
+	return client.GetEndpoint(ctx, in, opts...)
+}
+
+func (m *defaultOss) GetFileAccessUrl(ctx context.Context, in *GetFileAccessUrlRequest, opts ...grpc.CallOption) (*GetFileAccessUrlResponse, error) {
+	client := oss_service.NewOssClient(m.cli.Conn())
+	return client.GetFileAccessUrl(ctx, in, opts...)
 }

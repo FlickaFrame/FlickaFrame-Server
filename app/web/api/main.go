@@ -18,7 +18,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-var configFile = flag.String("f", "app/web/api/etc/main.yaml", "the config file")
+var configFile = flag.String("f", "etc/web_api.yml", "the config file")
 
 func main() {
 	flag.Parse()

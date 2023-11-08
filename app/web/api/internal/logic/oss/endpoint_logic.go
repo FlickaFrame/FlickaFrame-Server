@@ -2,6 +2,7 @@ package oss
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
@@ -24,8 +25,12 @@ func NewEndpointLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Endpoint
 }
 
 func (l *EndpointLogic) Endpoint() (resp *types.OssEndpointResponse, err error) {
+	endpoint, err := l.svcCtx.OssRpc.GetEndpoint(l.ctx, &oss.GetEndpointRequest{})
+	if err != nil {
+		return nil, err
+	}
 	resp = &types.OssEndpointResponse{
-		EndPoint: l.svcCtx.Config.Oss.Endpoint,
+		EndPoint: endpoint.Endpoint,
 	}
 	return
 }

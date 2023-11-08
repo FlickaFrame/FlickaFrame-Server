@@ -26,3 +26,13 @@ func (s *OssServer) CreatUpToken(ctx context.Context, in *oss_service.CreateUpTo
 	l := logic.NewCreatUpTokenLogic(ctx, s.svcCtx)
 	return l.CreatUpToken(in)
 }
+
+func (s *OssServer) GetEndpoint(ctx context.Context, in *oss_service.GetEndpointRequest) (*oss_service.GetEndpointResponse, error) {
+	l := logic.NewGetEndpointLogic(ctx, s.svcCtx)
+	return l.GetEndpoint(in)
+}
+
+func (s *OssServer) GetFileAccessUrl(ctx context.Context, in *oss_service.GetFileAccessUrlRequest) (*oss_service.GetFileAccessUrlResponse, error) {
+	l := logic.NewGetFileAccessUrlLogic(ctx, s.svcCtx)
+	return l.GetFileAccessUrl(in)
+}
