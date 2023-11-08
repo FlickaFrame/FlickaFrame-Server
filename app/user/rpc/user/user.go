@@ -17,14 +17,18 @@ type (
 	FindByIdResponse     = user_service.FindByIdResponse
 	FindByMobileRequest  = user_service.FindByMobileRequest
 	FindByMobileResponse = user_service.FindByMobileResponse
+	ListByIdsRequest     = user_service.ListByIdsRequest
+	ListByIdsResponse    = user_service.ListByIdsResponse
 	RegisterRequest      = user_service.RegisterRequest
 	RegisterResponse     = user_service.RegisterResponse
 	SendSmsRequest       = user_service.SendSmsRequest
 	SendSmsResponse      = user_service.SendSmsResponse
+	UserInfoResponse     = user_service.UserInfoResponse
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 		FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error)
+		ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
 		FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error)
 		SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 	}
@@ -48,6 +52,11 @@ func (m *defaultUser) Register(ctx context.Context, in *RegisterRequest, opts ..
 func (m *defaultUser) FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error) {
 	client := user_service.NewUserClient(m.cli.Conn())
 	return client.FindById(ctx, in, opts...)
+}
+
+func (m *defaultUser) ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error) {
+	client := user_service.NewUserClient(m.cli.Conn())
+	return client.ListByIds(ctx, in, opts...)
 }
 
 func (m *defaultUser) FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error) {

@@ -32,6 +32,11 @@ func (s *UserServer) FindById(ctx context.Context, in *user_service.FindByIdRequ
 	return l.FindById(in)
 }
 
+func (s *UserServer) ListByIds(ctx context.Context, in *user_service.ListByIdsRequest) (*user_service.ListByIdsResponse, error) {
+	l := logic.NewListByIdsLogic(ctx, s.svcCtx)
+	return l.ListByIds(in)
+}
+
 func (s *UserServer) FindByMobile(ctx context.Context, in *user_service.FindByMobileRequest) (*user_service.FindByMobileResponse, error) {
 	l := logic.NewFindByMobileLogic(ctx, s.svcCtx)
 	return l.FindByMobile(in)

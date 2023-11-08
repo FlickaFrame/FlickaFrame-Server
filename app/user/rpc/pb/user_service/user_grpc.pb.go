@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.20.1
-// source: rpc/user.proto
+// source: user.proto
 
 package user_service
 
@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	User_Register_FullMethodName     = "/service.User/Register"
 	User_FindById_FullMethodName     = "/service.User/FindById"
+	User_ListByIds_FullMethodName    = "/service.User/ListByIds"
 	User_FindByMobile_FullMethodName = "/service.User/FindByMobile"
 	User_SendSms_FullMethodName      = "/service.User/SendSms"
 )
@@ -31,6 +32,7 @@ const (
 type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error)
+	ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
 	FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error)
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 }
@@ -61,6 +63,15 @@ func (c *userClient) FindById(ctx context.Context, in *FindByIdRequest, opts ...
 	return out, nil
 }
 
+func (c *userClient) ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error) {
+	out := new(ListByIdsResponse)
+	err := c.cc.Invoke(ctx, User_ListByIds_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error) {
 	out := new(FindByMobileResponse)
 	err := c.cc.Invoke(ctx, User_FindByMobile_FullMethodName, in, out, opts...)
@@ -85,6 +96,7 @@ func (c *userClient) SendSms(ctx context.Context, in *SendSmsRequest, opts ...gr
 type UserServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	FindById(context.Context, *FindByIdRequest) (*FindByIdResponse, error)
+	ListByIds(context.Context, *ListByIdsRequest) (*ListByIdsResponse, error)
 	FindByMobile(context.Context, *FindByMobileRequest) (*FindByMobileResponse, error)
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
 	mustEmbedUnimplementedUserServer()
@@ -99,6 +111,9 @@ func (UnimplementedUserServer) Register(context.Context, *RegisterRequest) (*Reg
 }
 func (UnimplementedUserServer) FindById(context.Context, *FindByIdRequest) (*FindByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindById not implemented")
+}
+func (UnimplementedUserServer) ListByIds(context.Context, *ListByIdsRequest) (*ListByIdsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListByIds not implemented")
 }
 func (UnimplementedUserServer) FindByMobile(context.Context, *FindByMobileRequest) (*FindByMobileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindByMobile not implemented")
@@ -155,6 +170,24 @@ func _User_FindById_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListByIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListByIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListByIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListByIds(ctx, req.(*ListByIdsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _User_FindByMobile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FindByMobileRequest)
 	if err := dec(in); err != nil {
@@ -207,6 +240,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_FindById_Handler,
 		},
 		{
+			MethodName: "ListByIds",
+			Handler:    _User_ListByIds_Handler,
+		},
+		{
 			MethodName: "FindByMobile",
 			Handler:    _User_FindByMobile_Handler,
 		},
@@ -216,5 +253,5 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "rpc/user.proto",
+	Metadata: "user.proto",
 }

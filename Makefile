@@ -13,13 +13,27 @@ gen-web-api: ## generate web api
 
 .PHONY: run-web
 run-web: ## run web
-	go run ./app/web/api/web.go -f ./app/web/api/etc/main.yaml
-	make tidy
+	go run ./app/web/api/main.go -f ./app/web/api/etc/main.yaml
 
 .PHONY: gen-user-rpc
 gen-user-rpc: ## generate user rpc
-	goctl rpc protoc ./rpc/user.proto --go_out=./rpc/pb --go-grpc_out=./rpc/pb --zrpc_out=./rpc/
+	mkdir -p ./app/user/rpc
+	cp ./spec/proto/user.proto ./app/user/rpc/
+	cd ./app/user/rpc && goctl rpc protoc user.proto --go_out=pb --go-grpc_out=pb --zrpc_out=. --style go_zero
+	rm -rf ./app/user/rpc/user.proto
 	make tidy
+
+.PHONY: gen-oss-rpc
+gen-oss-rpc:
+	mkdir -p ./app/oss/rpc
+	cp ./spec/proto/oss.proto ./app/oss/rpc/
+	cd ./app/oss/rpc && goctl rpc protoc oss.proto --go_out=pb --go-grpc_out=pb --zrpc_out=. --style go_zero
+	rm -rf ./app/oss/rpc/oss.proto
+	make tidy
+
+.PHONY: run-oss
+run-oss:
+	go run ./app/oss/rpc/oss.go -f ./app/oss/rpc/etc/oss.yaml
 
 .PHONY: gen-api-go
 gen-api-go: ## generate api go
