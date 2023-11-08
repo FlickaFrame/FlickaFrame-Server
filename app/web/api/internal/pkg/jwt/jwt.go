@@ -3,7 +3,7 @@ package jwt
 import (
 	"context"
 	"encoding/json"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/code"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"

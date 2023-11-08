@@ -5,7 +5,7 @@ option go_package="./user_service";
 
 service User {
   rpc Register(RegisterRequest) returns (RegisterResponse); // 注册
-  rpc FindById(FindByIdRequest) returns (FindByIdResponse); // 根据id查找
+  rpc FindById(FindByIdRequest) returns (UserInfoResponse); // 根据id查找
   rpc ListByIds(ListByIdsRequest) returns (ListByIdsResponse); // 根据id列表查找
   rpc FindByMobile(FindByMobileRequest) returns (FindByMobileResponse); // 根据手机号查找
   rpc SendSms(SendSmsRequest) returns (SendSmsResponse); // 发送短信
@@ -23,6 +23,7 @@ message UserInfoResponse {
   int64  followerCount = 9; // 粉丝数
   int64  likeCount = 10; // 获得的点赞数
   int64  collectCount = 11; // 收藏的视频数
+  string BackgroundUrl = 12; // 背景图片
 }
 
 message RegisterRequest {

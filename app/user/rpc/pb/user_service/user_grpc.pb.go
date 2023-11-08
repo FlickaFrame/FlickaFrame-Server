@@ -31,7 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error)
+	FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 	ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
 	FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error)
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
@@ -54,8 +54,8 @@ func (c *userClient) Register(ctx context.Context, in *RegisterRequest, opts ...
 	return out, nil
 }
 
-func (c *userClient) FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error) {
-	out := new(FindByIdResponse)
+func (c *userClient) FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
+	out := new(UserInfoResponse)
 	err := c.cc.Invoke(ctx, User_FindById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (c *userClient) SendSms(ctx context.Context, in *SendSmsRequest, opts ...gr
 // for forward compatibility
 type UserServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	FindById(context.Context, *FindByIdRequest) (*FindByIdResponse, error)
+	FindById(context.Context, *FindByIdRequest) (*UserInfoResponse, error)
 	ListByIds(context.Context, *ListByIdsRequest) (*ListByIdsResponse, error)
 	FindByMobile(context.Context, *FindByMobileRequest) (*FindByMobileResponse, error)
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
@@ -109,7 +109,7 @@ type UnimplementedUserServer struct {
 func (UnimplementedUserServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServer) FindById(context.Context, *FindByIdRequest) (*FindByIdResponse, error) {
+func (UnimplementedUserServer) FindById(context.Context, *FindByIdRequest) (*UserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindById not implemented")
 }
 func (UnimplementedUserServer) ListByIds(context.Context, *ListByIdsRequest) (*ListByIdsResponse, error) {

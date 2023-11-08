@@ -27,7 +27,7 @@ type (
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-		FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error)
+		FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 		ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
 		FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error)
 		SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
@@ -49,7 +49,7 @@ func (m *defaultUser) Register(ctx context.Context, in *RegisterRequest, opts ..
 	return client.Register(ctx, in, opts...)
 }
 
-func (m *defaultUser) FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*FindByIdResponse, error) {
+func (m *defaultUser) FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
 	client := user_service.NewUserClient(m.cli.Conn())
 	return client.FindById(ctx, in, opts...)
 }

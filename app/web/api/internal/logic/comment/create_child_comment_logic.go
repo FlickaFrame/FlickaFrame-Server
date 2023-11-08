@@ -2,9 +2,9 @@ package comment
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/code"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
 	"strconv"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"

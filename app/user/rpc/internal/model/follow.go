@@ -1,8 +1,7 @@
-package user
+package model
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -11,7 +10,7 @@ import (
 
 // Follow 关注
 type Follow struct {
-	base.Model
+	orm.Model
 
 	UserID         int64 `gorm:"uniqueIndex:idx_follow"`
 	User           *User `gorm:"-"`
@@ -58,7 +57,7 @@ func (m *UserModel) FollowUser(ctx context.Context, userId, followID int64) erro
 		return code.HadFollowed
 	}
 	return m.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(&Follow{Model: base.NewModel(), UserID: userId, FollowedUserID: followID}).Error; err != nil {
+		if err := tx.Create(&Follow{Model: orm.NewModel(), UserID: userId, FollowedUserID: followID}).Error; err != nil {
 			return err
 		}
 		if err := tx.Model(&User{}).Where("id = ?", followID).Update("follower_count", gorm.Expr("follower_count + ?", 1)).Error; err != nil {

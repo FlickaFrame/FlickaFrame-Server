@@ -2,13 +2,13 @@ package user
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/code"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 

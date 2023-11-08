@@ -3,12 +3,12 @@ package favorite
 import (
 	"context"
 	"encoding/json"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/code"
 	notice_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
+	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"

@@ -15,6 +15,7 @@ type Config struct {
 		AccessExpire int64
 	}
 	OssRpcConf  zrpc.RpcClientConf
+	UserRpcConf zrpc.RpcClientConf
 	MeiliSearch struct {
 		Host    string
 		APIKey  string

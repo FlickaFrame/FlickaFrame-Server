@@ -1,10 +1,9 @@
-package user
+package model
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/zeromicro/go-zero/core/stores/redis"
@@ -17,20 +16,20 @@ var (
 )
 
 type User struct {
-	base.Model
+	orm.Model
 
 	NickName      string `gorm:"type:varchar(32)"` // 昵称
 	AvatarUrl     string // 头像地址
-	Age           int    // 年龄
-	Gender        int    // 性别
+	Age           int32  // 年龄
+	Gender        int32  // 性别
 	Password      string // 密码
 	Phone         string `gorm:"type:varchar(100);index:idx_phone,unique"` // 手机号
 	BackgroundUrl string // 背景图
 	Slogan        string // 个人简介
 	TikTokID      string `gorm:"type:varchar(100);index:idx_tiktok"` // 抖音ID
 
-	FollowingCount int
-	FollowerCount  int
+	FollowingCount int64
+	FollowerCount  int64
 }
 
 func (u *User) TableName() string {
@@ -70,7 +69,7 @@ func NewUserModel(db *orm.DB, CacheRedis *redis.Redis) *UserModel {
 }
 
 func (m *UserModel) Insert(ctx context.Context, data *User) error {
-	data.Model = base.NewModel()
+	data.Model = orm.NewModel()
 	return m.db.WithContext(ctx).Create(data).Error
 }
 

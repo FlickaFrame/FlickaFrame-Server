@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
@@ -23,8 +24,34 @@ func NewFindByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindById
 	}
 }
 
-func (l *FindByIdLogic) FindById(in *user_service.FindByIdRequest) (*user_service.FindByIdResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &user_service.FindByIdResponse{}, nil
+func (l *FindByIdLogic) FindById(in *user_service.FindByIdRequest) (*user_service.UserInfoResponse, error) {
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
+	if err != nil {
+		return nil, err
+	}
+	// 用户的头像地址实际上是一个oss的key，需要通过oss服务获取访问地址
+	url, err := l.svcCtx.OssRpc.GetFileAccessUrl(l.ctx, &oss.GetFileAccessUrlRequest{Key: user.AvatarUrl})
+	if err != nil {
+		return nil, err
+	}
+	// 用户背景图片地址实际上是一个oss的key，需要通过oss服务获取访问地址
+	bgUrl, err := l.svcCtx.OssRpc.GetFileAccessUrl(l.ctx, &oss.GetFileAccessUrlRequest{Key: user.BackgroundUrl})
+	if err != nil {
+		return nil, err
+	}
+	user.AvatarUrl = url.Url
+	return &user_service.UserInfoResponse{
+		Id:             user.ID,
+		NickName:       user.NickName,
+		AvatarUrl:      user.AvatarUrl,
+		Slogan:         user.Slogan,
+		Gender:         user.Gender,
+		Age:            user.Age,
+		Mobile:         user.Phone,
+		FollowingCount: user.FollowingCount,
+		FollowerCount:  user.FollowerCount,
+		LikeCount:      0, //TODO: 获得点赞数
+		CollectCount:   0, //TODO: 收藏数
+		BackgroundUrl:  bgUrl.Url,
+	}, nil
 }

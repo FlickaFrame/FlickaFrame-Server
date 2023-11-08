@@ -2,6 +2,7 @@ package svc
 
 import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
+	user_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/comment"
@@ -31,6 +32,7 @@ type ServiceContext struct {
 	Indexer        *meilisearch.Client
 	KqPusherClient *kq.Pusher
 	OssRpc         oss.Oss
+	UserRpc        user_rpc.User
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -60,6 +62,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:         c,
 		Validate:       validator.New(),
 		OssRpc:         oss.NewOss(zrpc.MustNewClient(c.OssRpcConf)),
+		UserRpc:        user_rpc.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
 		DB:             db,
 		BizRedis:       rds,
 		VideoModel:     video.NewVideoModel(db),
