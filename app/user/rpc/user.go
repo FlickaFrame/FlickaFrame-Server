@@ -7,7 +7,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/server"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/service"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -26,7 +26,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		service.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
+		user_service.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

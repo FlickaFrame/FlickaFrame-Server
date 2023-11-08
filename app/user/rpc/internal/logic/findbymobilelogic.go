@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/service"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewFindByMobileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Find
 	}
 }
 
-func (l *FindByMobileLogic) FindByMobile(in *service.FindByMobileRequest) (*service.FindByMobileResponse, error) {
+func (l *FindByMobileLogic) FindByMobile(in *user_service.FindByMobileRequest) (*user_service.FindByMobileResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &service.FindByMobileResponse{}, nil
+	return &user_service.FindByMobileResponse{}, nil
 }

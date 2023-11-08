@@ -8,12 +8,12 @@ import (
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/logic"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/service"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
 )
 
 type UserServer struct {
 	svcCtx *svc.ServiceContext
-	service.UnimplementedUserServer
+	user_service.UnimplementedUserServer
 }
 
 func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
@@ -22,22 +22,22 @@ func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
 	}
 }
 
-func (s *UserServer) Register(ctx context.Context, in *service.RegisterRequest) (*service.RegisterResponse, error) {
+func (s *UserServer) Register(ctx context.Context, in *user_service.RegisterRequest) (*user_service.RegisterResponse, error) {
 	l := logic.NewRegisterLogic(ctx, s.svcCtx)
 	return l.Register(in)
 }
 
-func (s *UserServer) FindById(ctx context.Context, in *service.FindByIdRequest) (*service.FindByIdResponse, error) {
+func (s *UserServer) FindById(ctx context.Context, in *user_service.FindByIdRequest) (*user_service.FindByIdResponse, error) {
 	l := logic.NewFindByIdLogic(ctx, s.svcCtx)
 	return l.FindById(in)
 }
 
-func (s *UserServer) FindByMobile(ctx context.Context, in *service.FindByMobileRequest) (*service.FindByMobileResponse, error) {
+func (s *UserServer) FindByMobile(ctx context.Context, in *user_service.FindByMobileRequest) (*user_service.FindByMobileResponse, error) {
 	l := logic.NewFindByMobileLogic(ctx, s.svcCtx)
 	return l.FindByMobile(in)
 }
 
-func (s *UserServer) SendSms(ctx context.Context, in *service.SendSmsRequest) (*service.SendSmsResponse, error) {
+func (s *UserServer) SendSms(ctx context.Context, in *user_service.SendSmsRequest) (*user_service.SendSmsResponse, error) {
 	l := logic.NewSendSmsLogic(ctx, s.svcCtx)
 	return l.SendSms(in)
 }

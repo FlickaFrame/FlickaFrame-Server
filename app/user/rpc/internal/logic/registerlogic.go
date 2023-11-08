@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/service"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
-func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.RegisterResponse, error) {
+func (l *RegisterLogic) Register(in *user_service.RegisterRequest) (*user_service.RegisterResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &service.RegisterResponse{}, nil
+	return &user_service.RegisterResponse{}, nil
 }

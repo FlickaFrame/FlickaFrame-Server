@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/service"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewSendSmsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendSmsLo
 	}
 }
 
-func (l *SendSmsLogic) SendSms(in *service.SendSmsRequest) (*service.SendSmsResponse, error) {
+func (l *SendSmsLogic) SendSms(in *user_service.SendSmsRequest) (*user_service.SendSmsResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &service.SendSmsResponse{}, nil
+	return &user_service.SendSmsResponse{}, nil
 }

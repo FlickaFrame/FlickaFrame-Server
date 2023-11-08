@@ -10,3 +10,6 @@
 etc/main.yaml
 go.sum
 template
+
+etc
+main.yaml
