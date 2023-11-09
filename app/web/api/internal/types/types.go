@@ -92,6 +92,7 @@ type ListFollowReq struct {
 
 type ListFollowUserResp struct {
 	FollowUser []*FollowUser `json:"users"`
+	Total      int64         `json:"total"`
 }
 
 type UserBasicInfo struct {

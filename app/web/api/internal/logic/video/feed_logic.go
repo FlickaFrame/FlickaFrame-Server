@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
@@ -62,7 +63,14 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	// 判断关注状态
 	for i := range list {
 		authorId, _ := strconv.ParseInt(list[i].VideoUserInfo.ID, 10, 64)
-		resp.List[i].VideoUserInfo.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, authorId)
+		follow, err := l.svcCtx.FollowRpc.IsFollow(l.ctx, &follow_rpc.IsFollowReq{
+			UserId:         doerId,
+			FollowedUserId: authorId,
+		})
+		if err != nil {
+			return nil, err
+		}
+		resp.List[i].VideoUserInfo.IsFollow = follow.IsFollow
 	}
 	resp.IsEnd = len(resp.List) < req.Limit
 	return

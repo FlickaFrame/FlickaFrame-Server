@@ -23,8 +23,8 @@ func NewFindByMobileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Find
 	}
 }
 
-func (l *FindByMobileLogic) FindByMobile(in *user_service.FindByMobileRequest) (*user_service.FindByMobileResponse, error) {
+func (l *FindByMobileLogic) FindByMobile(in *user_service.FindByMobileRequest) (*user_service.UserInfoResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &user_service.FindByMobileResponse{}, nil
+	return &user_service.UserInfoResponse{}, nil
 }

@@ -183,5 +183,6 @@ type (
 	}
 	ListFollowUserResp {
 		FollowUser []*FollowUser `json:"users"`
+		Total     int64         `json:"total"`
 	}
 )

@@ -14,9 +14,10 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	OssRpcConf  zrpc.RpcClientConf
-	UserRpcConf zrpc.RpcClientConf
-	MeiliSearch struct {
+	OssRpcConf    zrpc.RpcClientConf
+	UserRpcConf   zrpc.RpcClientConf
+	FollowRpcConf zrpc.RpcClientConf
+	MeiliSearch   struct {
 		Host    string
 		APIKey  string
 		Timeout int64

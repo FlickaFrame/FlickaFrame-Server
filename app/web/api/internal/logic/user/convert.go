@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 	user_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
@@ -37,9 +38,15 @@ func (c *Convert) BuildUserBasicInfo(ctx context.Context, user *user_model.User)
 
 func (c *Convert) BuildUserInteractionInfo(ctx context.Context, doer, contextUser int64) (*types.UserInteractionInfo, error) {
 	// 关注信息
-	isFollow := c.svcCtx.UserModel.IsFollowing(ctx, doer, contextUser)
+	follow, err := c.svcCtx.FollowRpc.IsFollow(ctx, &follow_rpc.IsFollowReq{
+		UserId:         doer,
+		FollowedUserId: contextUser,
+	})
+	if err != nil {
+		return nil, err
+	}
 	return &types.UserInteractionInfo{
-		IsFollow: isFollow,
+		IsFollow: follow.IsFollow,
 	}, nil
 }
 

@@ -39,6 +39,18 @@ gen-oss-rpc:
 run-oss-rpc:
 	go run app/oss/rpc/oss.go -f etc/oss_rpc.yml
 
+.PHONY: gen-follow-rpc
+gen-follow-rpc:
+	mkdir -p ./app/follow/rpc
+	cp ./spec/proto/follow.proto ./app/follow/rpc/
+	cd ./app/follow/rpc && goctl rpc protoc follow.proto --go_out=pb --go-grpc_out=pb --zrpc_out=. --style go_zero
+	rm -rf ./app/follow/rpc/follow.proto
+	make tidy
+
+.PHONY: run-follow-rpc
+run-follow-rpc:
+	go run app/follow/rpc/follow.go -f etc/follow_rpc.yml
+
 .PHONY: gen-api-go
 gen-api-go: ## generate api go
 	goctl api go --dir=./ --api ./desc/main.api  --style go_zero

@@ -29,7 +29,7 @@ type (
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 		FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 		ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
-		FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error)
+		FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 		SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 	}
 
@@ -59,7 +59,7 @@ func (m *defaultUser) ListByIds(ctx context.Context, in *ListByIdsRequest, opts 
 	return client.ListByIds(ctx, in, opts...)
 }
 
-func (m *defaultUser) FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error) {
+func (m *defaultUser) FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
 	client := user_service.NewUserClient(m.cli.Conn())
 	return client.FindByMobile(ctx, in, opts...)
 }

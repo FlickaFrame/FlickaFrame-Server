@@ -1,6 +1,7 @@
 package svc
 
 import (
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 	user_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/config"
@@ -25,7 +26,6 @@ type ServiceContext struct {
 	BizRedis       *redis.Redis        // 业务redis连接
 	VideoModel     *video.VideoModel
 	UserModel      *user.UserModel
-	FollowModel    *user.FollowModel
 	FavoriteModel  *favorite.Model
 	CommentModel   *comment.Model
 	NoticeModel    *notice.NoticeModel
@@ -33,6 +33,7 @@ type ServiceContext struct {
 	KqPusherClient *kq.Pusher
 	OssRpc         oss.Oss
 	UserRpc        user_rpc.User
+	FollowRpc      follow_rpc.Follow
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -59,15 +60,16 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		//Timeout: time.Millisecond*c.MeiliSearch.Timeout
 	})
 	return &ServiceContext{
-		Config:         c,
-		Validate:       validator.New(),
-		OssRpc:         oss.NewOss(zrpc.MustNewClient(c.OssRpcConf)),
-		UserRpc:        user_rpc.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
-		DB:             db,
-		BizRedis:       rds,
-		VideoModel:     video.NewVideoModel(db),
-		UserModel:      user.NewUserModel(db, rds),
-		FollowModel:    user.NewFollowModel(db),
+		Config:     c,
+		Validate:   validator.New(),
+		OssRpc:     oss.NewOss(zrpc.MustNewClient(c.OssRpcConf)),
+		UserRpc:    user_rpc.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
+		FollowRpc:  follow_rpc.NewFollow(zrpc.MustNewClient(c.FollowRpcConf)),
+		DB:         db,
+		BizRedis:   rds,
+		VideoModel: video.NewVideoModel(db),
+		UserModel:  user.NewUserModel(db, rds),
+
 		FavoriteModel:  favorite.NewFavoriteModel(db),
 		CommentModel:   comment.NewCommentModel(db),
 		NoticeModel:    notice.NewNoticeModel(db),

@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"encoding/json"
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"time"
 
@@ -29,9 +30,12 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
 	doerUserId := jwt.GetUidFromCtx(l.ctx)
-	res := l.svcCtx.UserModel.FollowUser(l.ctx, doerUserId, req.ContextUserId)
+	_, err = l.svcCtx.FollowRpc.Follow(l.ctx, &follow_rpc.FollowRequest{
+		UserId:         doerUserId,
+		FollowedUserId: req.ContextUserId,
+	})
 	if err != nil {
-		return nil, res
+		return nil, err
 	}
 
 	notice := notice_model.Notice{
@@ -40,12 +44,12 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 		NoticeType: notice_model.NoticeTypeFollow,
 		NoticeTime: time.Now(),
 	}
-	jsonBody, errJson := json.Marshal(notice)
-	if errJson != nil {
-		return nil, errJson
+	jsonBody, err := json.Marshal(notice)
+	if err != nil {
+		return nil, err
 	}
 	if errMq := l.svcCtx.KqPusherClient.Push(string(jsonBody)); errMq != nil {
 		return nil, errMq
 	}
-	return nil, res
+	return
 }

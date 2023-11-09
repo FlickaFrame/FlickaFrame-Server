@@ -33,7 +33,7 @@ type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 	ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
-	FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error)
+	FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 }
 
@@ -72,8 +72,8 @@ func (c *userClient) ListByIds(ctx context.Context, in *ListByIdsRequest, opts .
 	return out, nil
 }
 
-func (c *userClient) FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*FindByMobileResponse, error) {
-	out := new(FindByMobileResponse)
+func (c *userClient) FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
+	out := new(UserInfoResponse)
 	err := c.cc.Invoke(ctx, User_FindByMobile_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ type UserServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	FindById(context.Context, *FindByIdRequest) (*UserInfoResponse, error)
 	ListByIds(context.Context, *ListByIdsRequest) (*ListByIdsResponse, error)
-	FindByMobile(context.Context, *FindByMobileRequest) (*FindByMobileResponse, error)
+	FindByMobile(context.Context, *FindByMobileRequest) (*UserInfoResponse, error)
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
@@ -115,7 +115,7 @@ func (UnimplementedUserServer) FindById(context.Context, *FindByIdRequest) (*Use
 func (UnimplementedUserServer) ListByIds(context.Context, *ListByIdsRequest) (*ListByIdsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListByIds not implemented")
 }
-func (UnimplementedUserServer) FindByMobile(context.Context, *FindByMobileRequest) (*FindByMobileResponse, error) {
+func (UnimplementedUserServer) FindByMobile(context.Context, *FindByMobileRequest) (*UserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindByMobile not implemented")
 }
 func (UnimplementedUserServer) SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error) {

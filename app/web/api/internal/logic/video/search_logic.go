@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
@@ -78,7 +79,15 @@ func (l *SearchLogic) Search(req *types.VideoSearchReq) (resp *types.VideoSearch
 	// 判断关注状态
 	for i := range list {
 		authorId, _ := strconv.ParseInt(list[i].VideoUserInfo.ID, 10, 64)
-		resp.Videos[i].VideoUserInfo.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, authorId)
+		follow, err := l.svcCtx.FollowRpc.IsFollow(l.ctx, &follow_rpc.IsFollowReq{
+			UserId:         doerId,
+			FollowedUserId: authorId,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		resp.Videos[i].VideoUserInfo.IsFollow = follow.IsFollow
 	}
 	return
 }

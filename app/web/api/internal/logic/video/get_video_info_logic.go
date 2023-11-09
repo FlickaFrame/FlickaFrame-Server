@@ -2,6 +2,7 @@ package video
 
 import (
 	"context"
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
@@ -36,6 +37,13 @@ func (l *GetVideoInfoLogic) GetVideoInfo(req *types.GetVideoInfoReq) (resp *type
 	}
 	// 互动信息(与当前登录用户的关注关系)
 	doerId := jwt.GetUidFromCtx(l.ctx)
-	resp.Video.VideoUserInfo.IsFollow = l.svcCtx.UserModel.IsFollowing(l.ctx, doerId, video.AuthorID)
+	follow, err := l.svcCtx.FollowRpc.IsFollow(l.ctx, &follow_rpc.IsFollowReq{
+		UserId:         doerId,
+		FollowedUserId: video.AuthorID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	resp.Video.VideoUserInfo.IsFollow = follow.IsFollow
 	return
 }

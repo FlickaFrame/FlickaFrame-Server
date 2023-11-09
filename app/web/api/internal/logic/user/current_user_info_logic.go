@@ -26,6 +26,7 @@ func NewCurrentUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
+// CurrentUserInfo 获取当前用户信息
 func (l *CurrentUserInfoLogic) CurrentUserInfo(req *types.UserDetailInfoReq) (resp *types.UserDetailInfoResp, err error) {
 	req.ContextUserId = jwt.GetUidFromCtx(l.ctx)
 	doerId := jwt.GetUidFromCtx(l.ctx)
