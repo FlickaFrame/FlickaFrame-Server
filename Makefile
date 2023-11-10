@@ -8,7 +8,7 @@ tidy:
 
 .PHONY: install
 install:
-	GO111MODULE=on GOPROXY=https://goproxy.cn/,direct go get -u github.com/tal-tech/go-zero/tools/goctl
+	GO111MODULE=on GOPROXY=https://goproxy.cn/,direct go get -u github.com/zeromicro/go-zero/tools/goctl
 
 .PHONY: gen-web-api
 gen-web-api: ## generate web api
