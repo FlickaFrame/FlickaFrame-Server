@@ -13,7 +13,7 @@ gen-web-api: ## generate web api
 
 .PHONY: run-web-api
 run-web-api: ## run web
-	go run ./app/web/api/main.go -f ./app/web/api/etc/main.yaml
+	go run ./app/web/api/main.go -f ./etc/web_api.yml
 
 .PHONY: gen-user-rpc
 gen-user-rpc: ## generate user rpc
