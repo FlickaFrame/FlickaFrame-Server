@@ -29,13 +29,14 @@ func NewUnFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UnFollow
 }
 
 func (l *UnFollowLogic) UnFollow(in *pb.UnFollowRequest) (*pb.UnFollowResponse, error) {
+	// 1. 参数校验
 	if in.UserId == 0 {
 		return nil, code.FollowUserIdEmpty
 	}
 	if in.FollowedUserId == 0 {
 		return nil, code.FollowedUserIdEmpty
 	}
-
+	// 2. 数据库操作
 	follow, err := l.svcCtx.FollowModel.FindByUserIDAndFollowedUserID(l.ctx, in.UserId, in.FollowedUserId)
 	if err != nil {
 		l.Logger.Errorf("[UnFollow] FollowModel.FindByUserIDAndFollowedUserID err: %v req: %v", err, in)
@@ -50,22 +51,26 @@ func (l *UnFollowLogic) UnFollow(in *pb.UnFollowRequest) (*pb.UnFollowResponse, 
 
 	// 事务
 	err = l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
-		err := model.NewFollowModel(tx).UpdateFields(l.ctx, follow.ID, map[string]interface{}{
-			"follow_status": types.FollowStatusUnfollow,
-		})
+		err := model.NewFollowModel(tx).
+			UpdateFields(l.ctx, follow.ID, map[string]interface{}{
+				"follow_status": types.FollowStatusUnfollow,
+			})
 		if err != nil {
 			return err
 		}
-		err = model.NewFollowCountModel(tx).DecrFollowCount(l.ctx, in.UserId)
+		err = model.NewFollowCountModel(tx).
+			DecrFollowCount(l.ctx, in.UserId)
 		if err != nil {
 			return err
 		}
-		return model.NewFollowCountModel(tx).DecrFansCount(l.ctx, in.FollowedUserId)
+		return model.NewFollowCountModel(tx).
+			DecrFansCount(l.ctx, in.FollowedUserId)
 	})
 	if err != nil {
 		l.Logger.Errorf("[UnFollow] Transaction error: %v", err)
 		return nil, err
 	}
+	// 3. 缓存操作
 	_, err = l.svcCtx.BizRedis.ZremCtx(l.ctx, userFollowKey(in.UserId), strconv.FormatInt(in.FollowedUserId, 10))
 	if err != nil {
 		l.Logger.Errorf("[UnFollow] BizRedis.ZremCtx error: %v", err)

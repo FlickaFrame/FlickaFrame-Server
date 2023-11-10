@@ -32,6 +32,7 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
+	// 1. 参数校验
 	if in.UserId == 0 {
 		return nil, code.FollowUserIdEmpty
 	}
@@ -41,7 +42,9 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 	if in.UserId == in.FollowedUserId {
 		return nil, code.CannotFollowSelf
 	}
-	follow, err := l.svcCtx.FollowModel.FindByUserIDAndFollowedUserID(l.ctx, in.UserId, in.FollowedUserId)
+
+	// 2. 数据库操作
+	follow, err := l.svcCtx.FollowModel.FindByUserIDAndFollowedUserID(l.ctx, in.UserId, in.FollowedUserId) // 查找数据库中是否已经存在关注关系
 	if err != nil {
 		l.Logger.Errorf("[Follow] FollowModel.FindByUserIDAndFollowedUserID err: %v req: %v", err, in)
 		return nil, err
@@ -51,11 +54,11 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 	}
 	// 事务
 	err = l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
-		if follow != nil {
+		if follow != nil { // 已经存在关注关系，更新关注状态
 			err = model.NewFollowModel(tx).UpdateFields(l.ctx, follow.ID, map[string]interface{}{
 				"follow_status": types.FollowStatusFollow,
 			})
-		} else {
+		} else { // 不存在关注关系，创建关注关系
 			err = model.NewFollowModel(tx).Insert(l.ctx, &model.Follow{
 				Model:          orm.NewModel(),
 				UserID:         in.UserId,
@@ -67,27 +70,29 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 		if err != nil {
 			return err
 		}
-		err = model.NewFollowCountModel(tx).IncrFollowCount(l.ctx, in.UserId)
+		err = model.NewFollowCountModel(tx).IncrFollowCount(l.ctx, in.UserId) // 关注数 +1
 		if err != nil {
 			return err
 		}
-		return model.NewFollowCountModel(tx).IncrFansCount(l.ctx, in.FollowedUserId)
+		return model.NewFollowCountModel(tx).IncrFansCount(l.ctx, in.FollowedUserId) // 粉丝数 +1
 	})
 	if err != nil {
 		l.Logger.Errorf("[Follow] Transaction error: %v", err)
 		return nil, err
 	}
+	// 3. 缓存操作
 	followExist, err := l.svcCtx.BizRedis.ExistsCtx(l.ctx, userFollowKey(in.UserId))
 	if err != nil {
 		l.Logger.Errorf("[Follow] Redis Exists error: %v", err)
 		return nil, err
 	}
-	if followExist {
+	if followExist { // 使用ZADD命令将关注关系写入Redis
 		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, userFollowKey(in.UserId), time.Now().Unix(), strconv.FormatInt(in.FollowedUserId, 10))
 		if err != nil {
 			l.Logger.Errorf("[Follow] Redis Zadd error: %v", err)
 			return nil, err
 		}
+		// 使用ZREMRANGEBYRANK命令剔除多余的关注关系
 		_, err = l.svcCtx.BizRedis.ZremrangebyrankCtx(l.ctx, userFollowKey(in.UserId), 0, -(types.CacheMaxFollowCount + 1))
 		if err != nil {
 			l.Logger.Errorf("[Follow] Redis Zremrangebyrank error: %v", err)

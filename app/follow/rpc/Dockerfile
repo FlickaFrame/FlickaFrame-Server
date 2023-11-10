@@ -14,8 +14,8 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
-COPY ./etc /app/etc
-RUN go build -ldflags="-s -w" -o /app/FlickaFrame-Server main.go
+COPY app/follow/rpc/etc /app/etc
+RUN go build -ldflags="-s -w" -o /app/follow app/follow/rpc/follow.go
 
 
 FROM scratch
@@ -25,7 +25,9 @@ COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/S
 ENV TZ Asia/Shanghai
 
 WORKDIR /app
-COPY --from=builder /app/FlickaFrame-Server /app/FlickaFrame-Server
+COPY --from=builder /app/follow /app/follow
 COPY --from=builder /app/etc /app/etc
 
-CMD ["./FlickaFrame-Server", "-f", "etc/main.yaml"]
+EXPOSE 8003
+
+CMD ["./follow", "-f", "etc/follow.yaml"]

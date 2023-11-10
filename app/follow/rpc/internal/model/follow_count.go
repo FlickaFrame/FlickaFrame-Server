@@ -8,9 +8,9 @@ import (
 
 type FollowCount struct {
 	orm.Model
-	UserID      int64
-	FollowCount int
-	FansCount   int
+	UserID      int64 `gorm:"uniqueIndex:idx_follow_count"`
+	FollowCount int   `gorm:"follow_count"`
+	FansCount   int   `gorm:"fans_count"`
 }
 
 func (m *FollowCount) TableName() string {

@@ -22,7 +22,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		MaxIdleConns: c.Mysql.MaxIdleConns,
 		MaxLifetime:  c.Mysql.MaxLifetime,
 	})
-
+	err := model.Migrate(db)
+	if err != nil {
+		panic(err)
+	}
 	rds := redis.MustNewRedis(redis.RedisConf{
 		Host: c.BizRedis.Host,
 		Pass: c.BizRedis.Pass,

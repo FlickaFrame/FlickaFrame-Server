@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
+	"sort"
 )
 
 type Follow struct {
@@ -43,7 +44,11 @@ func (m *FollowModel) Update(ctx context.Context, data *Follow) error {
 }
 
 func (m *FollowModel) UpdateFields(ctx context.Context, id int64, values map[string]interface{}) error {
-	return m.db.WithContext(ctx).Model(&Follow{}).Where("id = ?", id).Updates(values).Error
+	return m.db.WithContext(ctx).
+		Model(&Follow{}).
+		Where("id = ?", id).
+		Updates(values).
+		Error
 }
 
 // FindByUserIDAndFollowedUserID 获取关注关系
@@ -68,11 +73,42 @@ func (m *FollowModel) FindByUserId(ctx context.Context, userId int64, limit int)
 	return result, err
 }
 
+func (m *FollowModel) FindByFollowedUserId(ctx context.Context, userId int64, limit int) ([]*Follow, error) {
+	var result []*Follow
+	err := m.db.WithContext(ctx).
+		Where("followed_user_id = ? AND follow_status = ?", userId, 1).
+		Order("id desc").
+		Limit(limit).
+		Find(&result).Error
+	return result, err
+}
+
 func (m *FollowModel) FindByFollowedUserIds(ctx context.Context, followedUserIds []int64) ([]*Follow, error) {
 	var result []*Follow
 	err := m.db.WithContext(ctx).
 		Where("followed_user_id in (?)", followedUserIds).
 		Find(&result).Error
+	val2idx := make(map[int64]int, len(followedUserIds))
+	for i, v := range followedUserIds {
+		val2idx[v] = i
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return val2idx[result[i].FollowedUserID] < val2idx[result[j].FollowedUserID]
+	})
+	return result, err
+}
 
+func (m *FollowModel) FindByUserIds(ctx context.Context, userIds []int64) ([]*Follow, error) {
+	var result []*Follow
+	err := m.db.WithContext(ctx).
+		Where("user_id in (?)", userIds).
+		Find(&result).Error
+	val2idx := make(map[int64]int, len(userIds))
+	for i, v := range userIds {
+		val2idx[v] = i
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return val2idx[result[i].UserID] < val2idx[result[j].UserID]
+	})
 	return result, err
 }

@@ -58,18 +58,22 @@ message FollowListResponse {
 }
 
 message FansListRequest {
-  int64 userId = 1;
-  int64 cursor = 2;
-  int64 pageSize = 3;
+  int64 Id = 1;
+  int64 followedUserId = 2; // 被关注者
+  int64 cursor = 3;
+  int64 pageSize = 4;
 }
 
 message FansItem {
-  int64 userId = 1;
-  int64 fansUserId = 2;
-  int64 createTime = 3;
+  int64 Id = 1;
+  int64 userId = 2;
+  int64 fansUserId = 3;
+  int64 createTime = 4;
 }
 
 message FansListResponse {
   repeated FansItem items = 1;
   int64 cursor = 2;
+  bool isEnd = 3;
+  int64 Id = 4;
 }
