@@ -19,6 +19,8 @@ type (
 	FindByMobileResponse = user_service.FindByMobileResponse
 	ListByIdsRequest     = user_service.ListByIdsRequest
 	ListByIdsResponse    = user_service.ListByIdsResponse
+	LoginRequest         = user_service.LoginRequest
+	LoginResponse        = user_service.LoginResponse
 	RegisterRequest      = user_service.RegisterRequest
 	RegisterResponse     = user_service.RegisterResponse
 	SendSmsRequest       = user_service.SendSmsRequest
@@ -27,6 +29,7 @@ type (
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 		FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 		ListByIds(ctx context.Context, in *ListByIdsRequest, opts ...grpc.CallOption) (*ListByIdsResponse, error)
 		FindByMobile(ctx context.Context, in *FindByMobileRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
@@ -47,6 +50,11 @@ func NewUser(cli zrpc.Client) User {
 func (m *defaultUser) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	client := user_service.NewUserClient(m.cli.Conn())
 	return client.Register(ctx, in, opts...)
+}
+
+func (m *defaultUser) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	client := user_service.NewUserClient(m.cli.Conn())
+	return client.Login(ctx, in, opts...)
 }
 
 func (m *defaultUser) FindById(ctx context.Context, in *FindByIdRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {

@@ -27,6 +27,11 @@ func (s *UserServer) Register(ctx context.Context, in *user_service.RegisterRequ
 	return l.Register(in)
 }
 
+func (s *UserServer) Login(ctx context.Context, in *user_service.LoginRequest) (*user_service.LoginResponse, error) {
+	l := logic.NewLoginLogic(ctx, s.svcCtx)
+	return l.Login(in)
+}
+
 func (s *UserServer) FindById(ctx context.Context, in *user_service.FindByIdRequest) (*user_service.UserInfoResponse, error) {
 	l := logic.NewFindByIdLogic(ctx, s.svcCtx)
 	return l.FindById(in)

@@ -6,7 +6,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
 	"github.com/jinzhu/copier"
@@ -45,10 +44,6 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 		Avatar:   "",
 		Password: req.Password,
 	}
-	if len(user.Nickname) == 0 { // If the nickname is empty, generate a random nickname
-		user.Nickname = util.KRand(8, util.KC_RAND_KIND_ALL)
-	}
-	user.Password = util.Md5ByString(user.Password)
 	registerRsp, err := l.svcCtx.UserRpc.Register(l.ctx, user)
 	if err != nil {
 		return nil, err

@@ -5,6 +5,7 @@ option go_package="./user_service";
 
 service User {
   rpc Register(RegisterRequest) returns (RegisterResponse); // 注册
+  rpc Login(LoginRequest) returns (LoginResponse); // 登录
   rpc FindById(FindByIdRequest) returns (UserInfoResponse); // 根据id查找
   rpc ListByIds(ListByIdsRequest) returns (ListByIdsResponse); // 根据id列表查找
   rpc FindByMobile(FindByMobileRequest) returns (UserInfoResponse); // 根据手机号查找
@@ -32,6 +33,14 @@ message RegisterRequest {
   string phone= 2;
   string avatar = 3;
   string password = 4;
+}
+
+message LoginRequest {
+  string phone = 1;
+  string password = 2;
+}
+message LoginResponse {
+  int64 userId = 1;
 }
 
 message RegisterResponse {
