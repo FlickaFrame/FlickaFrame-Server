@@ -141,7 +141,7 @@ func (c *Convert) BuildParentCommentList(ctx context.Context, doerId int64, comm
 	for _, parentComment := range comments {
 		commentInfo, err := c.BuildParentComment(ctx, doerId, parentComment)
 		if err != nil {
-			return nil, err
+			return resp, err
 		}
 		resp = append(resp, commentInfo)
 	}
