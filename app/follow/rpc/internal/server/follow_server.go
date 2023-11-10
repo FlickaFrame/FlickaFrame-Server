@@ -46,3 +46,8 @@ func (s *FollowServer) IsFollow(ctx context.Context, in *pb.IsFollowReq) (*pb.Is
 	l := logic.NewIsFollowLogic(ctx, s.svcCtx)
 	return l.IsFollow(in)
 }
+
+func (s *FollowServer) FollowCount(ctx context.Context, in *pb.FollowCountReq) (*pb.FollowCountResp, error) {
+	l := logic.NewFollowCountLogic(ctx, s.svcCtx)
+	return l.FollowCount(in)
+}

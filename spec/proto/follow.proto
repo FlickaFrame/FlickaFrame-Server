@@ -9,6 +9,20 @@ service Follow {
   rpc FollowList (FollowListRequest) returns (FollowListResponse);   // 关注列表
   rpc FansList (FansListRequest) returns (FansListResponse);   // 粉丝列表
   rpc IsFollow (IsFollowReq) returns (IsFollowResp);   // 是否关注
+  rpc FollowCount (FollowCountReq) returns (FollowCountResp);   // 关注数&粉丝数
+}
+message FollowCountReq {
+  repeated int64 userIds = 1;
+}
+
+message FollowCountItem {
+  int64 userId = 1;
+  int64 followCount = 2;
+  int64 fansCount = 3;
+}
+
+message FollowCountResp {
+  repeated FollowCountItem items = 1;
 }
 
 message FollowRequest {

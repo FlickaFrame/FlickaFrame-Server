@@ -36,6 +36,21 @@ service main {
     get /user/me/following(ListFollowReq) returns (ListFollowUserResp)
 }
 
+//need login
+@server(
+    prefix: api/v1
+    group: user
+)
+service main {
+    @doc "ListFollowers list the given user's followers"
+    @handler ListFollowers
+    get /user/:user_id/followers(ListFollowReq) returns (ListFollowUserResp)
+
+    @doc "ListFollowing list the users that the given user is following"
+    @handler ListFollowing
+    get /user/:user_id/following(ListFollowReq) returns (ListFollowUserResp)
+}
+
 
 type (
     FollowReq {

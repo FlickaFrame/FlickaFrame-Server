@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Follow_Follow_FullMethodName     = "/service.Follow/Follow"
-	Follow_UnFollow_FullMethodName   = "/service.Follow/UnFollow"
-	Follow_FollowList_FullMethodName = "/service.Follow/FollowList"
-	Follow_FansList_FullMethodName   = "/service.Follow/FansList"
-	Follow_IsFollow_FullMethodName   = "/service.Follow/IsFollow"
+	Follow_Follow_FullMethodName      = "/service.Follow/Follow"
+	Follow_UnFollow_FullMethodName    = "/service.Follow/UnFollow"
+	Follow_FollowList_FullMethodName  = "/service.Follow/FollowList"
+	Follow_FansList_FullMethodName    = "/service.Follow/FansList"
+	Follow_IsFollow_FullMethodName    = "/service.Follow/IsFollow"
+	Follow_FollowCount_FullMethodName = "/service.Follow/FollowCount"
 )
 
 // FollowClient is the client API for Follow service.
@@ -35,6 +36,7 @@ type FollowClient interface {
 	FollowList(ctx context.Context, in *FollowListRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	FansList(ctx context.Context, in *FansListRequest, opts ...grpc.CallOption) (*FansListResponse, error)
 	IsFollow(ctx context.Context, in *IsFollowReq, opts ...grpc.CallOption) (*IsFollowResp, error)
+	FollowCount(ctx context.Context, in *FollowCountReq, opts ...grpc.CallOption) (*FollowCountResp, error)
 }
 
 type followClient struct {
@@ -90,6 +92,15 @@ func (c *followClient) IsFollow(ctx context.Context, in *IsFollowReq, opts ...gr
 	return out, nil
 }
 
+func (c *followClient) FollowCount(ctx context.Context, in *FollowCountReq, opts ...grpc.CallOption) (*FollowCountResp, error) {
+	out := new(FollowCountResp)
+	err := c.cc.Invoke(ctx, Follow_FollowCount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FollowServer is the server API for Follow service.
 // All implementations must embed UnimplementedFollowServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type FollowServer interface {
 	FollowList(context.Context, *FollowListRequest) (*FollowListResponse, error)
 	FansList(context.Context, *FansListRequest) (*FansListResponse, error)
 	IsFollow(context.Context, *IsFollowReq) (*IsFollowResp, error)
+	FollowCount(context.Context, *FollowCountReq) (*FollowCountResp, error)
 	mustEmbedUnimplementedFollowServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedFollowServer) FansList(context.Context, *FansListRequest) (*F
 }
 func (UnimplementedFollowServer) IsFollow(context.Context, *IsFollowReq) (*IsFollowResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsFollow not implemented")
+}
+func (UnimplementedFollowServer) FollowCount(context.Context, *FollowCountReq) (*FollowCountResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FollowCount not implemented")
 }
 func (UnimplementedFollowServer) mustEmbedUnimplementedFollowServer() {}
 
@@ -224,6 +239,24 @@ func _Follow_IsFollow_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Follow_FollowCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowCountReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FollowServer).FollowCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Follow_FollowCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FollowServer).FollowCount(ctx, req.(*FollowCountReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Follow_ServiceDesc is the grpc.ServiceDesc for Follow service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var Follow_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IsFollow",
 			Handler:    _Follow_IsFollow_Handler,
+		},
+		{
+			MethodName: "FollowCount",
+			Handler:    _Follow_FollowCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

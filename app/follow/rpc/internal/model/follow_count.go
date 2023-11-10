@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"gorm.io/gorm"
+	"sort"
 )
 
 type FollowCount struct {
@@ -68,5 +69,12 @@ func (m *FollowCountModel) DecrFansCount(ctx context.Context, userId int64) erro
 func (m *FollowCountModel) FindByUserIds(ctx context.Context, userIds []int64) ([]*FollowCount, error) {
 	var result []*FollowCount
 	err := m.db.WithContext(ctx).Where("user_id IN ?", userIds).Find(&result).Error
+	val2idx := make(map[int64]int, len(userIds))
+	for i, v := range userIds {
+		val2idx[v] = i
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return val2idx[result[i].UserID] < val2idx[result[j].UserID]
+	})
 	return result, err
 }

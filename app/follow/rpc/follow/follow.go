@@ -16,6 +16,9 @@ type (
 	FansItem           = pb.FansItem
 	FansListRequest    = pb.FansListRequest
 	FansListResponse   = pb.FansListResponse
+	FollowCountItem    = pb.FollowCountItem
+	FollowCountReq     = pb.FollowCountReq
+	FollowCountResp    = pb.FollowCountResp
 	FollowItem         = pb.FollowItem
 	FollowListRequest  = pb.FollowListRequest
 	FollowListResponse = pb.FollowListResponse
@@ -32,6 +35,7 @@ type (
 		FollowList(ctx context.Context, in *FollowListRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 		FansList(ctx context.Context, in *FansListRequest, opts ...grpc.CallOption) (*FansListResponse, error)
 		IsFollow(ctx context.Context, in *IsFollowReq, opts ...grpc.CallOption) (*IsFollowResp, error)
+		FollowCount(ctx context.Context, in *FollowCountReq, opts ...grpc.CallOption) (*FollowCountResp, error)
 	}
 
 	defaultFollow struct {
@@ -68,4 +72,9 @@ func (m *defaultFollow) FansList(ctx context.Context, in *FansListRequest, opts 
 func (m *defaultFollow) IsFollow(ctx context.Context, in *IsFollowReq, opts ...grpc.CallOption) (*IsFollowResp, error) {
 	client := pb.NewFollowClient(m.cli.Conn())
 	return client.IsFollow(ctx, in, opts...)
+}
+
+func (m *defaultFollow) FollowCount(ctx context.Context, in *FollowCountReq, opts ...grpc.CallOption) (*FollowCountResp, error) {
+	client := pb.NewFollowClient(m.cli.Conn())
+	return client.FollowCount(ctx, in, opts...)
 }
