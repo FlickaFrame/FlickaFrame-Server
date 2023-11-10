@@ -66,35 +66,6 @@ type UpdatePasswordReq struct {
 type UpdatePasswordResp struct {
 }
 
-type FollowReq struct {
-	ContextUserId int64 `path:"user_id"`
-}
-
-type FollowResp struct {
-}
-
-type UnFollowReq struct {
-	ContextUserId int64 `path:"user_id"`
-}
-
-type UnFollowResp struct {
-}
-
-type FollowUser struct {
-	UserBasicInfo
-	UserInteractionInfo
-}
-
-type ListFollowReq struct {
-	ContextUserId int64 `path:"user_id,optional"`
-	ListUserOption
-}
-
-type ListFollowUserResp struct {
-	FollowUser []*FollowUser `json:"users"`
-	Total      int64         `json:"total"`
-}
-
 type UserBasicInfo struct {
 	ID            string `json:"userId" copier:"IDString"` // 用户ID
 	NickName      string `json:"nickName"`                 // 用户名
@@ -389,4 +360,43 @@ type FollowNoticeResp struct {
 	Next  string        `json:"next"`  // 请求游标
 	List  []*NoticeItem `json:"list"`  // 通知列表
 	IsEnd bool          `json:"isEnd"` // 是否已到最后一页
+}
+
+type FollowReq struct {
+	ContextUserId int64 `path:"user_id"`
+}
+
+type FollowResp struct {
+}
+
+type UnFollowReq struct {
+	ContextUserId int64 `path:"user_id"`
+}
+
+type UnFollowResp struct {
+}
+
+type FollowUser struct {
+	UserBasicInfo
+	UserInteractionInfo
+}
+
+type ListFollowReq struct {
+	FeedPagerReq
+	ContextUserId int64 `path:"user_id,optional"`
+}
+
+type ListFollowUserResp struct {
+	FollowUser []*FollowUser `json:"users"`
+	FeedPagerResp
+}
+
+type FeedPagerReq struct {
+	Cursor   int64 `json:"cursor,optional" form:"cursor,optional"`
+	PageSize int64 `json:"page_size,default=10" form:"page_size,default=10"`
+}
+
+type FeedPagerResp struct {
+	Cursor int64 `json:"cursor"`
+	IsEnd  bool  `json:"is_end"`
 }

@@ -7,4 +7,5 @@ import (
 	"favorite_server.api"
 	"oss_server.api"
 	"notice_server.api"
+	"follow_server.api"
 )

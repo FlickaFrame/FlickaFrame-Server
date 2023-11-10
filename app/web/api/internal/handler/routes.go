@@ -19,33 +19,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				Method:  http.MethodPut,
-				Path:    "/user/follow_action/:user_id",
-				Handler: user.FollowHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/user/follow_action/:user_id",
-				Handler: user.UnfollowHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/me/followers",
-				Handler: user.ListMyFollowersHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/me/following",
-				Handler: user.ListMyFollowingHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
 				Method:  http.MethodGet,
 				Path:    "/user/:user_id/followers",
 				Handler: user.ListFollowersHandler(serverCtx),
@@ -269,6 +242,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/notice/type",
 				Handler: notice.GetNoticeHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPut,
+				Path:    "/user/follow_action/:user_id",
+				Handler: user.FollowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/user/follow_action/:user_id",
+				Handler: user.UnfollowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/me/followers",
+				Handler: user.ListMyFollowersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/me/following",
+				Handler: user.ListMyFollowingHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),

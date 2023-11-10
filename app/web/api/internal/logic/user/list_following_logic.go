@@ -30,8 +30,8 @@ func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *type
 	doerId, contextUserId := jwt.GetUidFromCtx(l.ctx), req.ContextUserId
 	followList, err := l.svcCtx.FollowRpc.FollowList(l.ctx, &follow_rpc.FollowListRequest{
 		UserId:   contextUserId,
-		Cursor:   0,
-		PageSize: int64(req.PageSize),
+		Cursor:   req.Cursor,
+		PageSize: req.PageSize,
 	})
 	if err != nil {
 		return nil, err
@@ -48,6 +48,10 @@ func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *type
 	}
 	resp = &types.ListFollowUserResp{
 		FollowUser: make([]*types.FollowUser, len(users.Users)),
+		FeedPagerResp: types.FeedPagerResp{
+			Cursor: followList.Cursor,
+			IsEnd:  followList.IsEnd,
+		},
 	}
 	for i := range users.Users {
 		resp.FollowUser[i] = &types.FollowUser{}

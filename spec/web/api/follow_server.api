@@ -1,0 +1,66 @@
+syntax = "v1"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+import(
+    "user_dto.api"
+    "pager.api"
+)
+
+//need login
+@server(
+    prefix: api/v1
+    group: user
+    jwt: JwtAuth
+)
+service main {
+    @doc "Follow a user"
+    @handler Follow
+    put /user/follow_action/:user_id (FollowReq) returns (FollowResp)
+
+    @doc "Unfollow a user"
+    @handler Unfollow
+    delete /user/follow_action/:user_id (UnFollowReq) returns (UnFollowResp)
+
+    @doc "ListMyFollowers list the followers user of the authenticated user"
+    @handler ListMyFollowers
+    get /user/me/followers (ListFollowReq) returns (ListFollowUserResp)
+
+    @doc "ListMyFollowing list the following users of the authenticated user"
+    @handler ListMyFollowing
+    get /user/me/following(ListFollowReq) returns (ListFollowUserResp)
+}
+
+
+type (
+    FollowReq {
+        ContextUserId int64 `path:"user_id"`
+    }
+    FollowResp {
+    }
+    UnFollowReq {
+        ContextUserId int64 `path:"user_id"`
+    }
+    UnFollowResp {
+    }
+)
+
+type (
+    FollowUser {
+        UserBasicInfo
+        UserInteractionInfo
+    }
+    ListFollowReq {
+        FeedPagerReq
+        ContextUserId int64 `path:"user_id,optional"`
+    }
+    ListFollowUserResp {
+        FollowUser []*FollowUser `json:"users"`
+        FeedPagerResp
+    }
+)
