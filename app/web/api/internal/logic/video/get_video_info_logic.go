@@ -3,6 +3,7 @@ package video
 import (
 	"context"
 	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
+	video_count "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video/count"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
@@ -50,5 +51,13 @@ func (l *GetVideoInfoLogic) GetVideoInfo(req *types.GetVideoInfoReq) (resp *type
 		return nil, err
 	}
 	resp.Video.VideoUserInfo.IsFollow = follow.IsFollow
+	// 分享数
+	resp.Video.VideoStatisticalInfo.ShareCount, err = video_count.
+		NewVideoCountModel(l.svcCtx.BizRedis).
+		GetVideoShareCount(l.ctx, req.VideoId)
+	// 播放量
+	resp.Video.VideoStatisticalInfo.ViewCount, err = video_count.
+		NewVideoCountModel(l.svcCtx.BizRedis).
+		GetVideoPlayCount(l.ctx, req.VideoId)
 	return
 }
