@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/base"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
-	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
@@ -37,26 +36,6 @@ func (u *User) TableName() string {
 	return "user"
 }
 
-func (u *User) SetPassword(passwd string) (err error) {
-	//TODO: 密钥加盐
-	if len(passwd) == 0 {
-		u.Password = ""
-		return nil
-	}
-	u.Password = util.Md5ByString(u.Password)
-	return nil
-}
-
-// ValidatePassword checks if the given password matches the one belonging to the user.
-func (u *User) ValidatePassword(password string) bool {
-	return u.Password == util.Md5ByString(password)
-}
-
-// IsPasswordSet checks if the password is set or left empty
-func (u *User) IsPasswordSet() bool {
-	return len(u.Password) != 0
-}
-
 type UserModel struct {
 	db         *orm.DB
 	CacheRedis *redis.Redis
@@ -67,11 +46,6 @@ func NewUserModel(db *orm.DB, CacheRedis *redis.Redis) *UserModel {
 		db:         db,
 		CacheRedis: CacheRedis,
 	}
-}
-
-func (m *UserModel) Insert(ctx context.Context, data *User) error {
-	data.Model = base.NewModel()
-	return m.db.WithContext(ctx).Create(data).Error
 }
 
 func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
@@ -116,12 +90,6 @@ func (m *UserModel) FindOneByDB(ctx context.Context, id int64) (*User, error) {
 func (m *UserModel) MustFindOne(ctx context.Context, id int64) *User {
 	user, _ := m.FindOne(ctx, id)
 	return user
-}
-
-func (m *UserModel) FindOneByPhone(ctx context.Context, phone string) (*User, error) {
-	var result User
-	err := m.db.WithContext(ctx).Where("phone = ?", phone).First(&result).Error
-	return &result, err
 }
 
 func (m *UserModel) Update(ctx context.Context, user *User, doerId int64) error {
