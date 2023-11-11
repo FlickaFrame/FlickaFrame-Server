@@ -25,14 +25,16 @@ func NewLikedVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LikedV
 
 func (l *LikedVideoLogic) LikedVideo(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	videoConvert := NewConvert(l.ctx, l.svcCtx)
-	return videoConvert.Feed(req, func(*svc.ServiceContext) ([]*video_model.Video, error) {
-		doerId := jwt.GetUidFromCtx(l.ctx)
-		videoIds, err := l.svcCtx.FavoriteModel.FindVideoIdsByUser(l.ctx, doerId, req.Cursor, req.Limit)
-		if err != nil {
-			logx.WithContext(l.ctx).Errorf("FindVideoIdsByUser: find videos by latest time error: %v", err)
-			return nil, err
-		}
-		// 获取视频基本信息
-		return l.svcCtx.VideoModel.FindByIDs(l.ctx, videoIds)
-	})
+	return videoConvert.Feed(req, LikedVideo)
+}
+
+func LikedVideo(ctx context.Context, svcCtx *svc.ServiceContext, req *types.FeedReq) ([]*video_model.Video, error) {
+	doerId := jwt.GetUidFromCtx(ctx)
+	videoIds, err := svcCtx.FavoriteModel.FindVideoIdsByUser(ctx, doerId, req.Cursor, req.Limit)
+	if err != nil {
+		logx.WithContext(ctx).Errorf("FindVideoIdsByUser: find videos by latest time error: %v", err)
+		return nil, err
+	}
+	// 获取视频基本信息
+	return svcCtx.VideoModel.FindByIDs(ctx, videoIds)
 }

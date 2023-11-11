@@ -206,7 +206,7 @@ func (c *Convert) WithVideoURL(ctx context.Context, key string) string {
 	return url.Url
 }
 
-func (c *Convert) Feed(req *types.FeedReq, GetVideos func(*svc.ServiceContext) ([]*video_model.Video, error)) (resp *types.FeedResp, err error) {
+func (c *Convert) Feed(req *types.FeedReq, GetVideos func(context.Context, *svc.ServiceContext, *types.FeedReq) ([]*video_model.Video, error)) (resp *types.FeedResp, err error) {
 	var (
 		doerId       = jwt.GetUidFromCtx(c.ctx)    // 从context中获取当前用户id
 		videoConvert = NewConvert(c.ctx, c.svcCtx) //TODO: 优化
@@ -219,7 +219,7 @@ func (c *Convert) Feed(req *types.FeedReq, GetVideos func(*svc.ServiceContext) (
 	if req.Cursor == 0 {
 		req.Cursor = time.Now().UnixMilli()
 	}
-	videos, err := GetVideos(c.svcCtx)
+	videos, err := GetVideos(c.ctx, c.svcCtx, req)
 	if err != nil {
 		logx.WithContext(c.ctx).Errorf("GetVideos : find videos by latest time error: %v", err)
 		return emptyResp, err

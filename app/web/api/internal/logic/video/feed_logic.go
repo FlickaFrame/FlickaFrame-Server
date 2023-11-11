@@ -26,13 +26,15 @@ func NewFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FeedLogic {
 
 func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	videoConvert := NewConvert(l.ctx, l.svcCtx)
-	return videoConvert.Feed(req, func(*svc.ServiceContext) ([]*video_model.Video, error) {
-		return l.svcCtx.VideoModel.List(l.ctx, video_model.ListOption{
-			AuthorID:   util.MustString2Int64(req.AuthorID),
-			LatestTime: time.UnixMilli(req.Cursor),
-			Limit:      req.Limit,
-			QueryAll:   false,
-			CategoryID: util.MustString2Int64(req.CategoryID),
-		})
+	return videoConvert.Feed(req, HomeFeed)
+}
+
+func HomeFeed(ctx context.Context, svcCtx *svc.ServiceContext, req *types.FeedReq) ([]*video_model.Video, error) {
+	return svcCtx.VideoModel.List(ctx, video_model.ListOption{
+		AuthorID:   util.MustString2Int64(req.AuthorID),
+		LatestTime: time.UnixMilli(req.Cursor),
+		Limit:      req.Limit,
+		QueryAll:   false,
+		CategoryID: util.MustString2Int64(req.CategoryID),
 	})
 }
