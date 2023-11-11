@@ -18,7 +18,7 @@ service main {
 	put /favorite/video/:targetId (FavoriteReq) returns (FavoriteResp)
 
 	@doc "UnFavorite a Video"
-	@handler UnFavoriteComment
+	@handler  UnFavoriteVideo
 	delete /favorite/video/:targetId(FavoriteReq) returns (FavoriteResp)
 
 	@doc "Check Video Favorite Status"
@@ -30,7 +30,7 @@ service main {
 	put /favorite/comment/:targetId (FavoriteReq) returns (FavoriteResp)
 
 	@doc "UnFavorite a Comment"
-	@handler UnFavoriteVideo
+	@handler UnFavoriteComment
 	delete /favorite/comment/:targetId(FavoriteReq) returns (FavoriteResp)
 
 	@doc "Check comment Favorite Status"

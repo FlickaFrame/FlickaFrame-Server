@@ -207,7 +207,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodDelete,
 				Path:    "/favorite/video/:targetId",
-				Handler: favorite.UnFavoriteCommentHandler(serverCtx),
+				Handler: favorite.UnFavoriteVideoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
@@ -222,7 +222,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodDelete,
 				Path:    "/favorite/comment/:targetId",
-				Handler: favorite.UnFavoriteVideoHandler(serverCtx),
+				Handler: favorite.UnFavoriteCommentHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
