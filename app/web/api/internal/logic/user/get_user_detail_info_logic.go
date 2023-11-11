@@ -62,7 +62,14 @@ func (l *GetUserDetailInfoLogic) GetUserDetailInfo(req *types.UserDetailInfoReq)
 
 	isFollow := false
 	if doerId != 0 {
-		isFollow, err = l.svcCtx.FavoriteModel.IsExist(l.ctx, contextUserId, doerId)
+		follow, err := l.svcCtx.FollowRpc.IsFollow(l.ctx, &follow_rpc.IsFollowReq{
+			UserId:         doerId,
+			FollowedUserId: contextUserId,
+		})
+		if err != nil {
+			return nil, err
+		}
+		isFollow = follow.IsFollow
 		if err != nil {
 			return nil, err
 		}
