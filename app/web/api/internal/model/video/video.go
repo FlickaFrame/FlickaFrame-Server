@@ -22,8 +22,8 @@ type Video struct {
 	Title         string     `gorm:"column:title;comment:视频标题"`
 	PlayUrl       string     `gorm:"column:play_url;comment:播放地址"`
 	ThumbUrl      string     `gorm:"column:thumb_url"`
-	FavoriteCount int        `gorm:"default:0"` // 点赞数量
-	CommentCount  int        `gorm:"default:0"` // 评论数量
+	FavoriteCount int64      `gorm:"default:0"` // 点赞数量
+	CommentCount  int64      `gorm:"default:0"` // 评论数量
 	AuthorID      int64      `gorm:"index"`     // 作者ID
 	Author        *user.User `gorm:"-"`         // 作者
 	CategoryID    int64      `gorm:"index"`     // 分类ID
@@ -34,8 +34,8 @@ type Video struct {
 	PublishStatus int        `gorm:"default:0"` // 发布状态 0:未发布 1:已发布
 	Visibility    int        `gorm:"default:0"` // 可见性 0:公开 1:私有
 	VideoDuration float32    // 视频时长
-	VideoHeight   uint       // 视频高度
-	VideoWidth    uint       // 视频宽度
+	VideoHeight   float32    // 视频高度
+	VideoWidth    float32    // 视频宽度
 }
 
 func (v *Video) TableName() string {
@@ -99,6 +99,9 @@ func (m *VideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
 
 // FindByIDs 通过视频ID列表获取对应记录
 func (m *VideoModel) FindByIDs(ctx context.Context, ids []int64) ([]*Video, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
 	var result []*Video
 	err := m.db.WithContext(ctx).Where("id IN ?", ids).Find(&result).Error
 	val2idx := make(map[int64]int, len(result))
@@ -151,7 +154,7 @@ func (m *VideoModel) applyOption(ctx context.Context, opts ListOption) *gorm.DB 
 		opts.Limit = DefaultLimit
 	}
 	if !opts.QueryAll {
-		session = session.Where("created_at <= ?", opts.LatestTime)
+		session = session.Where("created_at < ?", opts.LatestTime)
 		session = session.Limit(opts.Limit)
 	}
 	return session.Order("created_at desc")
@@ -204,6 +207,25 @@ func (m *VideoModel) FindTagsByVideoId(ctx context.Context, videoId int64) ([]*T
 		Joins("Join video_tags on `tags`.id = `video_tags`.tag_id").
 		Where("`video_tags`.video_id = ?", videoId)
 	return tags, sess.Find(&tags).Error
+}
+
+func (m *VideoModel) FindTagsByIds(ctx context.Context, ids []int64) ([]*Tag, error) {
+	tags := []*Tag{} // 确保返回空数组
+	err := m.db.WithContext(ctx).Model(&Tag{}).
+		Where("`tags`.id IN ?", ids).
+		Find(&tags).Error
+	if err != nil {
+		return tags, err
+	}
+	// 确保顺序
+	var2idx := make(map[int64]int, len(ids))
+	for i, v := range ids {
+		var2idx[v] = i
+	}
+	sort.Slice(tags, func(i, j int) bool {
+		return var2idx[tags[i].ID] < var2idx[tags[j].ID]
+	})
+	return tags, nil
 }
 
 func (m *VideoModel) MustFindTagsByVideoId(ctx context.Context, videoId int64) []*Tag {

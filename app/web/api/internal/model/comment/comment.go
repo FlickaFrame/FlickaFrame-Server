@@ -120,6 +120,15 @@ func (m *Model) FindChildCommentByCommentId(ctx context.Context, parentId int64,
 	return
 }
 
+// CountByVideoId 根据视频Id统计评论数
+func (m *Model) CountByVideoId(ctx context.Context, videoId int64) (int64, error) {
+	var cnt int64
+	return cnt, m.db.WithContext(ctx).
+		Model(&Comment{}).
+		Select("id").
+		Where("video_id = ?", videoId).Count(&cnt).Error
+}
+
 func (m *Model) CountCommentByParentCommentId(ctx context.Context, parentCommentId int64) (int64, error) {
 	var cnt int64
 	return cnt, m.db.WithContext(ctx).

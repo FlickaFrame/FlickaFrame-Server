@@ -81,6 +81,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/video/following",
 				Handler: video.FollowingHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/video/liked",
+				Handler: video.LikedVideoHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/api/v1"),

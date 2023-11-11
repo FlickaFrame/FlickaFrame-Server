@@ -26,6 +26,9 @@ service main{
 	@handler Following
 	get /video/following (FeedReq) returns (FeedResp)
 
+	@doc "List Video of user Like" // 用户点赞的视频列表
+	@handler LikedVideo
+	get /video/liked(FeedReq)returns(FeedResp)
 }
 
 //no need login

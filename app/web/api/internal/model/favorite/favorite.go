@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/base"
 	comment_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/comment"
 	video_model "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video"
@@ -48,6 +50,31 @@ func (m *Model) IsExist(ctx context.Context, targetId, userId int64) (bool, erro
 	return true, nil
 }
 
+// CountByVideoId 统计视频的点赞数量
+func (m *Model) CountByVideoId(ctx context.Context, videoId int64) (int64, error) {
+	var count int64
+	err := m.db.WithContext(ctx).
+		Model(&Favorite{}).
+		Where("target_id = ? AND type = ?", videoId, VideoFavoriteType).
+		Count(&count).Error
+	return count, err
+}
+
+// FindVideoIdsByUser 用户的点赞视频列表
+func (m *Model) FindVideoIdsByUser(ctx context.Context, userId int64, cursor int64, limit int) ([]int64, error) {
+	var videoIds []int64
+	cursorTime := time.UnixMilli(cursor)
+	err := m.db.WithContext(ctx).Select("target_id").
+		Model(&Favorite{}).
+		Where("user_id = ? AND type =?", userId, VideoFavoriteType).
+		Order("created_at desc").
+		Where("created_at < ?", cursorTime).
+		Limit(int(limit)).
+		Find(&videoIds).Error
+	return videoIds, err
+}
+
+// DeleteVideoFavorite 	删除用户的点赞
 func (m *Model) DeleteVideoFavorite(ctx context.Context, userId, videoId int64) error {
 	return m.db.WithContext(ctx).Transaction(
 		func(tx *gorm.DB) error {

@@ -43,8 +43,8 @@ func (l *CreateVideoLogic) CreateVideo(req *types.CreateVideoReq) (resp *types.C
 		PublishStatus: publishStatus,
 		Visibility:    req.Visibility,
 		VideoDuration: req.VideoDuration,
-		VideoHeight:   req.VideoHeight,
-		VideoWidth:    req.VideoWidth,
+		VideoHeight:   float32(req.VideoHeight),
+		VideoWidth:    float32(req.VideoWidth),
 		CategoryID:    util.MustString2Int64(req.CategoryID),
 	}
 

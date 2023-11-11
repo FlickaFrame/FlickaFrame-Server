@@ -6,7 +6,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
-	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -37,7 +36,10 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, err
 	}
-	var tokenResp types.LoginResp
-	err = copier.Copy(&tokenResp, token)
-	return &tokenResp, err
+	tokenResp := &types.LoginResp{
+		AccessToken:  token.AccessToken,
+		AccessExpire: token.AccessExpire,
+		RefreshAfter: token.RefreshAfter,
+	}
+	return tokenResp, err
 }

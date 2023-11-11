@@ -189,6 +189,29 @@ type GetVideoInfoResp struct {
 	Video *VideoBasicInfo `json:"video"`
 }
 
+type VideoInfo struct {
+	ID            string         `json:"id" copier:"IDString"` // 视频ID
+	Title         string         `json:"title"`                // 视频标题
+	Description   string         `json:"description"`          // 视频描述
+	PlayUrl       string         `json:"playUrl"`              // 视频播放地址
+	ThumbUrl      string         `json:"thumbUrl"`             // 视频封面地址
+	CreatedAt     int64          `json:"createdAt"`            // 视频创建时间(毫秒时间戳)
+	PublishTime   int64          `json:"publishTime"`          // 视频发布时间
+	PublishStatus int            `json:"publishStatus"`        // 视频发布状态
+	VideoDuration float32        `json:"videoDuration"`        // 视频时长
+	VideoHeight   float32        `json:"videoHeight"`          // 视频高度
+	VideoWidth    float32        `json:"videoWidth"`           // 视频宽度
+	Category      *Category      `json:"category"`             // 视频分类
+	Tags          []*Tag         `json:"tags"`                 // 视频标签
+	VideoUserInfo *VideoUserInfo `json:"author"`               // 视频作者信息
+	IsFavorite    bool           `json:"isFavorite"`           // 当前用户是否已点赞
+	ViewCount     int64          `json:"viewNum"`              // 播放数
+	FavoriteCount int64          `json:"favoriteCount"`        // 点赞数
+	CommentCount  int64          `json:"commentNum"`           // 评论数
+	ShareCount    int64          `json:"shareNum"`             // 分享数
+	Visibility    int            `json:"visibility"`           // 视频可见性
+}
+
 type Category struct {
 	ID   string `json:"id"`   // 分类ID
 	Name string `json:"name"` // 分类名称

@@ -57,7 +57,7 @@ func (m *VideoCountModel) GetVideoShareCount(ctx context.Context, videoId int64)
 // GetVideoPlayCount 获取视频播放量
 func (m *VideoCountModel) getVideoCount(ctx context.Context, key string) (int64, error) {
 	count, err := m.BizRedis.GetCtx(ctx, key)
-	if err != nil {
+	if count == "" || err != nil {
 		return 0, err
 	}
 	cnt, err := strconv.ParseInt(count, 10, 64)
