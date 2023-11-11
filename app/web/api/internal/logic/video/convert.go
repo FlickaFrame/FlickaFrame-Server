@@ -105,7 +105,7 @@ func (c *Convert) WithVideoIsFavorite(ctx context.Context, videoId, doerId int64
 // WithVideoPlayCount 用于加载播放量
 func (c *Convert) WithVideoPlayCount(ctx context.Context, videoId int64) (int64, error) {
 	count, err := video_count.NewVideoCountModel(c.svcCtx.BizRedis).
-		GetVideoPlayCount(ctx, videoId)
+		GetPlayCount(ctx, videoId)
 	if err != nil {
 		return 0, err
 	}
@@ -115,7 +115,7 @@ func (c *Convert) WithVideoPlayCount(ctx context.Context, videoId int64) (int64,
 // WithVideoShareCount 用于加载分享量
 func (c *Convert) WithVideoShareCount(ctx context.Context, videoId int64) (int64, error) {
 	count, err := video_count.NewVideoCountModel(c.svcCtx.BizRedis).
-		GetVideoShareCount(ctx, videoId)
+		GetShareCount(ctx, videoId)
 	if err != nil {
 		return 0, err
 	}

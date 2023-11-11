@@ -27,6 +27,8 @@ func NewAddPlayHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ad
 
 // AddPlayHistory 添加播放历史
 func (l *AddPlayHistoryLogic) AddPlayHistory(req *types.PlayHistoryReq) (resp *types.PlayHistoryResp, err error) {
+	videoCount := video_count.NewVideoCountModel(l.svcCtx.BizRedis)
+
 	resp = &types.PlayHistoryResp{}
 	doerId := jwt.GetUidFromCtx(l.ctx)
 	videoId, err := strconv.ParseInt(req.VideoId, 10, 64)
@@ -38,7 +40,8 @@ func (l *AddPlayHistoryLogic) AddPlayHistory(req *types.PlayHistoryReq) (resp *t
 	if err != nil {
 		return nil, err
 	}
-	_, err = video_count.NewVideoCountModel(l.svcCtx.BizRedis).IncrVideoPlayCount(l.ctx, videoId)
+	_, err = videoCount.IncrPlayCount(l.ctx, videoId)
+	_, err = videoCount.IncrHotCount(l.ctx, videoId)
 	if err != nil {
 		logx.Errorf("[AddPlayHistory] VideoRpc.IncrVideoPlayCount error: %v", err)
 	}

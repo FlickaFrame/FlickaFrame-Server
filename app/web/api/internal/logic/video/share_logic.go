@@ -33,7 +33,7 @@ func (l *ShareLogic) Share(req *types.ShareVideoReq) (resp *types.ShareVideoResp
 	}
 	count, err := video_count.
 		NewVideoCountModel(l.svcCtx.BizRedis).
-		IncrVideoShareCount(l.ctx, req.VideoId)
+		IncrShareCount(l.ctx, req.VideoId)
 	if err != nil {
 		return nil, err
 	}

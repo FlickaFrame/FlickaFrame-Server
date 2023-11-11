@@ -54,10 +54,10 @@ func (l *GetVideoInfoLogic) GetVideoInfo(req *types.GetVideoInfoReq) (resp *type
 	// 分享数
 	resp.Video.VideoStatisticalInfo.ShareCount, err = video_count.
 		NewVideoCountModel(l.svcCtx.BizRedis).
-		GetVideoShareCount(l.ctx, req.VideoId)
+		GetShareCount(l.ctx, req.VideoId)
 	// 播放量
 	resp.Video.VideoStatisticalInfo.ViewCount, err = video_count.
 		NewVideoCountModel(l.svcCtx.BizRedis).
-		GetVideoPlayCount(l.ctx, req.VideoId)
+		GetPlayCount(l.ctx, req.VideoId)
 	return
 }

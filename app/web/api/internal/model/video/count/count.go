@@ -2,9 +2,9 @@ package video_count
 
 import (
 	"context"
-	"fmt"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 	"strconv"
+
+	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
 // VideoCountModel 视频播放量统计
@@ -17,52 +17,92 @@ func NewVideoCountModel(rds *redis.Redis) *VideoCountModel {
 }
 
 // videoPlayCountKey 视频播放量
-func videoPlayCountKey(videoId int64) string {
-	return fmt.Sprintf("biz#video#view#play#%d", videoId)
+func videoPlayCountKey() string {
+	return "biz#video#view"
 }
 
 // videoShareCountKey 视频分享量
-func videoShareCountKey(videoId int64) string {
-	return fmt.Sprintf("biz#video#share#play#%d", videoId)
+func videoShareCountKey() string {
+	return "biz#video#share"
 }
 
-func (m *VideoCountModel) incrementVideoCount(ctx context.Context, key string) (int64, error) {
-	count, err := m.BizRedis.IncrCtx(ctx, key)
-	if err != nil {
-		return 1, err
-	}
-	return count, nil
+// videoHotVideoKey 热门视频(播放量+分享量)
+func videoHotVideoKey() string {
+	return "biz#video#hot"
 }
 
-// IncrVideoPlayCount 视频播放量+1
-func (m *VideoCountModel) IncrVideoPlayCount(ctx context.Context, videoId int64) (int64, error) {
-	return m.incrementVideoCount(ctx, videoPlayCountKey(videoId))
-}
-
-// IncrVideoShareCount 视频分享量+1
-func (m *VideoCountModel) IncrVideoShareCount(ctx context.Context, videoId int64) (int64, error) {
-	return m.incrementVideoCount(ctx, videoShareCountKey(videoId))
-}
-
-// GetVideoPlayCount 获取视频播放量
-func (m *VideoCountModel) GetVideoPlayCount(ctx context.Context, videoId int64) (int64, error) {
-	return m.getVideoCount(ctx, videoPlayCountKey(videoId))
-}
-
-// GetVideoShareCount 获取视频分享量
-func (m *VideoCountModel) GetVideoShareCount(ctx context.Context, videoId int64) (int64, error) {
-	return m.getVideoCount(ctx, videoShareCountKey(videoId))
-}
-
-// GetVideoPlayCount 获取视频播放量
-func (m *VideoCountModel) getVideoCount(ctx context.Context, key string) (int64, error) {
-	count, err := m.BizRedis.GetCtx(ctx, key)
-	if count == "" || err != nil {
-		return 0, err
-	}
-	cnt, err := strconv.ParseInt(count, 10, 64)
+func (m *VideoCountModel) IncrPlayCount(ctx context.Context, videoId int64) (int64, error) {
+	score, err := m.BizRedis.ZincrbyCtx(ctx, videoPlayCountKey(), 1, strconv.FormatInt(videoId, 10))
 	if err != nil {
 		return 0, err
 	}
-	return cnt, nil
+	return score, nil
+}
+
+func (m *VideoCountModel) IncrShareCount(ctx context.Context, videoId int64) (int64, error) {
+	score, err := m.BizRedis.ZincrbyCtx(ctx, videoShareCountKey(), 1, strconv.FormatInt(videoId, 10))
+	if err != nil {
+		return 0, err
+	}
+	return score, nil
+}
+
+func (m *VideoCountModel) IncrHotCount(ctx context.Context, videoId int64) (int64, error) {
+	score, err := m.BizRedis.ZincrbyCtx(ctx, videoHotVideoKey(), 1, strconv.FormatInt(videoId, 10))
+	if err != nil {
+		return 0, err
+	}
+	return score, nil
+}
+
+func (m *VideoCountModel) GetPlayCount(ctx context.Context, videoId int64) (int64, error) {
+	score, err := m.BizRedis.ZscoreCtx(ctx, videoPlayCountKey(), strconv.FormatInt(videoId, 10))
+	if err == redis.Nil {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	return score, nil
+}
+
+func (m *VideoCountModel) GetShareCount(ctx context.Context, videoId int64) (int64, error) {
+	score, err := m.BizRedis.ZscoreCtx(ctx, videoPlayCountKey(), strconv.FormatInt(videoId, 10))
+	if err == redis.Nil {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	return score, nil
+}
+
+func (m *VideoCountModel) GetHotCount(ctx context.Context, videoId int64) (int64, error) {
+	score, err := m.BizRedis.ZscoreCtx(ctx, videoPlayCountKey(), strconv.FormatInt(videoId, 10))
+	if err == redis.Nil {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	return score, nil
+}
+
+func (m *VideoCountModel) GetHotVideo(ctx context.Context, cursor, pageSize int64) ([]int64, error) {
+	limitCtx, err := m.BizRedis.ZrevrangebyscoreWithScoresAndLimitCtx(ctx, videoHotVideoKey(), 0, cursor, 0, int(pageSize))
+	if err == redis.Nil {
+		return []int64{}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	var videoIds []int64
+	for _, pair := range limitCtx {
+		videoId, err := strconv.ParseInt(pair.Key, 10, 64)
+		if err != nil {
+			continue
+		}
+		videoIds = append(videoIds, videoId)
+	}
+	return videoIds, nil
 }
