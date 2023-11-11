@@ -118,6 +118,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/video/share/:videoId",
 				Handler: video.ShareHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/video/hot",
+				Handler: video.HotHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1"),
 	)
