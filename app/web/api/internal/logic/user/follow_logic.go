@@ -33,10 +33,10 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
 	doerUserId := jwt.GetUidFromCtx(l.ctx)
 	// 判断关注用户是否存在
-	_, err = l.svcCtx.UserRpc.FindById(l.ctx, &user_rpc.FindByIdRequest{
+	user, err := l.svcCtx.UserRpc.FindById(l.ctx, &user_rpc.FindByIdRequest{
 		UserId: req.ContextUserId,
 	})
-	if err != nil {
+	if user == nil || err != nil {
 		return nil, code.ErrUserNoExistsError
 	}
 	// 关注操作
