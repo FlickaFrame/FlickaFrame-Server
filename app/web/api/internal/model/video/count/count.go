@@ -18,7 +18,7 @@ func NewVideoCountModel(rds *redis.Redis) *VideoCountModel {
 
 // videoPlayCountKey 视频播放量
 func videoPlayCountKey(videoId int64) string {
-	return fmt.Sprintf("biz#video#count#play#%d", videoId)
+	return fmt.Sprintf("biz#video#view#play#%d", videoId)
 }
 
 // videoShareCountKey 视频分享量

@@ -8,8 +8,6 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
-	"github.com/zeromicro/go-zero/core/threading"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -40,12 +38,10 @@ func (l *AddPlayHistoryLogic) AddPlayHistory(req *types.PlayHistoryReq) (resp *t
 	if err != nil {
 		return nil, err
 	}
-	threading.GoSafe(func() { // 视频增加播放量
-		_, err := video_count.NewVideoCountModel(l.svcCtx.BizRedis).IncrVideoPlayCount(l.ctx, videoId)
-		if err != nil {
-			logx.Errorf("[AddPlayHistory] VideoRpc.IncrVideoPlayCount error: %v", err)
-		}
-		// TODO:消息队列将播放量同步到数据库
-	})
+	_, err = video_count.NewVideoCountModel(l.svcCtx.BizRedis).IncrVideoPlayCount(l.ctx, videoId)
+	if err != nil {
+		logx.Errorf("[AddPlayHistory] VideoRpc.IncrVideoPlayCount error: %v", err)
+	}
+	// TODO:消息队列将播放量同步到数据库
 	return
 }
