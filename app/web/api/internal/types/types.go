@@ -181,12 +181,18 @@ type DeleteVideoReq struct {
 type DeleteVideoResp struct {
 }
 
+type VideoInfoItem struct {
+	VideoBasicInfo
+	VideoStatisticalInfo
+	VideoInteractInfo
+}
+
 type GetVideoInfoReq struct {
 	VideoId int64 `path:"videoId"`
 }
 
 type GetVideoInfoResp struct {
-	Video *VideoBasicInfo `json:"video"`
+	Video *VideoInfoItem `json:"video"`
 }
 
 type VideoInfo struct {
@@ -372,6 +378,7 @@ type FavoriteReq struct {
 
 type FavoriteResp struct {
 	IsFavorite bool `json:"isFavorite"`
+	LikeCount  int  `json:"likeCount"`
 }
 
 type OssEndpointResponse struct {

@@ -174,10 +174,16 @@ type (
 )
 
 type (
+	VideoInfoItem{
+		VideoBasicInfo
+		VideoStatisticalInfo
+		VideoInteractInfo
+	}
 	GetVideoInfoReq {
 		VideoId int64 `path:"videoId"`
 	}
 	GetVideoInfoResp {
-		Video *VideoBasicInfo `json:"video"`
+		Video *VideoInfoItem `json:"video"`
+
 	}
 )

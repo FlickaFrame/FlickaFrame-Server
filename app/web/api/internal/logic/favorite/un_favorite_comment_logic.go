@@ -26,7 +26,11 @@ func NewUnFavoriteCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *UnFavoriteCommentLogic) UnFavoriteComment(req *types.FavoriteReq) (resp *types.FavoriteResp, err error) {
+	resp = &types.FavoriteResp{IsFavorite: false}
 	doerId := jwt.GetUidFromCtx(l.ctx)
+	// redis desc
+	count, err := l.svcCtx.BizRedis.Decr(cacheCommentLikeCount(util.MustString2Int64(req.TargetId)))
+	resp.LikeCount = int(count)
 	err = l.svcCtx.FavoriteModel.DeleteCommentFavorite(l.ctx,
 		doerId,
 		util.MustString2Int64(req.TargetId))

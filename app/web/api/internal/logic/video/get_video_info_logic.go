@@ -33,10 +33,15 @@ func (l *GetVideoInfoLogic) GetVideoInfo(req *types.GetVideoInfoReq) (resp *type
 	}
 	videoBasicInfo, err := NewConvert(l.ctx, l.svcCtx).BuildVideoBasicInfo(l.ctx, video)
 	resp = &types.GetVideoInfoResp{
-		Video: videoBasicInfo,
+		Video: &types.VideoInfoItem{
+			VideoBasicInfo:       *videoBasicInfo,
+			VideoStatisticalInfo: types.VideoStatisticalInfo{},
+			VideoInteractInfo:    types.VideoInteractInfo{},
+		},
 	}
 	// 互动信息(与当前登录用户的关注关系)
 	doerId := jwt.GetUidFromCtx(l.ctx)
+	resp.Video.IsFavorite, err = l.svcCtx.FavoriteModel.IsExist(l.ctx, video.ID, doerId)
 	follow, err := l.svcCtx.FollowRpc.IsFollow(l.ctx, &follow_rpc.IsFollowReq{
 		UserId:         doerId,
 		FollowedUserId: video.AuthorID,

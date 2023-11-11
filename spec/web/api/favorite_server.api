@@ -44,5 +44,6 @@ type (
 	}
 	FavoriteResp {
 		IsFavorite bool `json:"isFavorite"`
+		LikeCount int  `json:"likeCount"`
 	}
 )

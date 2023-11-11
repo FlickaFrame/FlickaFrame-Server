@@ -77,11 +77,14 @@ func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *
 			return nil, err
 		}
 	}
+	// 3.构造点赞信息统计
 	count, err := c.svcCtx.FavoriteModel.CountByCommentId(ctx, comment.ID)
 	if err != nil {
 		return nil, err
 	}
 	comment.LikeCount = int(count)
+	// 4.构造是否点赞信息
+	resp.Liked, err = c.svcCtx.FavoriteModel.IsExist(ctx, doerId, comment.ID)
 	return
 }
 
@@ -143,6 +146,8 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 		return nil, err
 	}
 	resp.LikedCount = count
+	// 5.构造是否点赞信息
+	resp.Liked, err = c.svcCtx.FavoriteModel.IsExist(ctx, comment.ID, doerId)
 	return
 }
 

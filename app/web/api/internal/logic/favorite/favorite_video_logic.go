@@ -9,6 +9,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
+	"github.com/zeromicro/go-zero/core/threading"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -37,6 +38,9 @@ func (l *FavoriteVideoLogic) FavoriteVideo(req *types.FavoriteReq) (resp *types.
 		logx.Info(err)
 		return nil, code.VideoNotExistError
 	}
+	// redis incr
+	count, err := l.svcCtx.BizRedis.Incr(cacheVideoLikeCount(util.MustString2Int64(req.TargetId)))
+	resp.LikeCount = int(count)
 	err = l.svcCtx.FavoriteModel.CreateVideoFavorite(l.ctx,
 		doerId,
 		util.MustString2Int64(req.TargetId))
@@ -45,18 +49,22 @@ func (l *FavoriteVideoLogic) FavoriteVideo(req *types.FavoriteReq) (resp *types.
 		return nil, code.DuplicateFavoriteErr
 	}
 
-	notice := notice_model.Notice{
-		ToUserID:   video.AuthorID,
-		FromUserID: doerId,
-		NoticeType: notice_model.NoticeTypeLikeVideo,
-		NoticeTime: time.Now(),
-	}
-	jsonBody, errJson := json.Marshal(notice)
-	if errJson != nil {
-		return nil, errJson
-	}
-	if errMq := l.svcCtx.KqPusherClient.Push(string(jsonBody)); errMq != nil {
-		return nil, errMq
-	}
-	return
+	threading.GoSafe(func() {
+		notice := notice_model.Notice{
+			ToUserID:   video.AuthorID,
+			FromUserID: doerId,
+			NoticeType: notice_model.NoticeTypeLikeVideo,
+			NoticeTime: time.Now(),
+		}
+		jsonBody, errJson := json.Marshal(notice)
+		if errJson != nil {
+			logx.Error(errJson)
+			return
+		}
+		if errMq := l.svcCtx.KqPusherClient.Push(string(jsonBody)); errMq != nil {
+			logx.Error(errMq)
+			return
+		}
+	})
+	return resp, nil
 }
