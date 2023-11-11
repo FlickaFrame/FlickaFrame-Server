@@ -60,6 +60,16 @@ func (m *Model) CountByVideoId(ctx context.Context, videoId int64) (int64, error
 	return count, err
 }
 
+// CountByCommentId 统计评论的点赞数量
+func (m *Model) CountByCommentId(ctx context.Context, commentId int64) (int64, error) {
+	var count int64
+	err := m.db.WithContext(ctx).
+		Model(&Favorite{}).
+		Where("target_id = ? AND type = ?", commentId, CommentFavoriteType).
+		Count(&count).Error
+	return count, err
+}
+
 // FindVideoIdsByUser 用户的点赞视频列表
 func (m *Model) FindVideoIdsByUser(ctx context.Context, userId int64, cursor int64, limit int) ([]int64, error) {
 	var videoIds []int64

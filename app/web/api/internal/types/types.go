@@ -298,11 +298,11 @@ type CreateReplyCommentResp struct {
 }
 
 type GetVideoCommentReq struct {
-	CommentId string `json:"commentId" path:"comment_id"`
+	CommentId string `path:"comment_id"`
 }
 
 type GetVideoCommentResp struct {
-	Commnent *ParentComment `json:"comment"`
+	Comment *ParentComment `json:"comment"`
 }
 
 type DeleteVideoCommentReq struct {

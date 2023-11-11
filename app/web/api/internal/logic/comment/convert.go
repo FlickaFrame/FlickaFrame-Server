@@ -77,7 +77,11 @@ func (c *Convert) BuildChildComment(ctx context.Context, doerId int64, comment *
 			return nil, err
 		}
 	}
-	// TODO: 构造点赞信息
+	count, err := c.svcCtx.FavoriteModel.CountByCommentId(ctx, comment.ID)
+	if err != nil {
+		return nil, err
+	}
+	comment.LikeCount = int(count)
 	return
 }
 
@@ -133,6 +137,12 @@ func (c *Convert) BuildParentComment(ctx context.Context, doerId int64, comment 
 	if err != nil {
 		return nil, err
 	}
+	// 4.构造点赞信息
+	count, err := c.svcCtx.FavoriteModel.CountByCommentId(ctx, comment.ID)
+	if err != nil {
+		return nil, err
+	}
+	resp.LikedCount = count
 	return
 }
 
