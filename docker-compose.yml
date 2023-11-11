@@ -7,8 +7,7 @@ services:
         dockerfile: ./app/oss/rpc/Dockerfile
     ports:
       - "8001:8001"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
 
   user-rpc:
     build:
@@ -16,8 +15,7 @@ services:
         dockerfile: ./app/user/rpc/Dockerfile
     ports:
       - "8002:8002"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
 
   follow-rpc:
     build:
@@ -25,8 +23,7 @@ services:
       dockerfile: ./app/follow/rpc/Dockerfile
     ports:
         - "8003:8003"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
 
   web-api:
     build:
@@ -34,6 +31,6 @@ services:
       dockerfile: ./app/web/api/Dockerfile
     ports:
       - "8080:8080"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
+
 
