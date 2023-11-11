@@ -43,6 +43,7 @@ func (l *GetPlayHistoryLogic) GetPlayHistory(req *types.FeedReq) (resp *types.Fe
 		videoIdx = append(videoIdx, history.VideoId)
 	}
 	if len(videoIdx) > 0 && videoIdx[len(videoIdx)-1] == -1 {
+		histories = histories[:len(histories)-1]
 		videoIdx = videoIdx[:len(videoIdx)-1]
 		resp.IsEnd = true
 	}
