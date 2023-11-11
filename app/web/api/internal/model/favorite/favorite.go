@@ -94,7 +94,7 @@ func (m *Model) DeleteVideoFavorite(ctx context.Context, userId, videoId int64) 
 			if rowsAffected == 0 {
 				return fmt.Errorf("无法取消不存在的点赞")
 			}
-			if err := tx.Model(&comment_model.Comment{}).
+			if err := tx.Model(&video_model.Video{}).
 				Where("id = ?", videoId).
 				Update("favorite_count",
 					gorm.Expr("favorite_count - ?", 1)).Error; err != nil {
