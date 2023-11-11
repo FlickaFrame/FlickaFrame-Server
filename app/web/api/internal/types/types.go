@@ -95,6 +95,14 @@ type ListUserOption struct {
 	ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 }
 
+type ShareVideoReq struct {
+	VideoId int64 `path:"videoId"`
+}
+
+type ShareVideoResp struct {
+	ShareCount int64 `json:"shareCount"` // 分享次数
+}
+
 type PlayHistoryReq struct {
 	VideoId string `json:"videoId"`
 }
@@ -214,7 +222,7 @@ type VideoBasicInfo struct {
 	VideoWidth    float32        `json:"videoWidth"`           // 视频宽度
 	FavoriteCount int64          `json:"favoriteCount"`        // 点赞数
 	CommentCount  int64          `json:"commentNum"`           // 评论数
-	VideoDuration float32        `json:"videoDuration"`        // 视频时长         //视频宽度
+	VideoDuration float32        `json:"videoDuration"`        // 视频时长
 }
 
 type VideoManageInfo struct {
@@ -225,6 +233,7 @@ type VideoManageInfo struct {
 
 type VideoStatisticalInfo struct {
 	ShareCount int64 `json:"shareNum"` // 分享数
+	ViewCount  int64 `json:"viewNum"`  // 播放数
 }
 
 type VideoInteractInfo struct {

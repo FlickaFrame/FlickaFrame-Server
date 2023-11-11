@@ -49,6 +49,10 @@ service main{
 	@doc "Search Video By Keyword" // 搜索视频(根据标题和描述内容)
 	@handler Search
 	post /video/search (VideoSearchReq) returns (VideoSearchResp)
+
+	@doc "Share Video" // 分享视频
+	@handler Share
+	post /video/share/:videoId (ShareVideoReq) returns (ShareVideoResp)
 }
 
 @server(
@@ -73,6 +77,15 @@ service main {
 	@handler ClearPlayHistory
 	delete /video/play-history returns (ClearPlayHistoryResp)
 }
+
+type (
+	ShareVideoReq {
+		VideoId int64  `path:"videoId"`
+	}
+	ShareVideoResp {
+		ShareCount int64  `json:"shareCount"` // 分享次数
+	}
+)
 
 type (
 	PlayHistoryReq {

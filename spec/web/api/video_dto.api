@@ -33,7 +33,7 @@ type (
 		VideoWidth    float32        `json:"videoWidth"`           // 视频宽度
 		FavoriteCount int64          `json:"favoriteCount"`        // 点赞数
 		CommentCount  int64          `json:"commentNum"`           // 评论数
-		VideoDuration float32        `json:"videoDuration"`        // 视频时长         //视频宽度
+		VideoDuration float32        `json:"videoDuration"`        // 视频时长
 	}
 	VideoManageInfo {
 		PublishTime   string `json:"publishTime"`   // 视频发布时间
@@ -42,6 +42,7 @@ type (
 	}
 	VideoStatisticalInfo { // 视频统计信息
 		ShareCount int64 `json:"shareNum"` // 分享数
+		ViewCount  int64 `json:"viewNum"`  // 播放数
 	}
 	VideoInteractInfo { // 视频互动信息
 		IsFavorite bool `json:"isFavorite"` // 当前用户是否已点赞
