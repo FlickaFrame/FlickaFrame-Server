@@ -213,7 +213,7 @@ func (c *Convert) Feed(req *types.FeedReq, GetVideos func(context.Context, *svc.
 		emptyResp    = &types.FeedResp{            // 默认空列表
 			List:  make([]*types.FeedVideoItem, 0),
 			IsEnd: true,
-			Next:  strconv.FormatInt(time.Now().UnixMilli(), 10),
+			Next:  "-1",
 		}
 	)
 	if req.Cursor == 0 {
