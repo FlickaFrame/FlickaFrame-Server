@@ -2,10 +2,7 @@ package user
 
 import (
 	"context"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
-	"strconv"
-
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
 
