@@ -9,6 +9,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"sort"
 	"time"
 )
 
@@ -94,6 +95,20 @@ func (m *VideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
 	var result Video
 	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
 	return &result, err
+}
+
+// FindByIDs 通过视频ID列表获取对应记录
+func (m *VideoModel) FindByIDs(ctx context.Context, ids []int64) ([]*Video, error) {
+	var result []*Video
+	err := m.db.WithContext(ctx).Where("id IN ?", ids).Find(&result).Error
+	val2idx := make(map[int64]int, len(result))
+	for i, v := range ids {
+		val2idx[v] = i
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return val2idx[result[i].ID] < val2idx[result[j].ID]
+	})
+	return result, err
 }
 
 // ListOption 查找选项

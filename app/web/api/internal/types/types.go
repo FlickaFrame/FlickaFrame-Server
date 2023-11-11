@@ -95,6 +95,20 @@ type ListUserOption struct {
 	ListAll  bool `form:"listAll,default=false"` // 是否列出所有,默认为 false
 }
 
+type PlayHistoryReq struct {
+	VideoId string `json:"videoId"`
+}
+
+type DeletePlayHistoryReq struct {
+	VideoId string `path:"videoId"`
+}
+
+type PlayHistoryResp struct {
+}
+
+type ClearPlayHistoryResp struct {
+}
+
 type FeedReq struct {
 	Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
 	Limit      int    `form:"limit,default=10"`    // 请求数量

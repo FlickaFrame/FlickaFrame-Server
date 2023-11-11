@@ -20,22 +20,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/user/:user_id/followers",
-				Handler: user.ListFollowersHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/:user_id/following",
-				Handler: user.ListFollowingHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/api/v1"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
 				Path:    "/user/detail",
 				Handler: user.CurrentUserInfoHandler(serverCtx),
 			},
@@ -125,6 +109,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: video.SearchHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/video/play-history",
+				Handler: video.AddPlayHistoryHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/video/play-history",
+				Handler: video.GetPlayHistoryHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/video/play-history/:videoId",
+				Handler: video.DeletePlayHistoryHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/video/play-history",
+				Handler: video.ClearPlayHistoryHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/api/v1"),
 	)
 
@@ -272,6 +283,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/:user_id/followers",
+				Handler: user.ListFollowersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/:user_id/following",
+				Handler: user.ListFollowingHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/api/v1"),
 	)
 }

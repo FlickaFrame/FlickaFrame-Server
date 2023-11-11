@@ -51,6 +51,42 @@ service main{
 	post /video/search (VideoSearchReq) returns (VideoSearchResp)
 }
 
+@server(
+	prefix: api/v1
+	group: video
+	jwt: JwtAuth
+)
+service main {
+	@doc "Add Play History for a Video" // 添加播放历史
+	@handler AddPlayHistory
+	post /video/play-history (PlayHistoryReq) returns (PlayHistoryResp)
+
+	@doc "Get Play History for a User" // 获取用户播放历史
+	@handler GetPlayHistory
+	get /video/play-history (FeedReq)returns (FeedResp)
+
+	@doc "Delete Play History for a Video" // 删除播放历史
+	@handler DeletePlayHistory
+	delete /video/play-history/:videoId(DeletePlayHistoryReq) returns (PlayHistoryResp)
+
+	@doc "Clear Play History for a User" // 清空用户播放历史
+	@handler ClearPlayHistory
+	delete /video/play-history returns (ClearPlayHistoryResp)
+}
+
+type (
+	PlayHistoryReq {
+		VideoId   string `json:"videoId"`
+	}
+	DeletePlayHistoryReq {
+		VideoId string `path:"videoId"`
+	}
+	PlayHistoryResp {
+	}
+	ClearPlayHistoryResp {
+	}
+)
+
 type (
 	FeedReq {
 		Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)

@@ -11,6 +11,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/notice"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video"
+	video_history "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video/history"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/go-playground/validator/v10"
 	"github.com/meilisearch/meilisearch-go"
@@ -20,20 +21,21 @@ import (
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	Validate       *validator.Validate // 入参校验器
-	DB             *orm.DB             // 数据库连接
-	BizRedis       *redis.Redis        // 业务redis连接
-	VideoModel     *video.VideoModel
-	UserModel      *user.UserModel
-	FavoriteModel  *favorite.Model
-	CommentModel   *comment.Model
-	NoticeModel    *notice.NoticeModel
-	Indexer        *meilisearch.Client
-	KqPusherClient *kq.Pusher
-	OssRpc         oss.Oss
-	UserRpc        user_rpc.User
-	FollowRpc      follow_rpc.Follow
+	Config            config.Config
+	Validate          *validator.Validate // 入参校验器
+	DB                *orm.DB             // 数据库连接
+	BizRedis          *redis.Redis        // 业务redis连接
+	VideoModel        *video.VideoModel
+	VideoHistoryModel *video_history.VideoHistoryModel
+	UserModel         *user.UserModel
+	FavoriteModel     *favorite.Model
+	CommentModel      *comment.Model
+	NoticeModel       *notice.NoticeModel
+	Indexer           *meilisearch.Client
+	KqPusherClient    *kq.Pusher
+	OssRpc            oss.Oss
+	UserRpc           user_rpc.User
+	FollowRpc         follow_rpc.Follow
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -60,20 +62,20 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		//Timeout: time.Millisecond*c.MeiliSearch.Timeout
 	})
 	return &ServiceContext{
-		Config:     c,
-		Validate:   validator.New(),
-		OssRpc:     oss.NewOss(zrpc.MustNewClient(c.OssRpcConf)),
-		UserRpc:    user_rpc.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
-		FollowRpc:  follow_rpc.NewFollow(zrpc.MustNewClient(c.FollowRpcConf)),
-		DB:         db,
-		BizRedis:   rds,
-		VideoModel: video.NewVideoModel(db),
-		UserModel:  user.NewUserModel(db, rds),
-
-		FavoriteModel:  favorite.NewFavoriteModel(db),
-		CommentModel:   comment.NewCommentModel(db),
-		NoticeModel:    notice.NewNoticeModel(db),
-		Indexer:        indexer,
-		KqPusherClient: kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
+		Config:            c,
+		Validate:          validator.New(),
+		OssRpc:            oss.NewOss(zrpc.MustNewClient(c.OssRpcConf)),
+		UserRpc:           user_rpc.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
+		FollowRpc:         follow_rpc.NewFollow(zrpc.MustNewClient(c.FollowRpcConf)),
+		DB:                db,
+		BizRedis:          rds,
+		VideoModel:        video.NewVideoModel(db),
+		VideoHistoryModel: video_history.NewVideoHistoryModel(rds),
+		UserModel:         user.NewUserModel(db, rds),
+		FavoriteModel:     favorite.NewFavoriteModel(db),
+		CommentModel:      comment.NewCommentModel(db),
+		NoticeModel:       notice.NewNoticeModel(db),
+		Indexer:           indexer,
+		KqPusherClient:    kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
 	}
 }
