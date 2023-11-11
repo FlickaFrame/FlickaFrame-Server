@@ -48,12 +48,15 @@ func (l *GetUserDetailInfoLogic) GetUserDetailInfo(req *types.UserDetailInfoReq)
 	count, err := l.svcCtx.FollowRpc.FollowCount(l.ctx, &follow_rpc.FollowCountReq{
 		UserIds: []int64{contextUserId},
 	})
-	if err != nil {
-		return nil, err
+	var FollowCount, FansCount int
+	if err != nil || len(count.Items) == 0 {
+		FollowCount, FansCount = 0, 0
+	} else {
+		FollowCount, FansCount = int(count.Items[0].FollowCount), int(count.Items[0].FansCount)
 	}
 	UserStatisticalInfo := types.UserStatisticalInfo{
-		FollowingCount:        int(count.Items[0].FollowCount),
-		FollowerCount:         int(userInfo.FollowerCount),
+		FollowingCount:        FollowCount,
+		FollowerCount:         FansCount,
 		LikeCount:             0,
 		PublishedVideoCount:   0,
 		LikeVideoCount:        0,

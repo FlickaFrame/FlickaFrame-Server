@@ -83,10 +83,12 @@ func (m *FollowModel) FindByFollowedUserId(ctx context.Context, userId int64, li
 	return result, err
 }
 
-func (m *FollowModel) FindByFollowedUserIds(ctx context.Context, followedUserIds []int64) ([]*Follow, error) {
+// FindByFollowedUserIds 获取关注的人列表
+func (m *FollowModel) FindByFollowedUserIds(ctx context.Context, followedUserIds []int64, userId int64) ([]*Follow, error) {
 	var result []*Follow
 	err := m.db.WithContext(ctx).
 		Where("followed_user_id in (?)", followedUserIds).
+		Where("user_id =?", userId).
 		Find(&result).Error
 	val2idx := make(map[int64]int, len(followedUserIds))
 	for i, v := range followedUserIds {
@@ -98,10 +100,11 @@ func (m *FollowModel) FindByFollowedUserIds(ctx context.Context, followedUserIds
 	return result, err
 }
 
-func (m *FollowModel) FindByUserIds(ctx context.Context, userIds []int64) ([]*Follow, error) {
+func (m *FollowModel) FindByUserIds(ctx context.Context, userIds []int64, followedUserId int64) ([]*Follow, error) {
 	var result []*Follow
 	err := m.db.WithContext(ctx).
-		Where("user_id in (?)", userIds).
+		Where("user_id in (?) ", userIds).
+		Where("followed_user_id=?", followedUserId).
 		Find(&result).Error
 	val2idx := make(map[int64]int, len(userIds))
 	for i, v := range userIds {

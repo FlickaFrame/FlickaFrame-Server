@@ -63,13 +63,13 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 		if len(userIds) == 0 {
 			return &pb.FansListResponse{}, nil
 		}
-		follows, err = l.svcCtx.FollowModel.FindByFollowedUserIds(l.ctx, userIds)
+		follows, err = l.svcCtx.FollowModel.FindByUserIds(l.ctx, userIds, in.FollowedUserId)
 		if err != nil {
 			l.Logger.Errorf("[FansList] FollowModel.FindByFollowedUserIds error: %v req: %v", err, in)
 			return nil, err
 		}
 		for _, follow := range follows {
-			userIds = append(userIds, follow.UserID)
+			fansUserIds = append(fansUserIds, follow.UserID)
 			curPage = append(curPage, &pb.FansItem{
 				Id:         follow.ID,
 				UserId:     follow.UserID,

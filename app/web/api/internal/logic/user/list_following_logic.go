@@ -28,6 +28,7 @@ func NewListFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 	}
 }
 
+// ListFollowing 获取用户关注列表
 func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *types.ListFollowUserResp, err error) {
 	doerId, contextUserId := jwt.GetUidFromCtx(l.ctx), req.ContextUserId
 	if req.Cursor == 0 {
