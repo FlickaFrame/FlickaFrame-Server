@@ -87,7 +87,7 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 		return nil, err
 	}
 	if followExist { // 使用ZADD命令将关注关系写入Redis
-		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, userFollowKey(in.UserId), time.Now().Unix(), strconv.FormatInt(in.FollowedUserId, 10))
+		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, userFollowKey(in.UserId), time.Now().UnixMilli(), strconv.FormatInt(in.FollowedUserId, 10))
 		if err != nil {
 			l.Logger.Errorf("[Follow] Redis Zadd error: %v", err)
 			return nil, err
@@ -104,7 +104,7 @@ func (l *FollowLogic) Follow(in *pb.FollowRequest) (*pb.FollowResponse, error) {
 		return nil, err
 	}
 	if fansExist {
-		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, userFansKey(in.FollowedUserId), time.Now().Unix(), strconv.FormatInt(in.UserId, 10))
+		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, userFansKey(in.FollowedUserId), time.Now().UnixMilli(), strconv.FormatInt(in.UserId, 10))
 		if err != nil {
 			l.Logger.Errorf("[Follow] Redis Zadd error: %v", err)
 			return nil, err

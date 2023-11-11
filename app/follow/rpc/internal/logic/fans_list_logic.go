@@ -41,7 +41,7 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 		in.PageSize = types.DefaultPageSize
 	}
 	if in.Cursor == 0 {
-		in.Cursor = time.Now().Unix()
+		in.Cursor = time.Now().UnixMilli()
 	}
 
 	var (
@@ -73,7 +73,7 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 			curPage = append(curPage, &pb.FansItem{
 				Id:         follow.ID,
 				UserId:     follow.UserID,
-				CreateTime: follow.CreatedAt.Unix(),
+				CreateTime: follow.CreatedAt.UnixMilli(),
 			})
 		}
 	} else { // 缓存不存在 => 从数据库中获取(并且刷新缓存分页)
@@ -97,7 +97,7 @@ func (l *FansListLogic) FansList(in *pb.FansListRequest) (*pb.FansListResponse, 
 			curPage = append(curPage, &pb.FansItem{
 				Id:         follow.ID,
 				UserId:     follow.UserID,
-				CreateTime: follow.CreatedAt.Unix(),
+				CreateTime: follow.CreatedAt.UnixMilli(),
 			})
 		}
 	}
@@ -190,7 +190,7 @@ func (l *FansListLogic) addCacheFans(ctx context.Context, userId int64, follows 
 		if follow.UserID == -1 {
 			score = 0
 		} else {
-			score = follow.CreatedAt.Unix()
+			score = follow.CreatedAt.UnixMilli()
 		}
 		_, err := l.svcCtx.BizRedis.ZaddCtx(ctx, key, score, strconv.FormatInt(follow.UserID, 10))
 		if err != nil {

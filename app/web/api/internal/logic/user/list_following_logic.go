@@ -8,6 +8,8 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
 	"github.com/jinzhu/copier"
+	"strconv"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,6 +30,9 @@ func NewListFollowingLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 
 func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *types.ListFollowUserResp, err error) {
 	doerId, contextUserId := jwt.GetUidFromCtx(l.ctx), req.ContextUserId
+	if req.Cursor == 0 {
+		req.Cursor = time.Now().UnixMilli()
+	}
 	followList, err := l.svcCtx.FollowRpc.FollowList(l.ctx, &follow_rpc.FollowListRequest{
 		UserId:   contextUserId,
 		Cursor:   req.Cursor,
@@ -56,6 +61,7 @@ func (l *ListFollowingLogic) ListFollowing(req *types.ListFollowReq) (resp *type
 	for i := range users.Users {
 		resp.FollowUser[i] = &types.FollowUser{}
 		_ = copier.Copy(resp.FollowUser[i], users.Users[i])
+		resp.FollowUser[i].ID = strconv.FormatInt(users.Users[i].Id, 10)
 		resp.FollowUser[i].IsFollow = true
 		if doerId != contextUserId {
 			var follow *follow_rpc.IsFollowResp

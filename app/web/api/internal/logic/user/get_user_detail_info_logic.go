@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
 	user_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
@@ -44,17 +45,27 @@ func (l *GetUserDetailInfoLogic) GetUserDetailInfo(req *types.UserDetailInfoReq)
 		Age:           int(userInfo.Age),
 		BackgroundUrl: userInfo.BackgroundUrl,
 	}
+	count, err := l.svcCtx.FollowRpc.FollowCount(l.ctx, &follow_rpc.FollowCountReq{
+		UserIds: []int64{contextUserId},
+	})
+	if err != nil {
+		return nil, err
+	}
 	UserStatisticalInfo := types.UserStatisticalInfo{
-		FollowingCount:        int(userInfo.FollowingCount),
+		FollowingCount:        int(count.Items[0].FollowCount),
 		FollowerCount:         int(userInfo.FollowerCount),
 		LikeCount:             0,
 		PublishedVideoCount:   0,
 		LikeVideoCount:        0,
 		CollectionsVideoCount: 0,
 	}
+
 	isFollow := false
 	if doerId != 0 {
-		//	TODO:判断是否关注
+		isFollow, err = l.svcCtx.FavoriteModel.IsExist(l.ctx, contextUserId, doerId)
+		if err != nil {
+			return nil, err
+		}
 	}
 	UserInteractionInfo := types.UserInteractionInfo{
 		IsFollow: isFollow,

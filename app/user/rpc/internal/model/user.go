@@ -7,6 +7,7 @@ import (
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/orm"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/zeromicro/go-zero/core/stores/redis"
+	"sort"
 )
 
 var (
@@ -67,7 +68,18 @@ func NewUserModel(db *orm.DB, CacheRedis *redis.Redis) *UserModel {
 		CacheRedis: CacheRedis,
 	}
 }
-
+func (m *UserModel) FindByIDs(ctx context.Context, ids []int64) ([]*User, error) {
+	var result []*User
+	err := m.db.WithContext(ctx).Where("id in (?)", ids).Find(&result).Error
+	val2idx := make(map[int64]int)
+	for i, v := range ids {
+		val2idx[v] = i
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return val2idx[result[i].ID] < val2idx[result[j].ID]
+	})
+	return result, err
+}
 func (m *UserModel) Insert(ctx context.Context, data *User) error {
 	data.Model = orm.NewModel()
 	return m.db.WithContext(ctx).Create(data).Error
@@ -105,7 +117,6 @@ func (m *UserModel) FindOne(ctx context.Context, id int64) (*User, error) {
 		return user, nil
 	}
 }
-
 func (m *UserModel) FindOneByDB(ctx context.Context, id int64) (*User, error) {
 	var result User
 	err := m.db.WithContext(ctx).Where("id = ?", id).First(&result).Error
