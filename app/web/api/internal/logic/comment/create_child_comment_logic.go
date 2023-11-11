@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	video_count "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video/count"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/pkg/jwt"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/util"
 	"github.com/FlickaFrame/FlickaFrame-Server/pkg/xcode/code"
@@ -28,6 +29,7 @@ func NewCreateChildCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *CreateChildCommentLogic) CreateChildComment(req *types.CreateChildCommentReq) (resp *types.CreateChildCommentResp, err error) {
+	videoCount := video_count.NewVideoCountModel(l.svcCtx.BizRedis)
 	resp = &types.CreateChildCommentResp{}
 	doer := jwt.GetUidFromCtx(l.ctx)
 	// 检测视频是否存在
@@ -36,6 +38,15 @@ func (l *CreateChildCommentLogic) CreateChildComment(req *types.CreateChildComme
 		logx.Info(err)
 		return nil, code.VideoNotExistError
 	}
+	videoInt, err := strconv.ParseInt(req.VideoId, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	count, err := videoCount.IncrCommentCount(l.ctx, videoInt)
+	if err != nil {
+		return nil, err
+	}
+	_ = count // TODO 返回评论数给前端
 	ParentCommentId, _ := strconv.ParseInt(req.ParentCommentId, 10, 64)
 	TargetCommentId, _ := strconv.ParseInt(req.TargetCommentId, 10, 64)
 

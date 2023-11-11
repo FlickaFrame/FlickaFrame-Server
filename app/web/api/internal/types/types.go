@@ -314,6 +314,7 @@ type GetVideoCommentResp struct {
 type DeleteVideoCommentReq struct {
 	CommentId string `path:"comment_id"`
 	Type      string `form:"type"`
+	VideoId   string `form:"videoId"`
 }
 
 type DeleteVideoCommentResp struct {
@@ -334,6 +335,7 @@ type ListVideoCommentsReq struct {
 
 type ListVideoCommentsResp struct {
 	Comments []*ParentComment `json:"comments"`
+	Total    int64            `json:"total"`
 }
 
 type ListCommentOption struct {

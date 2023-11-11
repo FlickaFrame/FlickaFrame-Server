@@ -91,6 +91,7 @@ type (
 	DeleteVideoCommentReq {
 		CommentId string `path:"comment_id"`
 		Type      string `form:"type"`
+		VideoId  string `form:"videoId"`
 	}
 
 	DeleteVideoCommentResp {
