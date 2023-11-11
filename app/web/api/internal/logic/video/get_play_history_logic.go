@@ -61,8 +61,8 @@ func (l *GetPlayHistoryLogic) GetPlayHistory(req *types.FeedReq) (resp *types.Fe
 
 	// 判断是否无视频
 	resp.Next = strconv.FormatInt(time.Now().UnixMilli(), 10)
-	if len(videos) > 0 {
-		resp.Next = strconv.FormatInt(videos[len(videos)-1].CreatedAt.UnixMilli()-1, 10)
+	if len(histories) > 0 {
+		resp.Next = strconv.FormatInt(histories[len(histories)-1].PlayTime.UnixMilli(), 10)
 	}
 	err = copier.Copy(&resp.List, &list)
 	// 判断关注状态

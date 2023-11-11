@@ -54,7 +54,7 @@ func (m *VideoHistoryModel) GetPlayHistoryFromCache(ctx context.Context, userId,
 		}
 		playHistories = append(playHistories, &PlayHistory{
 			VideoId:  VideoId,
-			PlayTime: time.Unix(pair.Score, 0),
+			PlayTime: time.UnixMilli(pair.Score),
 		})
 	}
 	return playHistories, nil
@@ -88,7 +88,7 @@ func (m *VideoHistoryModel) AddCachePlayHistories(ctx context.Context, userId in
 		if history.VideoId == -1 {
 			score = 0
 		} else {
-			score = history.PlayTime.Unix()
+			score = history.PlayTime.UnixMilli()
 		}
 		_, err = m.BizRedis.ZaddCtx(ctx, key, score, strconv.FormatInt(history.VideoId, 10))
 		if err != nil {
