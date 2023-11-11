@@ -3,6 +3,8 @@ package logic
 import (
 	"context"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
+	"github.com/pkg/errors"
+	"gorm.io/gorm"
 
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/pb/user_service"
@@ -26,8 +28,11 @@ func NewFindByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindById
 
 func (l *FindByIdLogic) FindById(in *user_service.FindByIdRequest) (*user_service.UserInfoResponse, error) {
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) { // 数据库查询失败
 		return nil, err
+	}
+	if user == nil { // 用户不存在
+		return &user_service.UserInfoResponse{}, nil
 	}
 	// 用户的头像地址实际上是一个oss的key，需要通过oss服务获取访问地址
 	url, err := l.svcCtx.OssRpc.GetFileAccessUrl(l.ctx, &oss.GetFileAccessUrlRequest{Key: user.AvatarUrl})

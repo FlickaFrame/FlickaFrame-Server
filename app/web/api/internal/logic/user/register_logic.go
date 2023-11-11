@@ -32,10 +32,10 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	userInfo, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &user_rpc.FindByMobileRequest{
 		Mobile: req.Phone,
 	})
-	if err != nil && !errors.Is(err, code.ErrNotFound) {
+	if err != nil { // 数据库查询失败
 		return nil, errors.Wrapf(xcode.DB_ERROR, "mobile:%s,err:%v", req.Phone, err)
 	}
-	if userInfo.Id != 0 {
+	if userInfo.Id != 0 { // 用户已存在
 		return nil, errors.Wrapf(code.ErrUserAlreadyRegisterError, "Register user exists mobile:%s,err:%v", req.Phone, err)
 	}
 	user := &user_rpc.RegisterRequest{

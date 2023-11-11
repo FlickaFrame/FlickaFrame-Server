@@ -393,7 +393,7 @@ type ListFollowUserResp struct {
 
 type FeedPagerReq struct {
 	Cursor   int64 `json:"cursor,optional" form:"cursor,optional"`
-	PageSize int64 `json:"page_size,default=10" form:"page_size,default=10"`
+	PageSize int64 `json:"pageSize,default=10" form:"pageSize,default=10"`
 }
 
 type FeedPagerResp struct {
