@@ -36,7 +36,10 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 	user, err := l.svcCtx.UserRpc.FindById(l.ctx, &user_rpc.FindByIdRequest{
 		UserId: req.ContextUserId,
 	})
-	if user == nil || err != nil {
+	if err != nil {
+		return nil, err
+	}
+	if user.Id == 0 {
 		return nil, code.ErrUserNoExistsError
 	}
 	// 关注操作
