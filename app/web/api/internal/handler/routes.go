@@ -183,11 +183,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: comment.CreateChildCommentHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPut,
-				Path:    "/comment/child",
-				Handler: comment.CreateReplyCommentHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodDelete,
 				Path:    "/comment/:comment_id",
 				Handler: comment.DeleteVideoCommentHandler(serverCtx),
