@@ -102,7 +102,7 @@ run-favorite-rpc:
 
 .PHONY: gen-api-go
 gen-api-go: ## generate api go
-	goctl api go --dir=./ --api ./desc/main.api  --style go_zero
+	goctl api go --dir=./app/web/api --api ./spec/web/api/main.api  --style go_zero
 
 .PHONY: gen-api-doc
 gen-api-doc: ## generate api doc
