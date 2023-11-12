@@ -6,6 +6,7 @@ import (
 	video_count "github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model/video/count"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,5 +36,10 @@ func HotFeed(ctx context.Context, svcCtx *svc.ServiceContext, req *types.FeedReq
 	if err != nil {
 		return nil, err
 	}
-	return svcCtx.VideoModel.FindByIDs(ctx, videoIds)
+	categoryId, err := strconv.ParseInt(req.CategoryID, 10, 64)
+	if err != nil {
+		logx.Info("categoryId is empty")
+		categoryId = 0
+	}
+	return svcCtx.VideoModel.FindByIDsAndCategory(ctx, videoIds, categoryId)
 }

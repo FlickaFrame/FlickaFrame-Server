@@ -97,6 +97,26 @@ func (m *VideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
 	return &result, err
 }
 
+func (m *VideoModel) FindByIDsAndCategory(ctx context.Context, ids []int64, category int64) ([]*Video, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var result []*Video
+	sess := m.db.WithContext(ctx).Where("id IN ?", ids)
+	if category != 0 { // 0 表示不限制分类
+		sess = sess.Where("category_id = ?", category)
+	}
+	err := sess.Find(&result).Error
+	val2idx := make(map[int64]int, len(result))
+	for i, v := range ids {
+		val2idx[v] = i
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return val2idx[result[i].ID] < val2idx[result[j].ID]
+	})
+	return result, err
+}
+
 // FindByIDs 通过视频ID列表获取对应记录
 func (m *VideoModel) FindByIDs(ctx context.Context, ids []int64) ([]*Video, error) {
 	if len(ids) == 0 {
