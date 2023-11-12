@@ -105,7 +105,7 @@ func (m *VideoCountModel) GetPlayCount(ctx context.Context, videoId int64) (int6
 }
 
 func (m *VideoCountModel) GetShareCount(ctx context.Context, videoId int64) (int64, error) {
-	score, err := m.BizRedis.ZscoreCtx(ctx, videoPlayCountKey(), strconv.FormatInt(videoId, 10))
+	score, err := m.BizRedis.ZscoreCtx(ctx, videoShareCountKey(), strconv.FormatInt(videoId, 10))
 	if err == redis.Nil {
 		return 0, nil
 	}
@@ -116,7 +116,7 @@ func (m *VideoCountModel) GetShareCount(ctx context.Context, videoId int64) (int
 }
 
 func (m *VideoCountModel) GetHotCount(ctx context.Context, videoId int64) (int64, error) {
-	score, err := m.BizRedis.ZscoreCtx(ctx, videoPlayCountKey(), strconv.FormatInt(videoId, 10))
+	score, err := m.BizRedis.ZscoreCtx(ctx, videoHotVideoKey(), strconv.FormatInt(videoId, 10))
 	if err == redis.Nil {
 		return 0, nil
 	}
