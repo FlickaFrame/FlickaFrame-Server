@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package service;
+option go_package="./user_service";
+
+service User {
+  rpc Register(RegisterRequest) returns (RegisterResponse); // 注册
+  rpc Login(LoginRequest) returns (LoginResponse); // 登录
+  rpc FindById(FindByIdRequest) returns (UserInfoResponse); // 根据id查找
+  rpc ListByIds(ListByIdsRequest) returns (ListByIdsResponse); // 根据id列表查找
+  rpc FindByMobile(FindByMobileRequest) returns (UserInfoResponse); // 根据手机号查找
+  rpc SendSms(SendSmsRequest) returns (SendSmsResponse); // 发送短信
+}
+
+message UserInfoResponse {
+  int64  id = 1; // 用户id
+  string nickName = 2; // 昵称
+  string avatarUrl = 3; // 头像
+  string slogan = 4; // 个性签名
+  int32  gender = 5; // 性别
+  int32  age = 6; // 年龄
+  string mobile = 7; // 手机号
+  int64  followingCount = 8; // 关注数
+  int64  followerCount = 9; // 粉丝数
+  int64  likeCount = 10; // 获得的点赞数
+  int64  collectCount = 11; // 收藏的视频数
+  string BackgroundUrl = 12; // 背景图片
+  string password = 13; // 密码
+}
+
+message RegisterRequest {
+  string nickname = 1;
+  string phone= 2;
+  string avatar = 3;
+  string password = 4;
+}
+
+message LoginRequest {
+  string phone = 1;
+  string password = 2;
+}
+message LoginResponse {
+  int64 userId = 1;
+}
+
+message RegisterResponse {
+  int64 userId = 1;
+}
+
+message ListByIdsRequest {
+  repeated int64 userIds = 1;
+}
+
+message ListByIdsResponse {
+    int32 total = 1;
+    repeated UserInfoResponse users = 2;
+}
+
+message FindByIdRequest {
+  int64 userId = 1;
+}
+
+message FindByIdResponse {
+  int64  userId = 1;
+  string username = 2;
+  string mobile = 3;
+  string avatar = 4;
+}
+
+message FindByMobileRequest {
+  string mobile = 1;
+}
+
+message FindByMobileResponse {
+  int64 userId = 1;
+  string username = 2;
+  string mobile = 3;
+  string avatar = 4;
+}
+
+message SendSmsRequest {
+  int64  userId = 1;
+  string mobile = 2;
+}
+
+message SendSmsResponse {
+}

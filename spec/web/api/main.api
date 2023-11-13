@@ -1,0 +1,11 @@
+syntax = "v1"
+
+import (
+	"user_server.api"
+	"video_server.api"
+	"comment_server.api"
+	"favorite_server.api"
+	"oss_server.api"
+	"notice_server.api"
+	"follow_server.api"
+)

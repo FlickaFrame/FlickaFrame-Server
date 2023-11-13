@@ -1,63 +1,44 @@
+# FlickaFrame-Server| gozero短视频服务
 
-#  FlickaFrame-Server | 2023 年 **七牛云校园马拉松**
+## 功能介绍
 
-## 快速启动
-
-1. clone项目到本地
-
-    ```shell
-        git clone git@github.com:FlickaFrame/FlickaFrame-Server.git
-        cd TikTok
-    ```
-2. 安装依赖(参考下面中间件介绍和docker-compose.yml)
-
-3. 修改配置信息
-
-    修改`etc/main.yaml`中的配置信息
-
-4. 启动项目
-
-    ```shell
-        make run
-    ```
-
-## 二次开发 & 贡献
-
-1. 安装golang依赖
-    ```shell
-        make install
-    ```
-2. 代码生成
-    ```shell
-        make gen
-    ```
-3. 代码格式化
-    ```shell
-        make fmt
-    ```
-4. 项目启动
-    ```shell
-        make run
-    ```
-
-## 技术栈
-
-- HTTP框架: go-zero + gorm
-- 数据库：Mysql
-- 缓存：Redis
-- 搜索引擎：MeiliSearch
-- 对象存储：七牛云存储
-- 数据库和索引同步：MeiliSync
-- 消息队列: kafka
-- 项目管理: makefile
-- 前后端协同: goctl-swagger + apifox
-
-## API Doc
-
-```shell
-# 生成openAPI文档, 生成的文档在docs/swagger
-# 可以使用ApiFox订阅 http://localhost:8080/api/v1/swagger
-make gen-api-swagger 
-# 生成api markdown文档, 生成的文档在docs/api
-make gen-api-doc
-```
+- 用户模块 
+  - 用户信息子模块
+    - 登录
+    - 注册
+    - 修改密码
+    - 修改个人信息
+    - 获取个人信息
+    - 获取用户信息
+  - 关注子模块
+    - 关注用户
+    - 取消关注用户
+    - 获取用户关注的用户列表
+    - 获取用户粉丝列表
+- 视频模块
+  - 上传视频
+  - 删除视频
+  - 获取视频列表
+  - 获取视频详情
+  - 获取用户视频列表
+  - 获取用户喜欢的视频列表
+  - 获取用户关注的用户视频列表
+- 评论模块
+  - 发布评论
+  - 删除评论
+  - 获取指定评论列表
+  - 获取视频评论列表
+- 点赞模块
+  - 点赞
+  - 取消点赞
+  - 获取视频点赞列表
+  - 获取用户点赞列表
+- 关注模块
+- 动态模块
+  - 搜索模块
+- 搜索模块
+- 消息模块
+  - 获取消息列表
+  - 获取未读消息数量
+  - 设置消息已读
+  - 删除消息

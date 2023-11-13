@@ -1,0 +1,121 @@
+syntax = "v1"
+
+info(
+	title: "用户中心服务"
+	desc: "用户中心服务"
+	version: "v1"
+)
+
+import "user_dto.api"
+
+// Need login
+@server(
+	prefix: api/v1
+	group: user
+	jwt: JwtAuth
+)
+service main{
+	@doc "Get Current Logined User Detail Info"
+	@handler CurrentUserInfo
+	get /user/detail(UserDetailInfoReq)  returns (UserDetailInfoResp)
+
+	@doc "Update User Info"
+	@handler UpdateInfo
+	put /user/info (UpdateInfoReq) returns (UpdateInfoReq)
+
+	@doc "Update User Password" // 修改用户密码
+	@handler UpdatePassword
+	post /user/updatepwd (UpdatePasswordReq) returns (UpdatePasswordResp)
+}
+
+//no need login
+@server(
+	prefix: api/v1
+	group: user
+)
+service main {
+	@doc "Register User"
+	@handler register
+	post /user/register (RegisterReq) returns (RegisterResp)
+
+	@doc "Login User"
+	@handler login
+	post /user/login (LoginReq) returns (LoginResp)
+
+	@doc "Get User Detail Info"
+	@handler GetUserDetailInfo
+	get /user/detail/:userId (UserDetailInfoReq) returns (UserDetailInfoResp)
+
+	@doc "List User Ranking"
+	@handler Ranking
+	get /user/ranking (RankingReq) returns (RankingResp)
+}
+
+type (
+	RegisterReq {
+		Phone    string `json:"phone" validate:"required"`
+		Password string `json:"password" validate:"required"`
+		NickName string `json:"nickName,option"`
+	}
+	RegisterResp {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+)
+
+type (
+	LoginReq {
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	LoginResp {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+)
+
+type (
+	CurrentUserInfoReq {
+	}
+	CurrentUserInfoResp {
+		UserBasicInfo
+		UserStatisticalInfo
+		UserInteractionInfo
+	}
+	UserDetailInfoReq {
+		ContextUserId int64 `path:"userId,optional"`
+	}
+	UserDetailInfoResp {
+		UserBasicInfo
+		UserStatisticalInfo
+		UserInteractionInfo
+	}
+)
+
+type (
+	RankingReq {
+		ListUserOption
+	}
+	RankingResp {
+		Users []*UserBasicInfo `json:"users"`
+	}
+)
+
+type (
+	UpdateInfoReq {
+		NickName      string `json:"nickName"`      // 用户名
+		Slogan        string `json:"slogan"`        // 个性签名
+		Gender        int    `json:"gender"`        // 性别
+		Age           int    `json:"age"`           // 年龄
+		AvatarUrl     string `json:"avatarUrl"`     // 头像
+		BackgroundUrl string `json:"backgroundUrl"` // 用户主页背景图
+	}
+	// UserDetailInfoResp
+)
+
+type (
+	UpdatePasswordReq  struct{}
+	UpdatePasswordResp struct{}
+)

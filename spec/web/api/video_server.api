@@ -1,0 +1,193 @@
+syntax = "v1"
+
+info(
+	title: "短视频Feed"
+	desc: "主页短视频Feed"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
+)
+import "video_dto.api"
+// Need login
+@server(
+	prefix: api/v1
+	group: video
+	jwt: JwtAuth
+)
+service main{
+	@doc "Create Video" // 创建视频
+	@handler CreateVideo
+	post /video/create (CreateVideoReq) returns (CreateVideoResp)
+
+	@doc "Delete Video" // 删除视频
+	@handler DeleteVideo
+	delete /video/:videoId (DeleteVideoReq) returns (DeleteVideoResp)
+
+	@doc "List video of following User" // 获取关注用户的视频列表
+	@handler Following
+	get /video/following (FeedReq) returns (FeedResp)
+
+	@doc "List Video of user Like" // 用户点赞的视频列表
+	@handler LikedVideo
+	get /video/liked(FeedReq)returns(FeedResp)
+}
+
+//no need login
+@server(
+	prefix: api/v1
+	group: video
+)
+service main{
+	@doc "Get Video Info" // 获取视频详情
+	@handler GetVideoInfo
+	get /video/detail/:videoId (GetVideoInfoReq) returns (GetVideoInfoResp)
+
+	@doc "Get Video Category List" // 获取视频分区列表
+	@handler Category
+	get /video/category returns (CategoryResp)
+
+	@doc "Home Video Feed" // 获取主页视频Feed
+	@handler Feed
+	get /video/feed (FeedReq) returns (FeedResp)
+
+	@doc "Search Video By Keyword" // 搜索视频(根据标题和描述内容)
+	@handler Search
+	post /video/search (VideoSearchReq) returns (VideoSearchResp)
+
+	@doc "Share Video" // 分享视频
+	@handler Share
+	post /video/share/:videoId (ShareVideoReq) returns (ShareVideoResp)
+
+	@doc "Hot Video Feed" // 获取热门视频Feed
+	@handler Hot
+	get /video/hot (FeedReq) returns (FeedResp)
+}
+
+@server(
+	prefix: api/v1
+	group: video
+	jwt: JwtAuth
+)
+service main {
+	@doc "Add Play History for a Video" // 添加播放历史
+	@handler AddPlayHistory
+	post /video/play-history (PlayHistoryReq) returns (PlayHistoryResp)
+
+	@doc "Get Play History for a User" // 获取用户播放历史
+	@handler GetPlayHistory
+	get /video/play-history (FeedReq)returns (FeedResp)
+
+	@doc "Delete Play History for a Video" // 删除播放历史
+	@handler DeletePlayHistory
+	delete /video/play-history/:videoId(DeletePlayHistoryReq) returns (PlayHistoryResp)
+
+	@doc "Clear Play History for a User" // 清空用户播放历史
+	@handler ClearPlayHistory
+	delete /video/play-history returns (ClearPlayHistoryResp)
+}
+
+type (
+	ShareVideoReq {
+		VideoId int64  `path:"videoId"`
+	}
+	ShareVideoResp {
+		ShareCount int64  `json:"shareCount"` // 分享次数
+	}
+)
+
+type (
+	PlayHistoryReq {
+		VideoId   string `json:"videoId"`
+	}
+	DeletePlayHistoryReq {
+		VideoId string `path:"videoId"`
+	}
+	PlayHistoryResp {
+	}
+	ClearPlayHistoryResp {
+	}
+)
+
+type (
+	FeedReq {
+		Cursor     int64  `form:"cursor,default=0"`    // 最新视频时间(毫秒时间戳)
+		Limit      int    `form:"limit,default=10"`    // 请求数量
+		AuthorID   string `form:"authorID,default=0"`  // 作者ID(是否根据用户ID过滤)
+		Tag        string `form:"tag,optional"`        // 标签(是否根据标签过滤)
+		CategoryID string `form:"categoryId,optional"` // 分类(是否根据分类过滤)
+	}
+	FeedVideoItem {
+		VideoBasicInfo
+		VideoStatisticalInfo
+		VideoInteractInfo
+	}
+	FeedResp {
+		Next  string           `json:"next"`  // 请求游标
+		List  []*FeedVideoItem `json:"list"`  // 视频列表
+		IsEnd bool             `json:"isEnd"` // 是否已到最后一页
+	}
+)
+
+type (
+	CategoryResp {
+		CategoryList []*Category `json:"categoryList"`
+	}
+)
+
+type (
+	VideoSearchReq {
+		Keyword string `json:"keyword"`         // 搜索关键字
+		Offset  int64  `json:"offset,optional"` // 偏移量
+		Limit   int64  `json:"limit,optional"`  // 请求数量
+	}
+	VideoSearchResp {
+		Videos []*FeedVideoItem `json:"list"` // 视频列表
+		// Hits               interface{}      `json:"hits"`               // 搜索结果
+		Query              string `json:"query"`              // 搜索关键字
+		ProcessingTimeMs   int64  `json:"processingTimeMs"`   // 搜索耗时(毫秒)
+		Offset             int64  `json:"offset"`             // 偏移量
+		Limit              int64  `json:"limit"`              // 请求数量
+		EstimatedTotalHits int64  `json:"estimatedTotalHits"` // 搜索结果总数
+	}
+)
+
+type (
+	CreateVideoReq {
+		Title         string   `json:"title"`                // 视频标题
+		PlayUrl       string   `json:"playUrl"`              // 视频播放地址
+		ThumbUrl      string   `json:"thumbUrl"`             // 视频封面地址
+		Description   string   `json:"description,optional"` // 视频描述
+		CategoryID    string   `json:"category"`             // 视频分类
+		Tags          []string `json:"tags"`                 // 视频标签
+		PublishTime   int64    `json:"publishTime,optional"` // 视频发布时间(毫秒时间戳)
+		VideoKey      string   `json:"videoKey,optional"`    // 视频上传key
+		Visibility    int      `json:"visibility"`           // 视频可见性(1:公开,2:私密)
+		VideoDuration float32  `json:"videoDuration"`        // 视频时长(秒)
+		VideoHeight   uint     `json:"videoHeight"`          // 视频高度(像素)
+		VideoWidth    uint     `json:"videoWidth"`           // 视频宽度(像素)
+	}
+	CreateVideoResp {
+	}
+)
+
+type (
+	DeleteVideoReq {
+		VideoID int64 `path:"videoId"`
+	}
+	DeleteVideoResp {
+	}
+)
+
+type (
+	VideoInfoItem{
+		VideoBasicInfo
+		VideoStatisticalInfo
+		VideoInteractInfo
+	}
+	GetVideoInfoReq {
+		VideoId int64 `path:"videoId"`
+	}
+	GetVideoInfoResp {
+		Video *VideoInfoItem `json:"video"`
+
+	}
+)

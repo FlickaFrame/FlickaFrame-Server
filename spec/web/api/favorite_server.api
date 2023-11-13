@@ -1,0 +1,49 @@
+syntax = "v1"
+
+info(
+	title: "点赞"
+	desc: "点赞(视频/评论)"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
+)
+
+@server(
+	prefix: api/v1
+	group: favorite
+	jwt: JwtAuth
+)
+service main {
+	@doc "Favorite a Video"
+	@handler FavoriteVideo
+	put /favorite/video/:targetId (FavoriteReq) returns (FavoriteResp)
+
+	@doc "UnFavorite a Video"
+	@handler  UnFavoriteVideo
+	delete /favorite/video/:targetId(FavoriteReq) returns (FavoriteResp)
+
+	@doc "Check Video Favorite Status"
+	@handler CheckVideoFavorite
+	get /favorite/video/:targetId (FavoriteReq)returns(FavoriteResp)
+
+	@doc "Favorite a Comment"
+	@handler FavoriteComment
+	put /favorite/comment/:targetId (FavoriteReq) returns (FavoriteResp)
+
+	@doc "UnFavorite a Comment"
+	@handler UnFavoriteComment
+	delete /favorite/comment/:targetId(FavoriteReq) returns (FavoriteResp)
+
+	@doc "Check comment Favorite Status"
+	@handler CheckCommentFavorite
+	get /favorite/comment/:targetId (FavoriteReq) returns(FavoriteResp)
+}
+
+type (
+	FavoriteReq {
+		TargetId string `path:"targetId" copier:"IDString"`
+	}
+	FavoriteResp {
+		IsFavorite bool `json:"isFavorite"`
+		LikeCount int  `json:"likeCount"`
+	}
+)

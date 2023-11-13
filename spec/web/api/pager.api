@@ -1,0 +1,11 @@
+syntax = "v1"
+
+type FeedPagerReq{
+    Cursor int64   `json:"cursor,optional" form:"cursor,optional"`
+    PageSize int64 `json:"pageSize,default=10" form:"pageSize,default=10"`
+}
+
+type FeedPagerResp{
+    Cursor int64   `json:"cursor"`
+    IsEnd bool     `json:"is_end"`
+}

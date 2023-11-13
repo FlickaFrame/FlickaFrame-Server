@@ -1,0 +1,121 @@
+syntax = "v1"
+
+info(
+	title: "用户关注"
+	desc: "用户关注"
+	author: "caicandong"
+	email: "caicandong@shu.edu.cn"
+)
+
+import "comment_dto.api"
+
+@server(
+	prefix: api/v1
+	group: comment
+)
+service main {
+	@doc "Get a specific comment of an Video" // 获取视频的评论(包括子评论)
+	@handler GetVideoComment
+	get /video/:video_id/comments/:comment_id (GetVideoCommentReq) returns (GetVideoCommentResp)
+
+	@doc "List comments of an Video"
+	@handler ListVideoComments
+	get /video/:video_id/comments (ListVideoCommentsReq) returns (ListVideoCommentsResp)
+}
+
+@server(
+	prefix: api/v1
+	group: comment
+	jwt: JwtAuth
+)
+service main {
+	@doc "Create a comment for an Video"
+	@handler CreateVideoComment
+	post /comment/video (CreateVideoCommentReq) returns (CreateVideoCommentResp)
+
+	@doc "Create a child comment for comment"
+	@handler CreateChildComment
+	post /comment/parent (CreateChildCommentReq) returns (CreateChildCommentResp)
+
+	@doc "Delete a comment of an Video"
+	@handler DeleteVideoComment
+	delete /comment/:comment_id (DeleteVideoCommentReq) returns (DeleteVideoCommentResp)
+
+	@doc "Edit comments of an Video"
+	@handler EditVideoComment
+	post /comment/:comment_id (EditVideoCommentReq) returns (EditVideoCommentResp)
+}
+
+type ( // 创建评论
+	CreateVideoCommentReq {
+		VideoId   string   `json:"videoId"`
+		Content   string   `json:"content"`
+		AtUsersId []string `json:"atUsersId,optional"`
+	}
+	CreateVideoCommentResp {
+		Comment *ParentComment `json:"comment"`
+	}
+	CreateChildCommentReq {
+		VideoId         string   `json:"videoId"`
+		Content         string   `json:"content"`
+		AtUsersId       []string `json:"atUsersId,optional"`
+		ParentCommentId string   `json:"parentCommentId"`
+		TargetCommentId string   `json:"targetCommentId,optional"`
+	}
+	CreateChildCommentResp {
+		Comment *ChildComment `json:"comment"`
+	}
+	CreateReplyCommentReq {
+		VideoId         string   `json:"videoId"`
+		Content         string   `json:"content"`
+		AtUsersId       []string `json:"atUsersId,optional"`
+		ParentCommentId string   `json:"parentCommentId,optional"`
+		TargetCommentId string   `json:"targetCommentId,optional"`
+	}
+	CreateReplyCommentResp {
+		Comment *ChildComment `json:"comment"`
+	}
+)
+
+type (
+	GetVideoCommentReq {
+		CommentId string `path:"comment_id"`
+	}
+
+	GetVideoCommentResp {
+		Comment *ParentComment `json:"comment"`
+	}
+)
+
+type (
+	DeleteVideoCommentReq {
+		CommentId string `path:"comment_id"`
+		Type      string `form:"type"`
+		VideoId  string `form:"videoId"`
+	}
+
+	DeleteVideoCommentResp {
+	}
+)
+
+type (
+	EditVideoCommentReq {
+		VideoId   string `json:"videoId" path:"video_id"`
+		CommentId string `json:"commentId" path:"comment_id"`
+		Content   string `json:"content"`
+	}
+
+	EditVideoCommentResp {
+	}
+)
+
+type (
+	ListVideoCommentsReq {
+		VideoId string `path:"video_id,optional"`
+	}
+
+	ListVideoCommentsResp {
+		Comments []*ParentComment `json:"comments"`
+		Total   int64              `json:"total"`
+	}
+)

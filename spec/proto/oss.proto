@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package service;
+option go_package="./oss_service";
+
+
+service Oss{
+  rpc CreatUpToken(CreateUpTokenRequest) returns (CreateUpTokenResponse); // 创建上传凭证
+  rpc GetEndpoint(GetEndpointRequest) returns (GetEndpointResponse); // 获取文件存储域名
+  rpc GetFileAccessUrl(GetFileAccessUrlRequest) returns (GetFileAccessUrlResponse); // 获取文件访问地址
+}
+
+message CreateUpTokenRequest {
+  string uploadType =4; // 上传类型
+}
+
+message CreateUpTokenResponse {
+  string token = 1; // 上传凭证
+}
+
+message GetEndpointRequest {
+}
+
+message GetEndpointResponse {
+  string endpoint = 1; // 文件存储域名
+}
+message GetFileAccessUrlRequest {
+  string key = 1; // 文件key
+}
+message GetFileAccessUrlResponse {
+  string url = 1; // 文件访问地址
+}
