@@ -1,4 +1,4 @@
-package oss
+package handler
 
 import (
 	"net/http"
@@ -9,20 +9,33 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func CreateUpTokenHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func EndpointHandler(ctx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		l := oss.NewEndpointLogic(r.Context(), ctx)
+		resp, err := l.Endpoint()
+		if err != nil {
+			httpx.Error(w, err)
+		} else {
+			httpx.OkJson(w, resp)
+		}
+	}
+}
+
+func CreateUpTokenHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.CreateUpTokenReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.Error(w, err)
 			return
 		}
 
-		l := oss.NewCreateUpTokenLogic(r.Context(), svcCtx)
+		l := oss.NewCreateUpTokenLogic(r.Context(), ctx)
 		resp, err := l.CreateUpToken(&req)
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.Error(w, err)
 		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
+			httpx.OkJson(w, resp)
 		}
 	}
 }
