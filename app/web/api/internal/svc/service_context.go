@@ -2,7 +2,6 @@ package svc
 
 import (
 	follow_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/follow/rpc/follow"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 	user_rpc "github.com/FlickaFrame/FlickaFrame-Server/app/user/rpc/user"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/config"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/model"
@@ -33,7 +32,6 @@ type ServiceContext struct {
 	NoticeModel       *notice.NoticeModel
 	Indexer           *meilisearch.Client
 	KqPusherClient    *kq.Pusher
-	OssRpc            oss.Oss
 	UserRpc           user_rpc.User
 	FollowRpc         follow_rpc.Follow
 }
@@ -62,9 +60,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		//Timeout: time.Millisecond*c.MeiliSearch.Timeout
 	})
 	return &ServiceContext{
-		Config:            c,
-		Validate:          validator.New(),
-		OssRpc:            oss.NewOss(zrpc.MustNewClient(c.OssRpcConf)),
+		Config:   c,
+		Validate: validator.New(),
+
 		UserRpc:           user_rpc.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
 		FollowRpc:         follow_rpc.NewFollow(zrpc.MustNewClient(c.FollowRpcConf)),
 		DB:                db,
