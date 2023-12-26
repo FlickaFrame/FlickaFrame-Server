@@ -14,8 +14,8 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
-COPY app/oss/rpc/etc /app/etc
-RUN go build -ldflags="-s -w" -o /app/main app/oss/rpc/main.go
+COPY app/oss/api/etc /app/etc
+RUN go build -ldflags="-s -w" -o /app/main app/oss/api/main.go
 
 
 FROM scratch
@@ -27,7 +27,5 @@ ENV TZ Asia/Shanghai
 WORKDIR /app
 COPY --from=builder /app/main /app/main
 COPY --from=builder /app/etc /app/etc
-
-EXPOSE 8081
 
 CMD ["./main", "-f", "etc/main.yaml"]

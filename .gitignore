@@ -7,9 +7,9 @@
 .idea
 .vscode
 
-etc/main.yaml
+#etc/main.yaml
 go.sum
 template
 
 etc
-main.yaml
+#main.yaml
