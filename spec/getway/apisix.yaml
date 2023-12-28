@@ -1,0 +1,26 @@
+# https://github.com/apache/apisix/blob/master/conf/apisix.yaml
+routes:
+  - id:
+    uri: /oss
+    upstream:
+      nodes:
+        "127.0.0.1:8001": 1
+      type: roundrobin
+  - id:
+    uri: /user
+    upstream:
+      nodes:
+        "127.0.0.1:1980": 1
+      type: roundrobin
+
+  - id:
+    uri: /video
+    upstream:
+      nodes:
+
+  - id:
+    uri: /comment
+    upstream:
+      nodes:
+        "127.0.0.1:"
+

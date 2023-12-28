@@ -1,12 +1,11 @@
-package oss
+package logic
 
 import (
 	"context"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/api/internal/types"
 	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/rpc/oss"
 
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
-
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/api/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

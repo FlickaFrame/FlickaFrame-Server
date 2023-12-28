@@ -1,18 +1,18 @@
 package handler
 
 import (
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/api/internal/types"
 	"net/http"
 
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/logic/oss"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/svc"
-	"github.com/FlickaFrame/FlickaFrame-Server/app/web/api/internal/types"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/api/internal/logic"
+	"github.com/FlickaFrame/FlickaFrame-Server/app/oss/api/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func EndpointHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		l := oss.NewEndpointLogic(r.Context(), ctx)
+		l := logic.NewEndpointLogic(r.Context(), ctx)
 		resp, err := l.Endpoint()
 		if err != nil {
 			httpx.Error(w, err)
@@ -30,7 +30,7 @@ func CreateUpTokenHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := oss.NewCreateUpTokenLogic(r.Context(), ctx)
+		l := logic.NewCreateUpTokenLogic(r.Context(), ctx)
 		resp, err := l.CreateUpToken(&req)
 		if err != nil {
 			httpx.Error(w, err)
